@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class Player : Creature
 {
-    public override void OnAwake()
+    private MissionData missionData;
+    public override void OnStart()
     {
-        base.OnAwake();
+        base.OnStart();
+        missionData = GameSetting.Instance.CurrentMissionData;
+
+        HP = missionData.PlayerMaxHP;
+        Speed = missionData.PlayerSpeed;
     }
 }

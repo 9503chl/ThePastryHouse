@@ -8,6 +8,7 @@ public class GameSetting : MonoBehaviour
     public static GameSetting Instance;
 
     public MissionData CurrentMissionData;
+    public MissionLevel CurrentMissionLevel;
 
     public Options options;
     
