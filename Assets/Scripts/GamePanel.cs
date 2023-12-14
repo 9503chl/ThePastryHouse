@@ -13,6 +13,10 @@ public class GamePanel : View
 
     private void GamePanel_OnBeforeShow()
     {
-        PlayerInput.Instance.Player = GameObject.FindGameObjectWithTag(TagName);
+        PlayerInput.BaseInputInstance.Player = GameObject.FindGameObjectWithTag(TagName);
+        if(PlayerInput.BaseInputInstance.Player != null)
+        {
+            PlayerInput.PlayerInputInstance.PlayerComponent = PlayerInput.PlayerInputInstance.Player.GetComponent<Player>();
+        } 
     }
 }

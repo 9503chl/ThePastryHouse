@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BaseInput : MonoBehaviour
 {
-    public static BaseInput Instance;
+    public static BaseInput BaseInputInstance;
 
     public GameObject Player;
     void Start()
@@ -38,7 +38,7 @@ public class BaseInput : MonoBehaviour
 
     public virtual void OnAwake()
     {
-        
+        BaseInputInstance = this;
     }
     public virtual void EnableOn()
     {

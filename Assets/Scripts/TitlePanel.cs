@@ -1,14 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class TitlePanel : View
 {
+    public SaveData DataInstance;
+
     public GameObject LevelSelectPanel;
 
-    public Button StartButton;
+    public Button NewGameBtn;
+    public Button ContinueBtn;
+    public Button PanelExitBtn;
+
+    public Text LastPlayTimeTxt;
 
     public ButtonGroup LevelSelectGroup;
 
@@ -17,7 +22,13 @@ public class TitlePanel : View
     private void Awake()
     {
         OnBeforeShow += TitlePanel_OnBeforeShow;
-        StartButton.onClick.AddListener(OnStartBtnClick);
+
+        NewGameBtn.onClick.AddListener(NewGameInvoke);
+        ContinueBtn.onClick.AddListener(ContinueInvoke);
+        PanelExitBtn.onClick.AddListener(delegate
+        {
+            LevelSelectPanel.SetActive(false);
+        });
 
         LevelSelectGroup.onClick.AddListener(delegate { LevelSelect(LevelSelectGroup); });
     }
@@ -25,16 +36,39 @@ public class TitlePanel : View
     private void TitlePanel_OnBeforeShow()
     {
         LevelSelectPanel.SetActive(false);
+        if(DataInstance.IsFirst)
+        {
+            ContinueBtn.interactable = false;
+            LastPlayTimeTxt.text = string.Format("(없음)");
+        }
+        else
+        {
+            ContinueBtn.interactable = true;
+            LastPlayTimeTxt.text = string.Format("({0})", DataInstance.LastPlayTime.ToString("yyyy:MM:dd"));
+        }
     }
 
     private void LevelSelect(ButtonGroup buttonGroup)
     {
         GameSetting.Instance.CurrentMissionData = MissionDatas[buttonGroup.SelectedIndex];
+
+        DataInstance.DataReset();
+        DataInstance.CurrentLevel = 1;
+
+        GameSetting.Instance.CurrentSaveData = DataInstance;
         PanelManager.Instance.ActiveView = PanelManager.ViewKind.Game;
     }
-    private void OnStartBtnClick()
+    private void NewGameInvoke()
     {
         LevelSelectPanel.SetActive(true);
     }
+    private void ContinueInvoke()
+    {
+        switch (DataInstance.CurrentLevel)
+        {
+            case 1:
+                PanelManager.Instance.ActiveView = PanelManager.ViewKind.Game;
+                break;
+        }
+    }
 }
-    

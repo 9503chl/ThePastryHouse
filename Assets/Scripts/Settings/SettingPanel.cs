@@ -6,10 +6,12 @@ using UnityEngine.UI;
 public class SettingPanel : MonoBehaviour
 {
     private GameSetting gameSetting;
-    public GameObject Panel;
+    public GameObject BackToMenuPanel, BackToWindowPanel;
     public Slider BGMSlider;
     public Slider EffectSlider;
     public Slider GammaSlider;
+
+    public Button BackToMenuBtn, YesBackToMenuBtn, YesBackToWindowBtn;
 
     private static SettingPanel instance;
     public static SettingPanel Instance { 
@@ -38,13 +40,33 @@ public class SettingPanel : MonoBehaviour
         EffectSlider.onValueChanged.AddListener(delegate { gameSetting.EffectVolunmChange(EffectSlider.value); });
         GammaSlider.onValueChanged.AddListener(delegate { gameSetting.GammaChange(GammaSlider.value); });
 
-        BGMSlider.value = gameSetting.options.BGMVolumn;
-        EffectSlider.value = gameSetting.options.EffectVolumn;
-        GammaSlider.value = gameSetting.options.Gamma;
+        YesBackToMenuBtn.onClick.AddListener(delegate
+        {
+            gameSetting.SaveToInstance();
+            PanelManager.Instance.ActiveView = PanelManager.ViewKind.Title;
+            gameObject.SetActive(false);
+        });
+
+        YesBackToWindowBtn.onClick.AddListener(delegate
+        {
+            gameSetting.SaveToInstance();
+            Application.Quit();
+        });
+        gameObject.SetActive(false);
+    }
+    private void OnApplicationQuit()// 강제종료시도 저장
+    {
+        gameSetting.SaveToInstance();
     }
     void OnEnable()
     {
         Time.timeScale = 0;
+        BackToMenuPanel.SetActive(false);
+        BackToWindowPanel.SetActive(false);
+
+        BGMSlider.value = gameSetting.options.BGMVolumn;
+        EffectSlider.value = gameSetting.options.EffectVolumn;
+        GammaSlider.value = gameSetting.options.Gamma;
     }
     void OnDisable()
     {
