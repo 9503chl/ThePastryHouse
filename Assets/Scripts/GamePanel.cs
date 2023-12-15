@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class GamePanel : View
 {
     public string TagName;
+
+    public Transform ObstacleTarget;
     void Awake()
     {
         OnBeforeShow += GamePanel_OnBeforeShow;
@@ -17,6 +19,7 @@ public class GamePanel : View
         if(PlayerInput.BaseInputInstance.Player != null)
         {
             PlayerInput.PlayerInputInstance.PlayerComponent = PlayerInput.PlayerInputInstance.Player.GetComponent<Player>();
-        } 
+        }
+        MapManager.Instance.CreateMap(ObstacleTarget);
     }
 }

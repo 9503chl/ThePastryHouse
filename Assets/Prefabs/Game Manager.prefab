@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Player: {fileID: 0}
+  PlayerComponent: {fileID: 0}
 --- !u!1 &2008416756
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,7 +256,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3880582237909972649}
-  - component: {fileID: 1483481617}
   m_Layer: 0
   m_Name: Pool Manager
   m_TagString: Untagged
@@ -278,20 +278,6 @@ Transform:
   m_Father: {fileID: 116408843428226716}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1483481617
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4950619079761964949}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c31e21d160632d247b1b8e63fabe26b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CircleCapacity: 0
-  CirclePoolSize: 0
 --- !u!1 &5433319565682629688
 GameObject:
   m_ObjectHideFlags: 0
@@ -381,7 +367,7 @@ GameObject:
   - component: {fileID: 8301484181577757698}
   - component: {fileID: 7619038479530736083}
   m_Layer: 0
-  m_Name: Canvas
+  m_Name: Overlay Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -428,7 +414,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 3
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!114 &8301484181577757698
 MonoBehaviour:
@@ -477,6 +463,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8249209932000648771}
     m_Modifications:
+    - target: {fileID: 267029706, guid: 34897384111963144ae1e59d17f661a6, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -400
+      objectReference: {fileID: 0}
     - target: {fileID: 489716978, guid: 34897384111963144ae1e59d17f661a6, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -714,6 +704,11 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8087915167411927322, guid: 34897384111963144ae1e59d17f661a6,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 8087915167553421606, guid: 34897384111963144ae1e59d17f661a6,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -728,6 +723,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMin.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8087915167703259315, guid: 34897384111963144ae1e59d17f661a6,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 452.5
       objectReference: {fileID: 0}
     - target: {fileID: 8087915168132553711, guid: 34897384111963144ae1e59d17f661a6,
         type: 3}

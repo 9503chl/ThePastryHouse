@@ -3,18 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEditor;
+
 public class PoolManager : MonoBehaviour
 {
     public static PoolManager Instance;
 
-    public int CircleCapacity;
-    public int CirclePoolSize;
+    public int CubeCapacity;
+    public int CubePoolSize;
 
-    private GameObject CirclePrefab;
+    public int CylinderCapacity;
+    public int CylinderPoolSize;
 
-    public IObjectPool<GameObject> CirclePool { get; private set; }
-    public IObjectPool<GameObject> PaperLeftPool { get; private set; }
-    public IObjectPool<GameObject> PaperRightPool { get; private set; }
+    public GameObject CubePrefab;
+    public GameObject CylinderPrefab;
+
+    public IObjectPool<GameObject> CubePool { get; private set; }
+    public IObjectPool<GameObject> CylinderPool { get; private set; }
 
     private void Awake()
     {
@@ -23,19 +27,28 @@ public class PoolManager : MonoBehaviour
         else
             Destroy(this.gameObject);
         Init();
-        Application.targetFrameRate = 60;
     }
 
     private void Init()
     {
-        CirclePool = new ObjectPool<GameObject>(CreateCircleItem, OnTakeFromPoolCircle, OnReturnedToPool_Sphere,
-        OnDestroyPoolObject, true, CircleCapacity, CirclePoolSize);
+        CubePool = new ObjectPool<GameObject>(CreateCircleItem, OnTakeFromPool, OnReturnedToPool,
+        OnDestroyPoolObject, true, CubeCapacity, CubePoolSize);
+
+        CylinderPool = new ObjectPool<GameObject>(CreateCircleItem, OnTakeFromPool, OnReturnedToPool,
+        OnDestroyPoolObject, true, CubeCapacity, CubePoolSize);
 
         // 미리 오브젝트 생성 해놓기
-        for (int i = 0; i < CircleCapacity; i++)
+        for (int i = 0; i < CubeCapacity; i++)
         {
-            GameObject circle = CreateCircleItem();
-            CirclePool.Release(circle.gameObject);
+            GameObject Box = CreateCircleItem();
+            CubePool.Release(Box.gameObject);
+        }
+
+
+        for (int i = 0; i < CylinderCapacity; i++)
+        {
+            GameObject Cylinder = CreateCircleItem();
+            CylinderPool.Release(Cylinder.gameObject);
         }
     }
 
@@ -43,19 +56,19 @@ public class PoolManager : MonoBehaviour
     // 생성
     private GameObject CreateCircleItem()
     {
-        GameObject poolGo = Instantiate(CirclePrefab);
+        GameObject poolGo = Instantiate(CubePrefab);
         return poolGo;
     }
 
-    private void OnTakeFromPoolCircle(GameObject poolGo)
+    private void OnTakeFromPool(GameObject poolGo)
     {
-
+            
     }
     
     // 반환
-    private void OnReturnedToPool_Sphere(GameObject poolGo)
+    private void OnReturnedToPool(GameObject poolGo)
     {
-        poolGo.transform.localPosition = Vector3.left * 2000;
+        poolGo.transform.localPosition = Vector3.left * 3000;
     }
     // 삭제
     private void OnDestroyPoolObject(GameObject poolGo)

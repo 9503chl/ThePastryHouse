@@ -34,7 +34,7 @@ public class SettingPanel : MonoBehaviour
     {
         instance = this;
 
-        gameSetting = FindObjectOfType<GameSetting>();
+        gameSetting = GameSetting.Instance;
 
         BGMSlider.onValueChanged.AddListener(delegate { gameSetting.BGMVolunmChange(BGMSlider.value); });
         EffectSlider.onValueChanged.AddListener(delegate { gameSetting.EffectVolunmChange(EffectSlider.value); });
