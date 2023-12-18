@@ -20,6 +20,7 @@ public class GamePanel : View
         {
             PlayerInput.PlayerInputInstance.PlayerComponent = PlayerInput.PlayerInputInstance.Player.GetComponent<Player>();
         }
+        WaitingManager.Instance.NeedWaiting();
         MapManager.Instance.CreateMap(ObstacleTarget);
     }
 }

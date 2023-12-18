@@ -32,6 +32,9 @@ public class MapManager : MonoBehaviour
 
         CylinderCount = PoolManager.Instance.CylinderPoolSize;
         CubeCount = PoolManager.Instance.CubePoolSize;
+
+        boxColliders = new List<BoxCollider>();
+        capsuleColliders = new List<CapsuleCollider>();
     }
 
     public void CreateMap(Transform targetTransform)
@@ -39,9 +42,24 @@ public class MapManager : MonoBehaviour
         for (int i = 0; i < CylinderCount; i++)
         {
             prop = PoolManager.Instance.CylinderPool.Get();
-            prop.transform.parent = targetTransform;
+            prop.transform.SetParent(targetTransform);
 
-            int scaleFactor = Random.Range(0, 3);
+            int scaleFactor = Random.Range(1, 3);
+            prop.transform.localScale = Vector3.one * scaleFactor * 100;
+
+            prop.transform.localPosition = new Vector3(Random.Range(MinX, MaxX), Random.Range(MinY, MaxY), scaleFactor * -100);//Z 값은 피봇 대신 쓰는거.
+
+            propCapsureCollider = prop.GetComponent<CapsuleCollider>();
+            propCapsureCollider.radius *= 2;
+            capsuleColliders.Add(propCapsureCollider);
+        }
+
+        for (int i = 0; i < CubeCount; i++)
+        {
+            prop = PoolManager.Instance.CubePool.Get();
+            prop.transform.SetParent(targetTransform);
+
+            int scaleFactor = Random.Range(1, 3);
             prop.transform.localScale = Vector3.one * scaleFactor * 100;
 
             prop.transform.localPosition = new Vector3(Random.Range(MinX, MaxX), Random.Range(MinY, MaxY), scaleFactor * -50);//Z 값은 피봇 대신 쓰는거.
@@ -49,21 +67,6 @@ public class MapManager : MonoBehaviour
             propBoxCollider = prop.GetComponent<BoxCollider>();
             propBoxCollider.size *= 2;
             boxColliders.Add(propBoxCollider);
-        }
-
-        for (int i = 0; i < CubeCount; i++)
-        {
-            prop = PoolManager.Instance.CubePool.Get();
-            prop.transform.parent = targetTransform;
-
-            int scaleFactor = Random.Range(0, 3);
-            prop.transform.localScale = Vector3.one * scaleFactor;
-
-            prop.transform.localPosition = new Vector3(Random.Range(MinX, MaxX), Random.Range(MinY, MaxY), scaleFactor * -50);//Z 값은 피봇 대신 쓰는거.
-
-            propCapsureCollider = prop.GetComponent<CapsuleCollider>();
-            propCapsureCollider.radius *= 2;
-            capsuleColliders.Add(propCapsureCollider);
         }
     }
     public void ColliderReset()

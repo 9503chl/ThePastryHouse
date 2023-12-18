@@ -16,6 +16,13 @@ public class WaitingManager : MonoBehaviour
 
     private float currentTime;
 
+    public int dotSpeed;
+
+    public string FirstMainText;
+    public string SecondMainText;
+
+    private string[] dotTexts = new string[4] { "" , "." , ".." , "..."};
+
     private void Awake()
     {
         Instance = this;
@@ -24,14 +31,32 @@ public class WaitingManager : MonoBehaviour
     public void NeedWaiting()
     {
         ProgressiveImage.fillAmount = 0;
+        currentTime = 0;
+        Time.timeScale = 0f;
         StartCoroutine(WaitingCor());
     }
     IEnumerator WaitingCor()
     {
-        while (currentTime > 0)
+        WaitingBG.SetActive(true);
+        int whileCnt = 0;
+        int dotCnt = 0;
+        while (currentTime < 2)
         {
-
+            currentTime += Time.unscaledDeltaTime;
+            if (whileCnt == 0) dotCnt++;
+            if(currentTime < 1)
+                MainText.text = string.Format("{0}{1}", FirstMainText, dotTexts[dotCnt % 4]);
+            else
+                MainText.text = string.Format("{0}{1}", SecondMainText, dotTexts[dotCnt % 4]);
+            whileCnt++;
+            whileCnt %= dotSpeed;
+            ProgressiveImage.fillAmount = currentTime / 2;
+            PercentText.text = string.Format("{0}%", (currentTime * 50).ToString("F0"));
+            yield return new WaitForSecondsRealtime(Time.unscaledDeltaTime);
         }
-        yield return null;
+        ProgressiveImage.fillAmount = 1;
+        WaitingBG.SetActive(false);
+        currentTime = 0;
+        Time.timeScale = 1;
     }
 }
