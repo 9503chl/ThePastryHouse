@@ -25,7 +25,9 @@ public class SaveData : ScriptableObject
 
     public DateTime LastPlayTime;
 
-    public void DataReset()
+    public MissionLevel Difficulty;
+
+public void DataReset()
     {
         IsFirst = true;
 

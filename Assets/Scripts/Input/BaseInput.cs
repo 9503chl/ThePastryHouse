@@ -26,7 +26,14 @@ public class BaseInput : MonoBehaviour
     {
         EnableOn();
     }
+    private void FixedUpdate()
+    {
+        OnFixedUpdate();
+    }
+    public virtual void OnFixedUpdate()
+    {
 
+    }
     public virtual void OnUpdate()
     {
 

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64c8af3eb5833f6488e47af188c44bb3, type: 3}
   m_Name: New Save Data
   m_EditorClassIdentifier: 
-  IsFirst: 1
+  IsFirst: 0
   CurrentLevel: 0
   ARemainCount: 0
   RemainSnackCount: 0
@@ -22,3 +22,4 @@ MonoBehaviour:
   SnackPositions: []
   CylinderPosAndSizes: []
   BoxPosAndSizes: []
+  Difficulty: 1

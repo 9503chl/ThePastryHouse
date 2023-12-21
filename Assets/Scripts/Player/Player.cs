@@ -15,4 +15,9 @@ public class Player : Creature
         HP = missionData.PlayerMaxHP;
         Speed = missionData.PlayerSpeed;
     }
+    public override void CollisionEnterOn()
+    {
+        base.CollisionEnterOn();
+        Debug.Log(transform.name + "is Enter Collision");
+    }
 }

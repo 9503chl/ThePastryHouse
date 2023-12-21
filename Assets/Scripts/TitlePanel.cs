@@ -28,6 +28,7 @@ public class TitlePanel : View
         PanelExitBtn.onClick.AddListener(delegate
         {
             LevelSelectPanel.SetActive(false);
+            PlayerInput.PlayerInputInstance.isEscapeOK = true;
         });
 
         LevelSelectGroup.onClick.AddListener(delegate { LevelSelect(LevelSelectGroup); });
@@ -54,6 +55,7 @@ public class TitlePanel : View
 
         DataInstance.DataReset();
         DataInstance.CurrentLevel = 1;
+        DataInstance.Difficulty = (MissionLevel)buttonGroup.SelectedIndex;
 
         GameSetting.Instance.CurrentSaveData = DataInstance;
         PanelManager.Instance.ActiveView = PanelManager.ViewKind.Game;
@@ -61,9 +63,14 @@ public class TitlePanel : View
     private void NewGameInvoke()
     {
         LevelSelectPanel.SetActive(true);
+
+        PlayerInput.PlayerInputInstance.isEscapeOK = false;
     }
     private void ContinueInvoke()
     {
+
+        GameSetting.Instance.CurrentMissionData = MissionDatas[(int)DataInstance.Difficulty];
+
         switch (DataInstance.CurrentLevel)
         {
             case 1:

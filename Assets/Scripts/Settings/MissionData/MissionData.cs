@@ -4,7 +4,6 @@ using UnityEngine;
 
 public enum MissionLevel
 {
-    None,
     Easy,
     Normal,
     Hard

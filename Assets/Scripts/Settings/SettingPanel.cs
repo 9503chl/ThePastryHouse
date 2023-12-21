@@ -54,15 +54,15 @@ public class SettingPanel : MonoBehaviour
         });
         gameObject.SetActive(false);
     }
-    private void OnApplicationQuit()// 강제종료시도 저장
-    {
-        gameSetting.SaveToInstance();
-    }
     void OnEnable()
     {
         Time.timeScale = 0;
         BackToMenuPanel.SetActive(false);
         BackToWindowPanel.SetActive(false);
+        if (PanelManager.Instance.ActiveView == PanelManager.ViewKind.Title)
+            BackToMenuBtn.interactable = false;
+        else
+            BackToMenuBtn.interactable = true;
 
         BGMSlider.value = gameSetting.options.BGMVolumn;
         EffectSlider.value = gameSetting.options.EffectVolumn;

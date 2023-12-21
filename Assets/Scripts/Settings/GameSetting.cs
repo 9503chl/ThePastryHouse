@@ -43,7 +43,9 @@ public class GameSetting : MonoBehaviour
     }
 
     public SaveData CurrentSaveData;
+
     public GameData CurrentGameData;//구조체로 현재 정보 갖고 있다가 저장시 옮기기.
+
     public MissionData CurrentMissionData;
     public MissionLevel CurrentMissionLevel;
  
@@ -96,21 +98,32 @@ public class GameSetting : MonoBehaviour
     }
     public void SaveToInstance()
     {
-        CurrentSaveData.IsFirst = false;
+        if (CurrentSaveData != null)
+        {
+            CurrentSaveData.IsFirst = false;
 
-        CurrentSaveData.CurrentLevel = CurrentGameData.CurrentLevel;
-        CurrentSaveData.ARemainCount = CurrentGameData.ARemainCount;
-        CurrentSaveData.RemainSnackCount= CurrentGameData.RemainSnackCount;
+            CurrentSaveData.CurrentLevel = CurrentGameData.CurrentLevel;
+            CurrentSaveData.ARemainCount = CurrentGameData.ARemainCount;
+            CurrentSaveData.RemainSnackCount = CurrentGameData.RemainSnackCount;
 
-        CurrentSaveData.RemainPlayerHP = CurrentGameData.RemainPlayerHP;
-        CurrentSaveData.ARemainHPs = CurrentGameData.ARemainHPs;
+            CurrentSaveData.RemainPlayerHP = CurrentGameData.RemainPlayerHP;
+            CurrentSaveData.ARemainHPs = CurrentGameData.ARemainHPs;
 
-        CurrentSaveData.PlayerLastPosition= CurrentGameData.PlayerLastPosition;
-        CurrentSaveData.SnackPositions = CurrentGameData.SnackPositions;
+            CurrentSaveData.PlayerLastPosition = CurrentGameData.PlayerLastPosition;
+            CurrentSaveData.SnackPositions = CurrentGameData.SnackPositions;
 
-        CurrentSaveData.CylinderPosAndSizes= CurrentGameData.CylinderPosAndSizes;
-        CurrentSaveData.BoxPosAndSizes= CurrentGameData.BoxPosAndSizes;
+            CurrentSaveData.CylinderPosAndSizes = CurrentGameData.CylinderPosAndSizes;
+            CurrentSaveData.BoxPosAndSizes = CurrentGameData.BoxPosAndSizes;
 
-        CurrentSaveData.LastPlayTime = DateTime.Now;
+            CurrentSaveData.LastPlayTime = DateTime.Now;
+        }
+        else
+        {
+            Debug.Log("SaveData is empty");
+        }
+    }
+    private void OnApplicationQuit()// 강제종료시도 저장
+    {
+        SaveToInstance();
     }
 }

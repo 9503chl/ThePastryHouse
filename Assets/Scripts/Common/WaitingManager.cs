@@ -38,6 +38,7 @@ public class WaitingManager : MonoBehaviour
     IEnumerator WaitingCor()
     {
         WaitingBG.SetActive(true);
+        PlayerInput.PlayerInputInstance.isEscapeOK = false;
         int whileCnt = 0;
         int dotCnt = 0;
         while (currentTime < 2)
@@ -57,6 +58,7 @@ public class WaitingManager : MonoBehaviour
         ProgressiveImage.fillAmount = 1;
         WaitingBG.SetActive(false);
         currentTime = 0;
+        PlayerInput.PlayerInputInstance.isEscapeOK = true;
         Time.timeScale = 1;
     }
 }
