@@ -5,8 +5,19 @@ using UnityEngine;
 public class Creature : MonoBehaviour
 {
     public float HP;
+
     public float Speed;
 
+    public float CurrentHP;
+
+    public float Damage;
+
+    public SpriteRenderer m_Sprite;
+
+    private void Reset()
+    {
+        OnReset();
+    }
     void Start()
     {
         OnStart();
@@ -29,21 +40,25 @@ public class Creature : MonoBehaviour
     {
         DisableOn();
     }
-    void OnTriggerEnter()
+    private void OnCollisionEnter(Collision collision)
     {
-        TriggerEnterOn();
+        CollisionEnterOn(collision);
     }
-    void OnTriggerExit()
+    private void OnCollisionExit(Collision collision)
     {
-        TriggerExitOn();
+        CollisionExitOn(collision);
     }
-    void OnCollisionEnter()
+    private void OnTriggerEnter(Collider collider)
     {
-        CollisionEnterOn();
+        TriggerEnterOn(collider);
     }
-    void OnCollsionExit()
+    private void OnTriggerExit(Collider collider)
     {
-        CollisionExitOn();
+        TriggerExitOn(collider);
+    }
+    public virtual void OnReset()
+    {
+
     }
     public virtual void OnAwake()
     {
@@ -66,19 +81,19 @@ public class Creature : MonoBehaviour
     {
 
     }
-    public virtual void TriggerEnterOn()
+    public virtual void TriggerEnterOn(Collider collider)
     {
 
     }
-    public virtual void TriggerExitOn()
+    public virtual void TriggerExitOn(Collider collider)
     {
 
     }
-    public virtual void CollisionEnterOn()
+    public virtual void CollisionEnterOn(Collision collision)
     {
 
     }
-    public virtual void CollisionExitOn()
+    public virtual void CollisionExitOn(Collision collision)
     {
 
     }

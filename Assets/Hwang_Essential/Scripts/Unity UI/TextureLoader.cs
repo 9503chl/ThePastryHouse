@@ -116,7 +116,7 @@ namespace UnityEngine.UI
                 {
                     if (assetPath.Length >= ResourcesPath.Length && string.Compare(assetPath.Substring(0, ResourcesPath.Length), ResourcesPath, true) == 0)
                     {
-                        fileName = Path.ChangeExtension(assetPath.Substring(ResourcesPath.Length, assetPath.Length - ResourcesPath.Length - 1), null);
+                        fileName = System.IO.Path.ChangeExtension(assetPath.Substring(ResourcesPath.Length, assetPath.Length - ResourcesPath.Length - 1), null);
                         string[] parts = fileName.Split('/');
                         if (parts.Length > 1)
                         {

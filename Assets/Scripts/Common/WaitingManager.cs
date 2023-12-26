@@ -20,6 +20,7 @@ public class WaitingManager : MonoBehaviour
 
     public string FirstMainText;
     public string SecondMainText;
+    public string ThirdMainText;
 
     private string[] dotTexts = new string[4] { "" , "." , ".." , "..."};
 
@@ -32,7 +33,7 @@ public class WaitingManager : MonoBehaviour
     {
         ProgressiveImage.fillAmount = 0;
         currentTime = 0;
-        Time.timeScale = 0f;
+        Time.timeScale = 0f;//이거 왜 하는거지.
         StartCoroutine(WaitingCor());
     }
     IEnumerator WaitingCor()
@@ -41,18 +42,20 @@ public class WaitingManager : MonoBehaviour
         PlayerInput.PlayerInputInstance.isEscapeOK = false;
         int whileCnt = 0;
         int dotCnt = 0;
-        while (currentTime < 2)
+        while (currentTime < 3.5f)
         {
             currentTime += Time.unscaledDeltaTime;
             if (whileCnt == 0) dotCnt++;
             if(currentTime < 1)
                 MainText.text = string.Format("{0}{1}", FirstMainText, dotTexts[dotCnt % 4]);
-            else
+            else if(currentTime < 2) 
                 MainText.text = string.Format("{0}{1}", SecondMainText, dotTexts[dotCnt % 4]);
+            else
+                MainText.text = string.Format("{0}{1}", ThirdMainText, dotTexts[dotCnt % 4]);
             whileCnt++;
             whileCnt %= dotSpeed;
-            ProgressiveImage.fillAmount = currentTime / 2;
-            PercentText.text = string.Format("{0}%", (currentTime * 50).ToString("F0"));
+            ProgressiveImage.fillAmount = currentTime / 3.5f;
+            PercentText.text = string.Format("{0}%", (currentTime * 100 / 3.5f).ToString("F0"));
             yield return new WaitForSecondsRealtime(Time.unscaledDeltaTime);
         }
         ProgressiveImage.fillAmount = 1;

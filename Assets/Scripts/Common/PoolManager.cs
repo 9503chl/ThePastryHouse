@@ -14,14 +14,19 @@ public class PoolManager : MonoBehaviour
     public int CircleCapacity;
     public int CirclePoolSize;
 
+    public int EnemyCapacity;
+    public int EnemyPoolSize;
+
     public GameObject BoxPrefab;
     public GameObject CirclePrefab;
+    public GameObject EnemyPrefab;
 
     public Transform ObjectTf;
 
-
     public IObjectPool<GameObject> BoxPool { get; private set; }
     public IObjectPool<GameObject> CirclePool { get; private set; }
+    public IObjectPool<GameObject> EnemyPool { get; private set; }
+
 
     private void Awake()
     {
@@ -34,37 +39,52 @@ public class PoolManager : MonoBehaviour
 
     private void Init()
     {
-        BoxPool = new ObjectPool<GameObject>(CreateCircleItem_Box, OnTakeFromPool, OnReturnedToPool,
+        BoxPool = new ObjectPool<GameObject>(CreateBox, OnTakeFromPool, OnReturnedToPool,
         OnDestroyPoolObject, true, BoxCapacity, BoxPoolSize);
 
-        CirclePool = new ObjectPool<GameObject>(CreateCircleItem_Circle, OnTakeFromPool, OnReturnedToPool,
-        OnDestroyPoolObject, true, BoxCapacity, BoxPoolSize);
+        CirclePool = new ObjectPool<GameObject>(CreateCircle, OnTakeFromPool, OnReturnedToPool,
+        OnDestroyPoolObject, true, CircleCapacity, CirclePoolSize);
+
+        EnemyPool = new ObjectPool<GameObject>(CreateEnemy, OnTakeFromPool, OnReturnedToPool,
+     OnDestroyPoolObject, true, EnemyCapacity, EnemyPoolSize);
+
 
         // 미리 오브젝트 생성 해놓기
         for (int i = 0; i < BoxCapacity; i++)
         {
-            GameObject Box = CreateCircleItem_Box();
-            BoxPool.Release(Box.gameObject);
+            GameObject Box = CreateBox();
+            BoxPool.Release(Box);
         }
 
 
         for (int i = 0; i < CircleCapacity; i++)
         {
-            GameObject Circle = CreateCircleItem_Circle();
-            CirclePool.Release(Circle.gameObject);
+            GameObject Circle = CreateCircle();
+            CirclePool.Release(Circle);
+        }
+
+        for (int i = 0; i < EnemyCapacity; i++)
+        {
+            GameObject Enemy = CreateEnemy();
+            EnemyPool.Release(Enemy);
         }
     }
 
 
     // 생성
-    private GameObject CreateCircleItem_Box()
+    private GameObject CreateBox()
     {
         GameObject poolGo = Instantiate(BoxPrefab, ObjectTf);
         return poolGo;
     }
-    private GameObject CreateCircleItem_Circle()
+    private GameObject CreateCircle()
     {
         GameObject poolGo = Instantiate(CirclePrefab, ObjectTf);
+        return poolGo;
+    }
+    private GameObject CreateEnemy()
+    {
+        GameObject poolGo = Instantiate(EnemyPrefab, ObjectTf);
         return poolGo;
     }
 
@@ -81,6 +101,6 @@ public class PoolManager : MonoBehaviour
     // 삭제
     private void OnDestroyPoolObject(GameObject poolGo)
     {
-        Destroy(poolGo);
+        //Destroy(poolGo);
     }
 }

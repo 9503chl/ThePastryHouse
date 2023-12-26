@@ -18,7 +18,7 @@ namespace UnityEngine.UI
                 return;
             }
 
-            string screenshotPath = Path.GetDirectoryName(saver.GetScreenshotPath());
+            string screenshotPath = System.IO.Path.GetDirectoryName(saver.GetScreenshotPath());
 
             // Add a button to save screenshot in editor
             GUILayout.Space(10);

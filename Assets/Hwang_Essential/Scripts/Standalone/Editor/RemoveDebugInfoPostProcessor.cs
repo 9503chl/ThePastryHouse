@@ -9,8 +9,8 @@ public class RemoveDebugInfoPostProcessor
     [PostProcessBuild]
     private static void OnPostProcessBuild(BuildTarget target, string path)
     {
-        string buildPath = Path.GetDirectoryName(path);
-        string burstDebugInformationPath = Path.Combine(buildPath, string.Format("{0}_BurstDebugInformation_DoNotShip", Application.productName));
+        string buildPath = System.IO.Path.GetDirectoryName(path);
+        string burstDebugInformationPath = System.IO.Path.Combine(buildPath, string.Format("{0}_BurstDebugInformation_DoNotShip", Application.productName));
         if (Directory.Exists(burstDebugInformationPath))
         {
             try
@@ -23,7 +23,7 @@ public class RemoveDebugInfoPostProcessor
                 Debug.LogError(string.Format("Failed to delete Burst debug information : {0]", ex));
             }
         }
-        string il2cppDebugInformationPath = Path.Combine(buildPath, string.Format("{0}_BackUpThisFolder_ButDontShipItWithYourGame", Application.productName));
+        string il2cppDebugInformationPath = System.IO.Path.Combine(buildPath, string.Format("{0}_BackUpThisFolder_ButDontShipItWithYourGame", Application.productName));
         if (Directory.Exists(il2cppDebugInformationPath))
         {
             try

@@ -7,7 +7,7 @@ public class GamePanel : View
 {
     public string TagName;
 
-    public Transform ObstacleTarget;
+    public Transform ObjectTarget;
     void Awake()
     {
         OnBeforeShow += GamePanel_OnBeforeShow;
@@ -16,11 +16,14 @@ public class GamePanel : View
     private void GamePanel_OnBeforeShow()
     {
         PlayerInput.BaseInputInstance.Player = GameObject.FindGameObjectWithTag(TagName);
+
         if(PlayerInput.BaseInputInstance.Player != null)
         {
             PlayerInput.PlayerInputInstance.PlayerComponent = PlayerInput.PlayerInputInstance.Player.GetComponent<Player>();
+            PlayerInput.PlayerInputInstance.CharRigidbody = PlayerInput.BaseInputInstance.Player.GetComponent<Rigidbody>();
         }
         WaitingManager.Instance.NeedWaiting();
-        MapManager.Instance.CreateMap(ObstacleTarget);
+        MapManager.Instance.CreateMap(ObjectTarget);
+        EnemyManager.Instance.EnemyCreate(ObjectTarget);
     }
 }

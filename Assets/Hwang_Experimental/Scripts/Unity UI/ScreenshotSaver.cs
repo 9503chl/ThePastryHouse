@@ -133,7 +133,7 @@ namespace UnityEngine
         public string GetScreenshotPath()
         {
 #if UNITY_EDITOR || UNITY_STANDALONE
-            string dir = Path.GetDirectoryName(Path.GetDirectoryName(Application.streamingAssetsPath)).Replace('\\', '/');
+            string dir = System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(Application.streamingAssetsPath)).Replace('\\', '/');
 #else
             string dir = Application.persistentDataPath;
 #endif
@@ -152,7 +152,7 @@ namespace UnityEngine
 
         public void SaveScreenshot(string path)
         {
-            string dir = Path.GetDirectoryName(path);
+            string dir = System.IO.Path.GetDirectoryName(path);
             if (!Directory.Exists(dir))
             {
                 try

@@ -12,7 +12,7 @@ public class PlayerInput : BaseInput
 
     public bool isEscapeOK = true;
 
-    private float h, v;
+    public Rigidbody CharRigidbody;//이걸로 이동해보자.
 
     private Camera mainCamera;
     public override void OnUpdate()
@@ -22,10 +22,11 @@ public class PlayerInput : BaseInput
         if (Player != null)//아직 화면 벗어나기 설정안함
         {
             mainCamera.transform.position = new Vector3(Player.transform.position.x, Player.transform.position.y, 0);
-            if (Input.GetKey(KeyCode.W)) Player.transform.Translate(0, PlayerComponent.Speed * Time.deltaTime * BaseSpeed, 0);
-            if (Input.GetKey(KeyCode.S)) Player.transform.Translate(0, -PlayerComponent.Speed * Time.deltaTime * BaseSpeed, 0);
-            if (Input.GetKey(KeyCode.A)) Player.transform.Translate(-PlayerComponent.Speed * Time.deltaTime * BaseSpeed, 0, 0);
-            if (Input.GetKey(KeyCode.D)) Player.transform.Translate(PlayerComponent.Speed * Time.deltaTime * BaseSpeed, 0, 0);
+
+            if (Input.GetKey(KeyCode.W)) CharRigidbody.AddForce(new Vector3(0, PlayerComponent.Speed * Time.deltaTime * BaseSpeed, 0), ForceMode.VelocityChange);
+            if (Input.GetKey(KeyCode.S)) CharRigidbody.AddForce(new Vector3(0, -PlayerComponent.Speed * Time.deltaTime * BaseSpeed, 0), ForceMode.VelocityChange);
+            if (Input.GetKey(KeyCode.A)) CharRigidbody.AddForce(new Vector3(-PlayerComponent.Speed * Time.deltaTime * BaseSpeed, 0, 0), ForceMode.VelocityChange);
+            if (Input.GetKey(KeyCode.D)) CharRigidbody.AddForce(new Vector3(PlayerComponent.Speed * Time.deltaTime * BaseSpeed, 0, 0), ForceMode.VelocityChange);
         }
         #endregion
 
