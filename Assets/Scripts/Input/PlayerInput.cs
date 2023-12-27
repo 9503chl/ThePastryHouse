@@ -21,7 +21,7 @@ public class PlayerInput : BaseInput
         #region 캐릭터 상호작용
         if (Player != null)//아직 화면 벗어나기 설정안함
         {
-            mainCamera.transform.position = new Vector3(Player.transform.position.x, Player.transform.position.y, 0);
+            mainCamera.transform.position = new Vector3(Player.transform.position.x, Player.transform.position.y, mainCamera.transform.position.z);
 
             if (Input.GetKey(KeyCode.W)) CharRigidbody.AddForce(new Vector3(0, PlayerComponent.Speed * Time.deltaTime * BaseSpeed, 0), ForceMode.VelocityChange);
             if (Input.GetKey(KeyCode.S)) CharRigidbody.AddForce(new Vector3(0, -PlayerComponent.Speed * Time.deltaTime * BaseSpeed, 0), ForceMode.VelocityChange);

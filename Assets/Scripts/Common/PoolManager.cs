@@ -23,6 +23,10 @@ public class PoolManager : MonoBehaviour
 
     public Transform ObjectTf;
 
+    private Enemy enemyProp;
+    private Unit unitProp;
+
+
     public IObjectPool<GameObject> BoxPool { get; private set; }
     public IObjectPool<GameObject> CirclePool { get; private set; }
     public IObjectPool<GameObject> EnemyPool { get; private set; }
@@ -96,7 +100,20 @@ public class PoolManager : MonoBehaviour
     // 반환
     private void OnReturnedToPool(GameObject poolGo)
     {
-        poolGo.transform.localPosition = Vector3.left * 5000;//화면 밖으로
+        poolGo.transform.SetParent(ObjectTf);
+
+        enemyProp = poolGo.GetComponent<Enemy>();
+        if(enemyProp != null )
+        {
+            enemyProp.enabled = false;
+            enemyProp.FullHP();
+        }
+
+        unitProp= poolGo.GetComponent<Unit>();
+        if(unitProp != null)
+        {
+            unitProp.enabled = false;
+        }
     }
     // 삭제
     private void OnDestroyPoolObject(GameObject poolGo)

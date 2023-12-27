@@ -8,7 +8,7 @@ public class Unit : MonoBehaviour
     public const float minPathUpdateTime = 0.2f;
     public const float pathUpdateThreshold = 0.5f;
 
-    public Vector3 target;
+    public Transform target;
     public float speed = 5f;
     public float turnSpeed = 3f;
     public float turnDist = 5f;
@@ -17,7 +17,6 @@ public class Unit : MonoBehaviour
     private void Start()
     {
         StartCoroutine(updatePath());
-        target = transform.position;
 
         // Use this if you want to search path only once in the beginning
         //PathRequestManager.requestPath(new pathRequest(transform.position, target.position, OnPathFound));
@@ -99,19 +98,22 @@ public class Unit : MonoBehaviour
             yield return new WaitForSeconds(0.3f);
         }
 #endif
-        PathRequestManager.requestPath(new pathRequest(transform.position, target, OnPathFound));
-
-        float pathUpdateThresholdSqr = pathUpdateThreshold * pathUpdateThreshold;
-        Vector3 targetPosOld = target;
-
-        while (true)
+        if (target != null)
         {
-            yield return new WaitForSeconds(minPathUpdateTime);
+            PathRequestManager.requestPath(new pathRequest(transform.position, target.position, OnPathFound));
 
-            if ((target - targetPosOld).sqrMagnitude > pathUpdateThresholdSqr)
+            float pathUpdateThresholdSqr = pathUpdateThreshold * pathUpdateThreshold;
+            Vector3 targetPosOld = target.position;
+
+            while (true)
             {
-                PathRequestManager.requestPath(new pathRequest(transform.position, target, OnPathFound));
-                targetPosOld = target;
+                yield return new WaitForSeconds(minPathUpdateTime);
+
+                if ((target.position - targetPosOld).sqrMagnitude > pathUpdateThresholdSqr)
+                {
+                    PathRequestManager.requestPath(new pathRequest(transform.position, target.position, OnPathFound));
+                    targetPosOld = target.position;
+                }
             }
         }
     }

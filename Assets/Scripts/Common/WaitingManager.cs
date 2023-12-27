@@ -63,5 +63,6 @@ public class WaitingManager : MonoBehaviour
         currentTime = 0;
         PlayerInput.PlayerInputInstance.isEscapeOK = true;
         Time.timeScale = 1;
+        EnemyManager.Instance.EnemyComponentOn();
     }
 }

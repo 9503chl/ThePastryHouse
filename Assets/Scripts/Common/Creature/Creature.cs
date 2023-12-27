@@ -48,6 +48,10 @@ public class Creature : MonoBehaviour
     {
         CollisionExitOn(collision);
     }
+    private void OnCollisionStay(Collision collision)
+    {
+        CollisionStayOn(collision);
+    }
     private void OnTriggerEnter(Collider collider)
     {
         TriggerEnterOn(collider);
@@ -55,6 +59,10 @@ public class Creature : MonoBehaviour
     private void OnTriggerExit(Collider collider)
     {
         TriggerExitOn(collider);
+    }
+    private void OnTriggerStay(Collider collider)
+    {
+        TriggerStayOn(collider);
     }
     public virtual void OnReset()
     {
@@ -89,11 +97,19 @@ public class Creature : MonoBehaviour
     {
 
     }
+    public virtual void TriggerStayOn(Collider collider)
+    {
+
+    }
     public virtual void CollisionEnterOn(Collision collision)
     {
 
     }
     public virtual void CollisionExitOn(Collision collision)
+    {
+
+    }
+    public virtual void CollisionStayOn(Collision collision)
     {
 
     }

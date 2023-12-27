@@ -14,8 +14,8 @@ public class EnemyManager : MonoBehaviour
 
     private int enemyCount;
 
-    public float MaxX;//960
-    public float MaxY;//540
+    public float MaxX;
+    public float MaxY;
 
     public float MinX;
     public float MinY;
@@ -50,7 +50,25 @@ public class EnemyManager : MonoBehaviour
             }
             enemies.Add(prop);
         }
+        EnemyComponentOff();
     }
+    public void EnemyComponentOff()
+    {
+        for(int i= 0; i< enemies.Count; i++) 
+        {
+            enemies[i].GetComponent<Unit>().enabled = false;
+            enemies[i].GetComponent<Enemy>().enabled = false;
+        }
+    }
+    public void EnemyComponentOn()
+    {
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            enemies[i].GetComponent<Unit>().enabled = true;
+            enemies[i].GetComponent<Enemy>().enabled = true;
+        }
+    }
+
     public void EnemyReset()//È¸¼ö
     {
         for (int i = 0; i < enemies.Count; i++)

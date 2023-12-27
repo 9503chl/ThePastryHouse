@@ -43,7 +43,7 @@ public class Pathfinding : MonoBehaviour
                 {
 #if UNITY_EDITOR
                     sw.Stop();
-                    print("Path found in : " + sw.ElapsedMilliseconds + " ms");
+                    //print("Path found in : " + sw.ElapsedMilliseconds + " ms");
 #endif
                     pathSuccess = true;
                     break;

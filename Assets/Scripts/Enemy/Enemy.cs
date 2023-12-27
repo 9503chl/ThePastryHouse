@@ -1,32 +1,70 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Enemy : Creature
 {
     private MissionData missionData;
 
-    private Coroutine coroutine;
+    private Coroutine trackingCor, searchingCor;
+
+    private Transform searchingTr;
 
     private Player playerProp;
 
-    private bool isHorizon;
+    private Unit unitProp;
+
+    private int randomInt;
+
+    private float MaxX = 19.2f;
+    private float MaxY = 10.8f;
+    private float MinX = -19.2f;
+    private float MinY = -10.8f;
     public override void OnStart()
     {
-        missionData = GameSetting.Instance.CurrentMissionData;
         base.OnStart();
 
+        missionData = GameSetting.Instance.CurrentMissionData;
         HP = missionData.EnemyMaxHP;
         Speed = missionData.EnemySpeed;
-        Damage = 1;
+        Damage = 1;//나중에 바꿔야함.
+    }
+    public override void OnAwake()
+    {
+        base.OnAwake();
+
+        unitProp = GetComponent<Unit>();
+        searchingTr = transform.GetChild(0);
     }
     public override void EnableOn()
     {
         base.EnableOn();
-        int random = Random.Range(0, 1);
-        isHorizon = random == 1 ? false : true;
+        FullHP();
+    }
+    public void FullHP()
+    {
         CurrentHP = HP;
     }
+    private IEnumerator Searching()
+    {
+        unitProp.target = searchingTr;
+        while (isActiveAndEnabled)
+        {
+            randomInt = Random.Range(0, 1);
+            if(randomInt == 0)
+            {
+               // if(searchingTr.transform.position.x - 50 < MaxX)
+            }
+            else
+            {
+
+            }
+            yield return new WaitForSeconds(2);
+        }
+    }
+
 
     public override void CollisionEnterOn(Collision collision)//충돌시 플레이어 따라가고
     {
@@ -40,30 +78,36 @@ public class Enemy : Creature
             }
         }
     }
-    public override void TriggerEnterOn(Collider collider)//방향 구분성이 아직 없음.
+    public override void TriggerEnterOn(Collider collider)//Stay로 해보자.
     {
         base.TriggerEnterOn(collider);
-        //StopMove();
-        //isHorizon = false;
-        //collider.enabled = false;
-        //StartMove();
-        Debug.Log("Enemy Trigger On");
-    }
-    public void StartMove()
-    {
-        coroutine = StartCoroutine(MoveAI());
-    }
-    public void StopMove()
-    {
-        if(coroutine != null) 
-            StopCoroutine(MoveAI());
-    }
-    IEnumerator MoveAI()
-    {
-        while (isActiveAndEnabled)
+        if (collider.transform.tag == "Player")
         {
-
+            if(searchingCor != null) StopCoroutine(searchingCor);
+            trackingCor = StartCoroutine(DelayTracking(collider.gameObject));
         }
-        yield return null;
+    }
+    private IEnumerator DelayTracking(GameObject playerObj)
+    {
+        gameObject.transform.LookAt(playerObj.transform.position);//한번 바라봄
+        while(isActiveAndEnabled)
+        {
+            yield return new WaitForSeconds(0.3f);
+            unitProp.target = playerObj.transform;
+            Debug.Log(playerObj.transform.position);
+        }
+    }
+    public override void TriggerExitOn(Collider collider)
+    {
+        base.TriggerExitOn(collider);
+        StartCoroutine(DelayStopTrack());
+    }
+    private IEnumerator DelayStopTrack()
+    {
+        yield return new WaitForSeconds(3);
+        if(trackingCor!= null) 
+            StopCoroutine(trackingCor);
+
+        searchingCor = StartCoroutine(Searching());
     }
 }
