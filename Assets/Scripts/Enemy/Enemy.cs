@@ -18,15 +18,14 @@ public class Enemy : Creature
 
     private IAstarAI aiProp;
 
-    private Player playerProp;
-
     private float followTime;
-    private float MaxX = 1920f;
-    private float MaxZ = 1080f;
-    private float MinX = -1920f;
-    private float MinZ = -1080f;
 
-    private Vector2 randomVec2;
+    //private float MaxX = 1920f;
+    //private float MaxZ = 1080f;
+    //private float MinX = -1920f;
+    //private float MinZ = -1080f;
+
+    //private Vector2 randomVec2;
 
     public override void OnStart()
     {
@@ -72,18 +71,6 @@ public class Enemy : Creature
         aIDestinationSetter.enabled = false;
     }
 
-    public override void CollisionEnterOn(Collision2D collision)//충돌시 플레이어 따라가고
-    {
-        base.CollisionEnterOn(collision);
-        if(collision.transform.tag == "Player")
-        {
-            playerProp = collision.transform.GetComponent<Player>();
-            if(playerProp != null )
-            {
-                playerProp.DamageCount(Damage);
-            }
-        }
-    }
     public override void TriggerEnterOn(Collider2D collider)
     {
         base.TriggerEnterOn(collider);
@@ -97,7 +84,7 @@ public class Enemy : Creature
     {
         while (isActiveAndEnabled)
         {
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(Time.deltaTime);
             childTr.position = playerObj.transform.position;
             aiProp.SearchPath();
         }

@@ -86,7 +86,7 @@ public class MapManager : MonoBehaviour
         }
         StartCoroutine(DelayReset());
     }
-    IEnumerator DelayReset()
+    IEnumerator DelayReset()//맵이 세팅되고 겹치는걸 방지해서 5초간 시간을 줌.
     {
         Time.timeScale = 5.0f;
         float time = 0.8f;

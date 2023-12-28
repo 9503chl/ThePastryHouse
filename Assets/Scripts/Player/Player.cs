@@ -8,9 +8,11 @@ public class Player : Creature
 {
     public Image DamageImage;
 
-    public float DamageInterval;
+    private float DamageInterval;
 
     private MissionData missionData;
+
+    private Enemy enemyProp;
 
     private bool isDamaged = true;
 
@@ -20,10 +22,14 @@ public class Player : Creature
         base.OnAwake();
         missionData = GameSetting.Instance.CurrentMissionData;
         m_Sprite = GetComponent<SpriteRenderer>();
-
+    }
+    public override void OnStart()
+    {
+        base.OnStart();
         HP = missionData.PlayerMaxHP;
         Speed = missionData.PlayerSpeed;
         CurrentHP = HP;
+        DamageInterval = missionData.DamageInterval;
         Damage = 1;
     }
     public override void EnableOn()
@@ -35,6 +41,18 @@ public class Player : Creature
     {
         if(isDamaged == true) 
             StartCoroutine(DamageDelay(damage));
+    }
+    public override void CollisionStayOn(Collision2D collision)
+    {
+        base.CollisionStayOn(collision);
+        if(collision.gameObject.layer != 7)//적이 맞나?
+        {
+            if (isDamaged)
+            {
+                enemyProp = collision.gameObject.GetComponent<Enemy>();
+                DamageCount(enemyProp.Damage);
+            }
+        }
     }
     IEnumerator DamageDelay(float damage)
     {

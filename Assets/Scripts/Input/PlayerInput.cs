@@ -8,11 +8,11 @@ public class PlayerInput : BaseInput
 
     public Player PlayerComponent;
 
-    public float BaseSpeed;
-
     public bool isEscapeOK = true;
 
     public Rigidbody2D CharRigidbody;//이걸로 이동해보자.
+
+    private Vector2 dir = Vector2.zero;
     
     private Camera mainCamera;
     public override void OnUpdate()
@@ -22,11 +22,7 @@ public class PlayerInput : BaseInput
         if (Player != null)//아직 화면 벗어나기 설정안함
         {
             mainCamera.transform.position = new Vector3(Player.transform.position.x, Player.transform.position.y, mainCamera.transform.position.z);
-
-            if (Input.GetKey(KeyCode.W)) CharRigidbody.AddForce(new Vector3(0, PlayerComponent.Speed * Time.deltaTime * BaseSpeed, 0));
-            if (Input.GetKey(KeyCode.S)) CharRigidbody.AddForce(new Vector3(0, -PlayerComponent.Speed * Time.deltaTime * BaseSpeed, 0));
-            if (Input.GetKey(KeyCode.A)) CharRigidbody.AddForce(new Vector3(-PlayerComponent.Speed * Time.deltaTime * BaseSpeed, 0, 0));
-            if (Input.GetKey(KeyCode.D)) CharRigidbody.AddForce(new Vector3(PlayerComponent.Speed * Time.deltaTime * BaseSpeed, 0, 0));
+            InputAndDir();
         }
         #endregion
 
@@ -35,7 +31,28 @@ public class PlayerInput : BaseInput
             SettingPanel.Instance.gameObject.SetActive(SettingPanel.Instance.gameObject.activeSelf ? false : true);
         #endregion
     }
-    
+
+    void InputAndDir()
+    {
+        dir.x = Input.GetAxis("Horizontal");   // x축 방향 키 입력
+
+        if(dir.x < 0) PlayerComponent.m_Sprite.flipX= true; // 스프라이트 뒤집기, 차후 확인필요.
+        else PlayerComponent.m_Sprite.flipX = false;
+
+        dir.y = Input.GetAxis("Vertical");     // z축 방향 키 입력
+        if (dir != Vector2.zero)   // 키입력이 존재하는 경우
+        {
+            transform.forward = dir;	// 키 입력 시, 입력된 방향으로 캐릭터의 방향을 바꿈
+        }
+    }
+    public override void OnFixedUpdate()
+    {
+        base.OnFixedUpdate();
+        if (Player != null)//아직 화면 벗어나기 설정안함
+        {
+            CharRigidbody.MovePosition(CharRigidbody.position + dir * PlayerComponent.Speed * Time.deltaTime);
+        }
+    }
     public override void OnAwake()
     {
         base.OnAwake();

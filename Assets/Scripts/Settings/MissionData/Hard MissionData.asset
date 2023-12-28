@@ -17,8 +17,9 @@ MonoBehaviour:
   PlayerMaxHP: 100
   EnemyMaxHP: 150
   HungerPoint: 1.5
-  PlayerSpeed: 1
+  PlayerSpeed: 5.5
   EnemySpeed: 5
   EnemyFollowTime: 5
+  DamageInterval: 0.5
   SnackCount: 3
   SnackValue: 25
