@@ -20,7 +20,7 @@ public class GamePanel : View
         if(PlayerInput.BaseInputInstance.Player != null)
         {
             PlayerInput.PlayerInputInstance.PlayerComponent = PlayerInput.PlayerInputInstance.Player.GetComponent<Player>();
-            PlayerInput.PlayerInputInstance.CharRigidbody = PlayerInput.BaseInputInstance.Player.GetComponent<Rigidbody>();
+            PlayerInput.PlayerInputInstance.CharRigidbody = PlayerInput.BaseInputInstance.Player.GetComponent<Rigidbody2D>();
         }
         WaitingManager.Instance.NeedWaiting();
         MapManager.Instance.CreateMap(ObjectTarget);

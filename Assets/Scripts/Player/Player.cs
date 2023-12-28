@@ -12,10 +12,6 @@ public class Player : Creature
 
     private MissionData missionData;
 
-    private Enemy enemyProp;
-
-    private Unit unitProp;
-
     private bool isDamaged = true;
 
 

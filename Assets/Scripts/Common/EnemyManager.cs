@@ -32,7 +32,8 @@ public class EnemyManager : MonoBehaviour
         {
             prop = PoolManager.Instance.EnemyPool.Get();
             prop.transform.SetParent(targetTF);
-            prop.transform.localPosition = new Vector3(Random.Range(MinX, MaxX) * 100, Random.Range(MinY, MaxY) * 100, 0);
+            prop.transform.localPosition = new Vector3(Random.Range(MinX, MaxX) * 10, Random.Range(MinY, MaxY) * 10, 0);
+            prop.transform.localRotation = Quaternion.Euler(0, 0, 0);
 
             enemyProp = prop.GetComponent<Enemy>();
             colliderProps = prop.GetComponents<Collider>();
@@ -56,7 +57,6 @@ public class EnemyManager : MonoBehaviour
     {
         for(int i= 0; i< enemies.Count; i++) 
         {
-            enemies[i].GetComponent<Unit>().enabled = false;
             enemies[i].GetComponent<Enemy>().enabled = false;
         }
     }
@@ -64,7 +64,6 @@ public class EnemyManager : MonoBehaviour
     {
         for (int i = 0; i < enemies.Count; i++)
         {
-            enemies[i].GetComponent<Unit>().enabled = true;
             enemies[i].GetComponent<Enemy>().enabled = true;
         }
     }

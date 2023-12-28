@@ -42,22 +42,22 @@ public class MapManager : MonoBehaviour
             prop.transform.SetParent(targetTransform);
 
             int scaleFactor = Random.Range(1, 3);
-            prop.transform.localScale = Vector3.one * scaleFactor * 100;
+            prop.transform.localScale = Vector3.one * scaleFactor * 10;
+            //prop.transform.localRotation = Quaternion.Euler(0,0, 0);
 
             tempRigid = prop.GetComponent<Rigidbody>();
             tempRigid2D = prop.GetComponent<Rigidbody2D>();
 
             if(tempRigid != null)//3D 일때
             {
-                prop.transform.localPosition = new Vector3(Random.Range(MinX, MaxX) * 100, Random.Range(MinY, MaxY) * 100, scaleFactor * -100);//Z 값은 피봇 대신 쓰는거.
-                //prop.transform.localPosition = new Vector3(Random.Range(MinX, MaxX), Random.Range(MinY, MaxY), 0);//Z 값은 피봇 대신 쓰는거.
+                prop.transform.localPosition = new Vector3(Random.Range(MinX, MaxX) * 10, Random.Range(MinY, MaxY) * 10, 0);//Z 값은 피봇 대신 쓰는거.
                 tempRigid.isKinematic = false;
                 rigidbodies.Add(tempRigid);
             }
             if(tempRigid2D != null)
             {
-                prop.transform.localPosition = new Vector3(Random.Range(MinX, MaxX) * 100, Random.Range(MinY, MaxY) * 100, 0);//Z 값은 피봇 대신 쓰는거.
-                tempRigid2D.isKinematic = false;
+                prop.transform.localPosition = new Vector3(Random.Range(MinX, MaxX) * 10, Random.Range(MinY, MaxY) * 10, 0);//Z 값은 피봇 대신 쓰는거.
+                tempRigid2D.bodyType = RigidbodyType2D.Dynamic;
                 rigidbody2Ds.Add(tempRigid2D);
             }
         }
@@ -68,19 +68,19 @@ public class MapManager : MonoBehaviour
             prop.transform.SetParent(targetTransform);
 
             int scaleFactor = Random.Range(1, 3);
-            prop.transform.localScale = Vector3.one * scaleFactor * 100;
+            prop.transform.localScale = Vector3.one * scaleFactor * 10;
 
             tempRigid = prop.GetComponent<Rigidbody>();
             tempRigid2D = prop.GetComponent<Rigidbody2D>();
 
             if (tempRigid != null)//3D 일때
             {
-                prop.transform.localPosition = new Vector3(Random.Range(MinX, MaxX) * 100, Random.Range(MinY, MaxY) * 100, scaleFactor * -50);//Z 값은 피봇 대신 쓰는거.
+                prop.transform.localPosition = new Vector3(Random.Range(MinX, MaxX) * 10, Random.Range(MinY, MaxY) * 10, 0);//Z 값은 피봇 대신 쓰는거.
                 rigidbodies.Add(tempRigid);
             }
             if (tempRigid2D != null)
             {
-                prop.transform.localPosition = new Vector3(Random.Range(MinX, MaxX) * 100, Random.Range(MinY, MaxY) * 100, 0);//Z 값은 피봇 대신 쓰는거.
+                prop.transform.localPosition = new Vector3(Random.Range(MinX, MaxX) * 10, Random.Range(MinY, MaxY) * 10, 0);//Z 값은 피봇 대신 쓰는거.
                 rigidbody2Ds.Add(tempRigid2D);
             }
         }
@@ -101,7 +101,7 @@ public class MapManager : MonoBehaviour
         }
         for (int i = 0; i < rigidbody2Ds.Count; i++)
         {
-            rigidbody2Ds[i].isKinematic = true;
+            rigidbody2Ds[i].bodyType = RigidbodyType2D.Kinematic;
         }
         Time.timeScale = 1.0f;
     }

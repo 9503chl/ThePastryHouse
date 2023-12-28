@@ -32,6 +32,10 @@ public class Creature : MonoBehaviour
     {
         OnUpdate();
     }
+    private void FixedUpdate()
+    {
+        OnFixedUpdate();
+    }
     void OnEnable()
     {
         EnableOn();
@@ -40,29 +44,33 @@ public class Creature : MonoBehaviour
     {
         DisableOn();
     }
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         CollisionEnterOn(collision);
     }
-    private void OnCollisionExit(Collision collision)
+    private void OnCollisionExit2D(Collision2D collision)
     {
         CollisionExitOn(collision);
     }
-    private void OnCollisionStay(Collision collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
         CollisionStayOn(collision);
     }
-    private void OnTriggerEnter(Collider collider)
+    private void OnTriggerEnter2D(Collider2D collider)
     {
         TriggerEnterOn(collider);
     }
-    private void OnTriggerExit(Collider collider)
+    private void OnTriggerExit2D(Collider2D collider)
     {
         TriggerExitOn(collider);
     }
-    private void OnTriggerStay(Collider collider)
+    private void OnTriggerStay2D(Collider2D collider)
     {
         TriggerStayOn(collider);
+    }
+    public virtual void OnFixedUpdate()
+    {
+
     }
     public virtual void OnReset()
     {
@@ -89,27 +97,27 @@ public class Creature : MonoBehaviour
     {
 
     }
-    public virtual void TriggerEnterOn(Collider collider)
+    public virtual void TriggerEnterOn(Collider2D collider)
     {
 
     }
-    public virtual void TriggerExitOn(Collider collider)
+    public virtual void TriggerExitOn(Collider2D collider)
     {
 
     }
-    public virtual void TriggerStayOn(Collider collider)
+    public virtual void TriggerStayOn(Collider2D collider)
     {
 
     }
-    public virtual void CollisionEnterOn(Collision collision)
+    public virtual void CollisionEnterOn(Collision2D collision)
     {
 
     }
-    public virtual void CollisionExitOn(Collision collision)
+    public virtual void CollisionExitOn(Collision2D collision)
     {
 
     }
-    public virtual void CollisionStayOn(Collision collision)
+    public virtual void CollisionStayOn(Collision2D collision)
     {
 
     }

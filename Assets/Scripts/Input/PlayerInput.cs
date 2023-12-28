@@ -12,8 +12,8 @@ public class PlayerInput : BaseInput
 
     public bool isEscapeOK = true;
 
-    public Rigidbody CharRigidbody;//이걸로 이동해보자.
-
+    public Rigidbody2D CharRigidbody;//이걸로 이동해보자.
+    
     private Camera mainCamera;
     public override void OnUpdate()
     {
@@ -23,10 +23,10 @@ public class PlayerInput : BaseInput
         {
             mainCamera.transform.position = new Vector3(Player.transform.position.x, Player.transform.position.y, mainCamera.transform.position.z);
 
-            if (Input.GetKey(KeyCode.W)) CharRigidbody.AddForce(new Vector3(0, PlayerComponent.Speed * Time.deltaTime * BaseSpeed, 0), ForceMode.VelocityChange);
-            if (Input.GetKey(KeyCode.S)) CharRigidbody.AddForce(new Vector3(0, -PlayerComponent.Speed * Time.deltaTime * BaseSpeed, 0), ForceMode.VelocityChange);
-            if (Input.GetKey(KeyCode.A)) CharRigidbody.AddForce(new Vector3(-PlayerComponent.Speed * Time.deltaTime * BaseSpeed, 0, 0), ForceMode.VelocityChange);
-            if (Input.GetKey(KeyCode.D)) CharRigidbody.AddForce(new Vector3(PlayerComponent.Speed * Time.deltaTime * BaseSpeed, 0, 0), ForceMode.VelocityChange);
+            if (Input.GetKey(KeyCode.W)) CharRigidbody.AddForce(new Vector3(0, PlayerComponent.Speed * Time.deltaTime * BaseSpeed, 0));
+            if (Input.GetKey(KeyCode.S)) CharRigidbody.AddForce(new Vector3(0, -PlayerComponent.Speed * Time.deltaTime * BaseSpeed, 0));
+            if (Input.GetKey(KeyCode.A)) CharRigidbody.AddForce(new Vector3(-PlayerComponent.Speed * Time.deltaTime * BaseSpeed, 0, 0));
+            if (Input.GetKey(KeyCode.D)) CharRigidbody.AddForce(new Vector3(PlayerComponent.Speed * Time.deltaTime * BaseSpeed, 0, 0));
         }
         #endregion
 

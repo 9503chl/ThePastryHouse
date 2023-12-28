@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
+using Pathfinding;
 
 public class Enemy : Creature
 {
@@ -10,38 +10,49 @@ public class Enemy : Creature
 
     private Coroutine trackingCor, searchingCor;
 
-    private Transform searchingTr;
+    private Transform childTr;
+
+    private AIDestinationSetter aIDestinationSetter;
+
+    private AILerp aILerp;
+
+    private IAstarAI aiProp;
 
     private Player playerProp;
 
-    private Unit unitProp;
+    private float followTime;
+    private float MaxX = 1920f;
+    private float MaxZ = 1080f;
+    private float MinX = -1920f;
+    private float MinZ = -1080f;
 
-    private int randomInt;
+    private Vector2 randomVec2;
 
-    private float MaxX = 19.2f;
-    private float MaxY = 10.8f;
-    private float MinX = -19.2f;
-    private float MinY = -10.8f;
     public override void OnStart()
     {
         base.OnStart();
 
         missionData = GameSetting.Instance.CurrentMissionData;
         HP = missionData.EnemyMaxHP;
-        Speed = missionData.EnemySpeed;
+        aILerp.speed = missionData.EnemySpeed;
+        followTime = missionData.EnemyFollowTime;
+        FullHP();
+
         Damage = 1;//나중에 바꿔야함.
     }
     public override void OnAwake()
     {
         base.OnAwake();
-
-        unitProp = GetComponent<Unit>();
-        searchingTr = transform.GetChild(0);
+        childTr = transform.GetChild(0);
+        aIDestinationSetter = GetComponent<AIDestinationSetter>();
+        aiProp = GetComponent<IAstarAI>();
+        aILerp = GetComponent<AILerp>();
     }
     public override void EnableOn()
     {
         base.EnableOn();
-        FullHP();
+        aIDestinationSetter.enabled = true;
+        searchingCor = StartCoroutine(Searching());
     }
     public void FullHP()
     {
@@ -49,24 +60,19 @@ public class Enemy : Creature
     }
     private IEnumerator Searching()
     {
-        unitProp.target = searchingTr;
+        childTr.position = transform.position;
         while (isActiveAndEnabled)
         {
-            randomInt = Random.Range(0, 1);
-            if(randomInt == 0)
-            {
-               // if(searchingTr.transform.position.x - 50 < MaxX)
-            }
-            else
-            {
-
-            }
             yield return new WaitForSeconds(2);
         }
     }
+    public override void DisableOn()
+    {
+        base.DisableOn();
+        aIDestinationSetter.enabled = false;
+    }
 
-
-    public override void CollisionEnterOn(Collision collision)//충돌시 플레이어 따라가고
+    public override void CollisionEnterOn(Collision2D collision)//충돌시 플레이어 따라가고
     {
         base.CollisionEnterOn(collision);
         if(collision.transform.tag == "Player")
@@ -78,35 +84,37 @@ public class Enemy : Creature
             }
         }
     }
-    public override void TriggerEnterOn(Collider collider)//Stay로 해보자.
+    public override void TriggerEnterOn(Collider2D collider)
     {
         base.TriggerEnterOn(collider);
         if (collider.transform.tag == "Player")
         {
             if(searchingCor != null) StopCoroutine(searchingCor);
-            trackingCor = StartCoroutine(DelayTracking(collider.gameObject));
+            if(trackingCor == null) trackingCor = StartCoroutine(DelayTracking(collider.gameObject));
         }
     }
     private IEnumerator DelayTracking(GameObject playerObj)
     {
-        gameObject.transform.LookAt(playerObj.transform.position);//한번 바라봄
-        while(isActiveAndEnabled)
+        while (isActiveAndEnabled)
         {
             yield return new WaitForSeconds(0.3f);
-            unitProp.target = playerObj.transform;
-            Debug.Log(playerObj.transform.position);
+            childTr.position = playerObj.transform.position;
+            aiProp.SearchPath();
         }
     }
-    public override void TriggerExitOn(Collider collider)
+    public override void TriggerExitOn(Collider2D collider)
     {
         base.TriggerExitOn(collider);
         StartCoroutine(DelayStopTrack());
     }
     private IEnumerator DelayStopTrack()
     {
-        yield return new WaitForSeconds(3);
-        if(trackingCor!= null) 
+        yield return new WaitForSeconds(followTime);
+        if (trackingCor != null)
+        {
             StopCoroutine(trackingCor);
+            trackingCor = null;
+        }
 
         searchingCor = StartCoroutine(Searching());
     }

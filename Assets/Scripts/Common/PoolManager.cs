@@ -24,7 +24,6 @@ public class PoolManager : MonoBehaviour
     public Transform ObjectTf;
 
     private Enemy enemyProp;
-    private Unit unitProp;
 
 
     public IObjectPool<GameObject> BoxPool { get; private set; }
@@ -107,12 +106,6 @@ public class PoolManager : MonoBehaviour
         {
             enemyProp.enabled = false;
             enemyProp.FullHP();
-        }
-
-        unitProp= poolGo.GetComponent<Unit>();
-        if(unitProp != null)
-        {
-            unitProp.enabled = false;
         }
     }
     // ªË¡¶
