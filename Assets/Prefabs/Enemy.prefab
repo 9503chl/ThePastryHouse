@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 2817357596332877153}
   - component: {fileID: 2817357596332877156}
   - component: {fileID: 2817357596332877157}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -215,7 +215,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 4
+  m_Radius: 6
 --- !u!114 &2817357596332877157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -242,7 +242,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2817357597654912096}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Transform
   m_TagString: Untagged
   m_Icon: {fileID: 0}

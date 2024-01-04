@@ -12,6 +12,8 @@ public class PlayerInput : BaseInput
 
     public Rigidbody2D CharRigidbody;//이걸로 이동해보자.
 
+    public Collider2D collider2D;
+
     private Vector2 dir = Vector2.zero;
     
     private Camera mainCamera;
@@ -36,7 +38,7 @@ public class PlayerInput : BaseInput
     {
         dir.x = Input.GetAxis("Horizontal");   // x축 방향 키 입력
 
-        if(dir.x < 0) PlayerComponent.m_Sprite.flipX= true; // 스프라이트 뒤집기, 차후 확인필요.
+        if(dir.x < 0) PlayerComponent.m_Sprite.flipX = true; // 스프라이트 뒤집기, 차후 확인필요.
         else PlayerComponent.m_Sprite.flipX = false;
 
         dir.y = Input.GetAxis("Vertical");     // z축 방향 키 입력
@@ -55,8 +57,21 @@ public class PlayerInput : BaseInput
     }
     public override void OnAwake()
     {
-        base.OnAwake();
-        mainCamera  = Camera.main;  
+        base.OnAwake();                                                 
+        mainCamera  = Camera.main;
         PlayerInputInstance = this;
+    }
+
+    public void ColliderGetComponent()
+    {
+        collider2D = Player.GetComponent<Collider2D>();
+    }
+    public void ColliderOff()
+    {
+        collider2D.enabled = false;
+    }
+    public void ColliderOn()
+    {
+        collider2D.enabled = true;
     }
 }

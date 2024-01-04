@@ -45,12 +45,13 @@ public class Player : Creature
     public override void CollisionStayOn(Collision2D collision)
     {
         base.CollisionStayOn(collision);
-        if(collision.gameObject.layer != 7)//적이 맞나?
+        if(collision.gameObject.layer == 6)//적이 맞나?
         {
             if (isDamaged)
             {
                 enemyProp = collision.gameObject.GetComponent<Enemy>();
-                DamageCount(enemyProp.Damage);
+                if(enemyProp != null) 
+                    DamageCount(enemyProp.Damage);
             }
         }
     }

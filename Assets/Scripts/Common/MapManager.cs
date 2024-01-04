@@ -6,15 +6,11 @@ public class MapManager : MonoBehaviour
 {
     public static MapManager Instance;
 
-    public GameObject Cylinder;
-    public GameObject Cube;
-
     private GameObject prop;
 
     private List<Rigidbody> rigidbodies = new List<Rigidbody>();
     private List<Rigidbody2D> rigidbody2Ds = new List<Rigidbody2D>();
 
-    private Rigidbody tempRigid;
     private Rigidbody2D tempRigid2D;
 
     private int circleCount;
@@ -44,16 +40,8 @@ public class MapManager : MonoBehaviour
             int scaleFactor = Random.Range(1, 3);
             prop.transform.localScale = Vector3.one * scaleFactor * 10;
             //prop.transform.localRotation = Quaternion.Euler(0,0, 0);
-
-            tempRigid = prop.GetComponent<Rigidbody>();
             tempRigid2D = prop.GetComponent<Rigidbody2D>();
 
-            if(tempRigid != null)//3D 일때
-            {
-                prop.transform.localPosition = new Vector3(Random.Range(MinX, MaxX) * 10, Random.Range(MinY, MaxY) * 10, 0);//Z 값은 피봇 대신 쓰는거.
-                tempRigid.isKinematic = false;
-                rigidbodies.Add(tempRigid);
-            }
             if(tempRigid2D != null)
             {
                 prop.transform.localPosition = new Vector3(Random.Range(MinX, MaxX) * 10, Random.Range(MinY, MaxY) * 10, 0);//Z 값은 피봇 대신 쓰는거.
@@ -70,14 +58,8 @@ public class MapManager : MonoBehaviour
             int scaleFactor = Random.Range(1, 3);
             prop.transform.localScale = Vector3.one * scaleFactor * 10;
 
-            tempRigid = prop.GetComponent<Rigidbody>();
             tempRigid2D = prop.GetComponent<Rigidbody2D>();
 
-            if (tempRigid != null)//3D 일때
-            {
-                prop.transform.localPosition = new Vector3(Random.Range(MinX, MaxX) * 10, Random.Range(MinY, MaxY) * 10, 0);//Z 값은 피봇 대신 쓰는거.
-                rigidbodies.Add(tempRigid);
-            }
             if (tempRigid2D != null)
             {
                 prop.transform.localPosition = new Vector3(Random.Range(MinX, MaxX) * 10, Random.Range(MinY, MaxY) * 10, 0);//Z 값은 피봇 대신 쓰는거.

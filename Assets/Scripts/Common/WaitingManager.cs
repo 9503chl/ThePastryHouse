@@ -40,6 +40,7 @@ public class WaitingManager : MonoBehaviour
     {
         WaitingBG.SetActive(true);
         PlayerInput.PlayerInputInstance.isEscapeOK = false;
+        PlayerInput.PlayerInputInstance.ColliderOff();
         int whileCnt = 0;
         int dotCnt = 0;
         while (currentTime < 3.5f)
@@ -63,6 +64,8 @@ public class WaitingManager : MonoBehaviour
         currentTime = 0;
         PlayerInput.PlayerInputInstance.isEscapeOK = true;
         Time.timeScale = 1;
+        PlayerInput.PlayerInputInstance.ColliderOn();
         EnemyManager.Instance.EnemyComponentOn();
+        AstarPath.active.Scan();
     }
 }
