@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
 
-namespace UnityEngine.UI
+namespace UnityEngine
 {
     public static class EasingUtility
     {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -20,7 +21,11 @@ namespace UnityEngine.UI
             {
                 if (instance == null)
                 {
+#if UNITY_2020_1_OR_NEWER
+                    EventSystemRaycaster[] templates = FindObjectsOfType<EventSystemRaycaster>(true);
+#else
                     EventSystemRaycaster[] templates = FindObjectsOfType<EventSystemRaycaster>();
+#endif
                     if (templates.Length > 0)
                     {
                         instance = templates[0];
@@ -29,7 +34,11 @@ namespace UnityEngine.UI
                     }
                     else
                     {
+#if UNITY_2020_1_OR_NEWER
+                        EventSystem eventSystem = FindObjectOfType<EventSystem>(true);
+#else
                         EventSystem eventSystem = FindObjectOfType<EventSystem>();
+#endif
                         instance = eventSystem.gameObject.AddComponent<EventSystemRaycaster>();
                         instance.enabled = true;
                     }
@@ -76,7 +85,7 @@ namespace UnityEngine.UI
             {
                 if (passThroughFamily)
                 {
-                    return targetObject.transform.IsChildOf(topMostObject.transform) || targetObject.transform.parent == topMostObject.transform.parent;
+                    return topMostObject.transform.IsChildOf(targetObject.transform) || targetObject.transform.parent == topMostObject.transform.parent;
                 }
                 else
                 {

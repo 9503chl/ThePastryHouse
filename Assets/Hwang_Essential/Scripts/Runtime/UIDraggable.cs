@@ -146,7 +146,7 @@ namespace UnityEngine.UI
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            if (isActiveAndEnabled && !dragging && !eventData.dragging)
+            if (isActiveAndEnabled && !dragging)
             {
                 entering = true;
                 OnEnter();
@@ -155,7 +155,7 @@ namespace UnityEngine.UI
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            if (isActiveAndEnabled && !dragging && !eventData.dragging)
+            if (isActiveAndEnabled && !dragging)
             {
                 entering = false;
                 OnExit();

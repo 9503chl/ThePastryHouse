@@ -3,11 +3,20 @@
 namespace UnityEngine
 {
     [Serializable]
-    public class CustomCursor
+    [CreateAssetMenu(fileName = "Custom Cursor", menuName = "Preset/Custom Cursor", order = 1001)]
+    public class CustomCursor : ScriptableObject
     {
         public Texture2D Texture;
         public Vector2 HotSpot;
         public CursorMode Mode;
+
+        private static Component ownerComponent;
+
+        private static CustomCursor currentCursor;
+        public static CustomCursor CurrentCursor
+        {
+            get { return currentCursor; }
+        }
 
         public CustomCursor()
         {
@@ -20,25 +29,24 @@ namespace UnityEngine
             Mode = mode;
         }
 
-        public void Apply()
-        {
-            if (Texture != null)
-            {
-                Cursor.SetCursor(Texture, HotSpot, Mode);
-            }
-        }
-
-        public static void Apply(CustomCursor customCursor)
+        public static void Apply(Component component, CustomCursor customCursor)
         {
             if (customCursor != null)
             {
-                customCursor.Apply();
+                Cursor.SetCursor(customCursor.Texture, customCursor.HotSpot, customCursor.Mode);
+                currentCursor = customCursor;
+                ownerComponent = component;
             }
         }
 
-        public static void Reset()
+        public static void Reset(Component component)
         {
-            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+            if (ownerComponent == component)
+            {
+                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                currentCursor = null;
+                ownerComponent = null;
+            }
         }
     }
 }

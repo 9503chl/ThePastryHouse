@@ -110,6 +110,7 @@ namespace UnityEngine.UI
                             }
                             else
                             {
+#if UNITY_2018_2_OR_NEWER
                                 string[] propertyNames = material.GetTexturePropertyNames();
                                 for (int i = 0; i < propertyNames.Length; i++)
                                 {
@@ -119,10 +120,17 @@ namespace UnityEngine.UI
                                         break;
                                     }
                                 }
+#else
+                                hasProperty = material.HasProperty(loader.TextureName);
+#endif
                             }
                         }
                         GUILayout.FlexibleSpace();
+#if UNITY_2019_3_OR_NEWER
                         EditorGUILayout.HelpBox(preview);
+#else
+                        GUILayout.Box(preview);
+#endif
                         GUILayout.FlexibleSpace();
 
                         if (modified && loader.enabled)
@@ -152,15 +160,15 @@ namespace UnityEngine.UI
             {
                 if (!hasMaterial)
                 {
-                    EditorGUILayout.HelpBox("Material index is out of range.", MessageType.Info);
+                    EditorGUILayout.HelpBox("Material index is out of range.", MessageType.Warning);
                 }
                 else if (!hasProperty)
                 {
-                    EditorGUILayout.HelpBox("There is no matching texture property name in Shader.", MessageType.Info);
+                    EditorGUILayout.HelpBox("There is no matching texture property.", MessageType.Warning);
                 }
                 else if (!Application.isPlaying)
                 {
-                    EditorGUILayout.HelpBox("Texture will be changed in play mode.", MessageType.Info);
+                    EditorGUILayout.HelpBox("Texture will be applied only while playing.", MessageType.Info);
                 }
             }
         }

@@ -9,6 +9,8 @@ namespace UnityEngine.UI
     public class VideoViewerInspector : Editor
     {
         private SerializedProperty sourceVideoPlayerProperty;
+        private SerializedProperty showBannerOnStopProperty;
+        private SerializedProperty resizeToFitVideoProperty;
         private SerializedProperty overrideVideoSizeProperty;
         private SerializedProperty videoWidthProperty;
         private SerializedProperty videoHeightProperty;
@@ -17,15 +19,12 @@ namespace UnityEngine.UI
         public virtual void OnEnable()
         {
             sourceVideoPlayerProperty = serializedObject.FindProperty("SourceVideoPlayer");
+            showBannerOnStopProperty = serializedObject.FindProperty("ShowBannerOnStop");
+            resizeToFitVideoProperty = serializedObject.FindProperty("ResizeToFitVideo");
             overrideVideoSizeProperty = serializedObject.FindProperty("OverrideVideoSize");
             videoWidthProperty = serializedObject.FindProperty("VideoWidth");
             videoHeightProperty = serializedObject.FindProperty("VideoHeight");
             renderAlphaChannelProperty = serializedObject.FindProperty("RenderAlphaChannel");
-            VideoViewer videoViewer = target as VideoViewer;
-            if (videoViewer.SourceVideoPlayer == null || (videoViewer.SourceVideoPlayer.targetTexture == null && videoViewer.GetComponent<RawImage>().texture == null))
-            {
-                videoViewer.GetComponent<RawImage>().enabled = false;
-            }
         }
 
         public override void OnInspectorGUI()
@@ -47,10 +46,11 @@ namespace UnityEngine.UI
                 {
                     VideoPlayer videoPlayer = sourceVideoPlayerProperty.objectReferenceValue as VideoPlayer;
                     videoViewer.GetComponent<RawImage>().texture = videoPlayer.targetTexture;
-                    videoViewer.GetComponent<RawImage>().enabled = (videoPlayer.targetTexture != null) || (videoViewer.GetComponent<RawImage>().texture != null);
                 }
             }
+            EditorGUILayout.PropertyField(showBannerOnStopProperty);
             EditorGUI.BeginDisabledGroup(EditorApplication.isPlaying);
+            EditorGUILayout.PropertyField(resizeToFitVideoProperty);
             EditorGUILayout.PropertyField(overrideVideoSizeProperty);
             if (overrideVideoSizeProperty.boolValue)
             {

@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 
 public class KeyboardImeController : MonoBehaviour
 {
+#if UNITY_STANDALONE_WIN
     [DllImport("user32.dll")]
     private static extern IntPtr GetActiveWindow();
     [DllImport("imm32.dll")]
@@ -80,4 +81,5 @@ public class KeyboardImeController : MonoBehaviour
         }
         return false;
     }
+#endif
 }

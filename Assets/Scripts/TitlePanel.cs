@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class TitlePanel : View
 {
-    public SaveData DataInstance;
-
     public GameObject LevelSelectPanel;
 
     public Button NewGameBtn;
@@ -18,6 +16,8 @@ public class TitlePanel : View
     public ButtonGroup LevelSelectGroup;
 
     public MissionData[] MissionDatas;
+
+    private SaveData saveData;
 
     private void Awake()
     {
@@ -32,12 +32,14 @@ public class TitlePanel : View
         });
 
         LevelSelectGroup.onClick.AddListener(delegate { LevelSelect(LevelSelectGroup); });
+
+        saveData = GameSetting.Instance.CurrentSaveData;
     }
 
     private void TitlePanel_OnBeforeShow()
     {
         LevelSelectPanel.SetActive(false);
-        if(DataInstance.IsFirst)
+        if(saveData.IsFirst)
         {
             ContinueBtn.interactable = false;
             LastPlayTimeTxt.text = string.Format("(없음)");
@@ -45,7 +47,7 @@ public class TitlePanel : View
         else
         {
             ContinueBtn.interactable = true;
-            LastPlayTimeTxt.text = string.Format("({0})", DataInstance.LastPlayTime.ToString("yyyy:MM:dd"));
+            LastPlayTimeTxt.text = string.Format("({0})", saveData.LastPlayTime.ToString("yyyy:MM:dd"));
         }
     }
 
@@ -53,11 +55,10 @@ public class TitlePanel : View
     {
         GameSetting.Instance.CurrentMissionData = MissionDatas[buttonGroup.SelectedIndex];
 
-        DataInstance.DataReset();
-        DataInstance.CurrentLevel = 1;
-        DataInstance.Difficulty = (MissionLevel)buttonGroup.SelectedIndex;
+        saveData.DataReset();
+        saveData.CurrentLevel = 1;
+        saveData.Difficulty = (MissionLevel)buttonGroup.SelectedIndex;
 
-        GameSetting.Instance.CurrentSaveData = DataInstance;
         PanelManager.Instance.ActiveView = PanelManager.ViewKind.Game;
     }
     private void NewGameInvoke()
@@ -69,9 +70,9 @@ public class TitlePanel : View
     private void ContinueInvoke()
     {
 
-        GameSetting.Instance.CurrentMissionData = MissionDatas[(int)DataInstance.Difficulty];
+        GameSetting.Instance.CurrentMissionData = MissionDatas[(int)saveData.Difficulty];
 
-        switch (DataInstance.CurrentLevel)
+        switch (saveData.CurrentLevel)
         {
             case 1:
                 PanelManager.Instance.ActiveView = PanelManager.ViewKind.Game;

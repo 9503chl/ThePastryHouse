@@ -84,7 +84,11 @@ namespace UnityEngine.UI
                     {
                         loaded = true;
                         GUILayout.FlexibleSpace();
+#if UNITY_2019_3_OR_NEWER
                         EditorGUILayout.HelpBox(preview);
+#else
+                        GUILayout.Box(preview);
+#endif
                         GUILayout.FlexibleSpace();
 
                         if (modified && loader.enabled)

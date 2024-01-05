@@ -88,12 +88,18 @@ namespace UnityEngine.UI
 
         protected override void OnEnter()
         {
-            CustomCursor.Apply(MoveCursor);
+            if (!Input.GetMouseButton(0))
+            {
+                CustomCursor.Apply(this, MoveCursor);
+            }
         }
 
         protected override void OnExit()
         {
-            CustomCursor.Reset();
+            if (!Input.GetMouseButton(0))
+            {
+                CustomCursor.Reset(this);
+            }
         }
 
         protected override void OnBeginDrag()
@@ -132,6 +138,13 @@ namespace UnityEngine.UI
             {
                 needClipping = false;
                 ApplyDragDelta(Vector2.zero, FitInPixels, ClippingMode != DragClippingMode.DoNotClipping);
+            }
+            if (entering && !dragging && !Input.GetMouseButton(0))
+            {
+                if (CustomCursor.CurrentCursor == null)
+                {
+                    CustomCursor.Apply(this, MoveCursor);
+                }
             }
             if (Input.GetKeyDown(KeyCode.Escape))
             {

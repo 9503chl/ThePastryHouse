@@ -21,7 +21,7 @@ namespace UnityEngine.UI
 
         protected override void UpdateProgress(float progress)
         {
-            SetValue(Vector3.Slerp(FromValue, ToValue, progress));
+            SetValue(Vector3.Lerp(FromValue, ToValue, progress));
         }
 
 #if UNITY_EDITOR

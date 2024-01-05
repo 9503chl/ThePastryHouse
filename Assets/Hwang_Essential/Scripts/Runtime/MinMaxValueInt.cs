@@ -31,7 +31,7 @@ namespace UnityEngine
 
         public int Clamp(int value)
         {
-            return Mathf.Clamp(value, min, max);
+            return (min > max) ? Mathf.Clamp(value, max, min) : Mathf.Clamp(value, min, max);
         }
 
         public float Lerp(float t)

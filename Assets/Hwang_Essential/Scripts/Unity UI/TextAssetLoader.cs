@@ -277,7 +277,11 @@ namespace UnityEngine.UI
                 else if (line[i] == CsvSeperator && !quoted)
                 {
                     sections.Add(sb.ToString().Trim());
+#if UNITY_2018_3_OR_NEWER
                     sb.Clear();
+#else
+                    sb.Length = 0;
+#endif
                     prevChar = '\0';
                 }
                 else

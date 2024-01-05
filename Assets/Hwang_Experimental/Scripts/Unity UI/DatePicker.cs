@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -17,17 +17,18 @@ namespace UnityEngine.UI
         public Text CurrentMonthText;
         public Button PreviousMonthButton;
         public Button NextMonthButton;
-        public GridLayoutGroup DateGrid;
         public LayoutGroup WeekHeader;
         public LayoutGroup DayGrid;
         public Image CurrentCellImage;
         public Image SelectedCellImage;
 
+        public Font CalendarFont = null;
         public Color NormalTextColor = Color.white;
         public Color SundayTextColor = new Color(1f, 0.25f, 0.25f, 1f);
         public Color SaturdayTextColor = new Color(0f, 0.5f, 1f, 1f);
+        [Range(0f, 1f)]
+        public float OutsideTextAlpha = 0.5f;
 
-        private const string YEAR_MONTH_TEXT_FORMAT = "MMMM yyyy";
         private const string YEAR_TEXT_FORMAT = "yyyy";
         private const string MONTH_TEXT_FORMAT = "MMMM";
         private const string DAY_OF_WEEK_TEXT_FORMAT = "ddd";
@@ -66,24 +67,6 @@ namespace UnityEngine.UI
                 {
                     firstDayOfWeek = value;
                     RebuildHeader();
-                    RebuildCalendar();
-                }
-            }
-        }
-
-        [SerializeField]
-        private string yearMonthTextFormat = YEAR_MONTH_TEXT_FORMAT;
-        public string YearMonthTextFormat
-        {
-            get
-            {
-                return yearMonthTextFormat;
-            }
-            set
-            {
-                if (yearMonthTextFormat != value)
-                {
-                    yearMonthTextFormat = value;
                     RebuildCalendar();
                 }
             }
@@ -378,52 +361,20 @@ namespace UnityEngine.UI
             }
         }
 
-        private CultureInfo GetCultureInfo()
-        {
-            if (calendarLanguage != SystemLanguage.Unknown)
-            {
-                CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
-                string languageName = string.Format("{0}", calendarLanguage);
-                if (calendarLanguage == SystemLanguage.Chinese)
-                {
-                    languageName = "zh-CN"; // "Chinese (Simplified)"
-                }
-                else if (calendarLanguage == SystemLanguage.ChineseSimplified)
-                {
-                    languageName = "zh-Hans"; // "zh-CHS" is legacy name of "Chinese (Simplified)"
-                }
-                else if (calendarLanguage == SystemLanguage.ChineseTraditional)
-                {
-                    languageName = "zh-Hant"; // "zh-CHT" is legacy name of "Chinese (Traditional)"
-                }
-                else if (calendarLanguage == SystemLanguage.SerboCroatian)
-                {
-                    languageName = "hr"; // "Serbo-Croatian" and "sh" are deprecated. "Bosnian", "bs", "Croatian", "hr", "Serbian" or "sr" should be used.
-                }
-                foreach (CultureInfo culture in cultures)
-                {
-                    if (string.Compare(culture.Name, languageName, true) == 0 || string.Compare(culture.DisplayName, languageName, true) == 0)
-                    {
-                        return culture;
-                    }
-                }
-            }
-            return CultureInfo.CurrentCulture;
-        }
-
         private string GetDateTimeText(DateTime dt, string format, string defFormat)
         {
+            CultureInfo culture = calendarLanguage.GetCultureInfo();
             if (!string.IsNullOrEmpty(format))
             {
                 try
                 {
-                    return dt.ToString(format, GetCultureInfo());
+                    return dt.ToString(format, culture);
                 }
                 catch (Exception)
                 {
                 }
             }
-            return dt.ToString(defFormat, GetCultureInfo());
+            return dt.ToString(defFormat, culture);
         }
 
         private void SetCurrentCell(Cell cell)
@@ -493,7 +444,10 @@ namespace UnityEngine.UI
                 Text[] weekColumns = WeekHeader.GetComponentsInChildren<Text>();
                 foreach (Text columnText in weekColumns)
                 {
-                    columnText.text = GetDateTimeText(todayDate.AddDays(days), dayOfWeekTextFormat, DAY_OF_WEEK_TEXT_FORMAT);
+                    if (CalendarFont != null)
+                    {
+                        columnText.font = CalendarFont;
+                    }
                     switch (todayDate.AddDays(days).DayOfWeek)
                     {
                         case DayOfWeek.Sunday:
@@ -506,6 +460,7 @@ namespace UnityEngine.UI
                             columnText.color = NormalTextColor;
                             break;
                     }
+                    columnText.text = GetDateTimeText(todayDate.AddDays(days), dayOfWeekTextFormat, DAY_OF_WEEK_TEXT_FORMAT);
                     days++;
                 }
             }
@@ -560,14 +515,14 @@ namespace UnityEngine.UI
                 {
                     cell.IsInside = false;
                     cell.CellValue = day - 1;
-                    cell.CellText.color = cellDateColor / 2f;
+                    cell.CellText.color = cellDateColor * OutsideTextAlpha;
                     cell.CellText.enabled = showOutsideCells;
                 }
                 else if (day > lastDay)
                 {
                     cell.IsInside = false;
                     cell.CellValue = day - lastDay;
-                    cell.CellText.color = cellDateColor / 2f;
+                    cell.CellText.color = cellDateColor * OutsideTextAlpha;
                     cell.CellText.enabled = showOutsideCells;
                 }
                 else
@@ -584,6 +539,10 @@ namespace UnityEngine.UI
                     {
                         SetSelectedCell(cell);
                     }
+                }
+                if (CalendarFont != null)
+                {
+                    cell.CellText.font = CalendarFont;
                 }
                 cell.CellText.text = GetDateTimeText(cellDate, dayTextFormat, DAY_TEXT_FORMAT);
                 cell.CellButton.enabled = cell.CellText.enabled;
@@ -667,11 +626,19 @@ namespace UnityEngine.UI
             if (validateLanguage != calendarLanguage)
             {
                 validateLanguage = calendarLanguage;
-                firstDayOfWeek = GetCultureInfo().DateTimeFormat.FirstDayOfWeek;
+                firstDayOfWeek = calendarLanguage.GetCultureInfo().DateTimeFormat.FirstDayOfWeek;
             }
             FillDayCells();
             RebuildHeader();
             RebuildCalendar();
+        }
+
+        private void Reset()
+        {
+            if (CalendarFont == null)
+            {
+                CalendarFont = new Font("Arial");
+            }
         }
 #endif
     }

@@ -21,15 +21,16 @@ public class EnhanceScrollView : MonoBehaviour
 
     public float dragFactor = 0.001f;
 
-    public EnhanceScrollItem[] scrollItems;
-
     public UnityEvent onItemSelected = new UnityEvent();
+
+    [NonSerialized]
+    private EnhanceScrollItem[] scrollItems;
 
     [NonSerialized]
     private int centeredIndex = -1;
 
     [NonSerialized]
-    private float totalHorizontalWidth = 500f;
+    private float totalWidth = 500f;
 
     [NonSerialized]
     private float currentDuration = 0f;
@@ -76,7 +77,8 @@ public class EnhanceScrollView : MonoBehaviour
 
     private void Start()
     {
-        if (scrollItems == null || scrollItems.Length == 0)
+        scrollItems = GetComponentsInChildren<EnhanceScrollItem>();
+        if (scrollItems.Length == 0)
         {
             Debug.LogError("No scroll items in scroll view!");
             return;
@@ -106,7 +108,7 @@ public class EnhanceScrollView : MonoBehaviour
         }
 
         sortedItems = new List<EnhanceScrollItem>(scrollItems);
-        totalHorizontalWidth = cellWidth * count;
+        totalWidth = cellWidth * count;
         selectedItem = scrollItems[startIndex];
         if (changed && onItemSelected != null)
         {
@@ -144,7 +146,7 @@ public class EnhanceScrollView : MonoBehaviour
         {
             originHorizontalValue = originValue;
             currentHorizontalValue = targetValue;
-            currentDuration = 0.0f;
+            currentDuration = 0f;
         }
         else
         {
@@ -174,10 +176,10 @@ public class EnhanceScrollView : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             EnhanceScrollItem item = scrollItems[i];
-            float positionX = positionCurve.Evaluate(value + item.CenterOffset) * totalHorizontalWidth - (totalHorizontalWidth / 2f);
+            float positionX = positionCurve.Evaluate(value + item.CenterOffset) * totalWidth - (totalWidth / 2f);
             float scale = scaleCurve.Evaluate(value + item.CenterOffset);
             float depth = depthCurve.Evaluate(value + item.CenterOffset);
-            item.UpdateScrollItem(new Vector3(positionX, cellPositionY, 1f), new Vector3(scale, scale, 1f), depth, count);
+            item.UpdateScrollItem(new Vector3(positionX, cellPositionY, 0f), new Vector3(scale, scale, 1f), depth, count);
         }
     }
 
@@ -209,7 +211,7 @@ public class EnhanceScrollView : MonoBehaviour
 
             SortScrollItems();
 
-            float centerXValue = positionCurve.Evaluate(0.5f) * totalHorizontalWidth - (totalHorizontalWidth / 2f);
+            float centerXValue = positionCurve.Evaluate(0.5f) * totalWidth - (totalWidth / 2f);
             int moveIndexCount = Mathf.Abs(Mathf.Abs(previousItem.RealIndex) - Mathf.Abs(item.RealIndex));
             float deltaValue;
             if (item.transform.localPosition.x > centerXValue)
@@ -323,8 +325,6 @@ public class EnhanceScrollView : MonoBehaviour
             depthCurve = new AnimationCurve(new Keyframe(0f, 0f, 0f, 2f), new Keyframe(0.5f, 1f, 2f, -2f), new Keyframe(1f, 0f, -2f, 0f));
             depthCurve.preWrapMode = WrapMode.Loop;
             depthCurve.postWrapMode = WrapMode.Loop;
-
-            scrollItems = GetComponentsInChildren<EnhanceScrollItem>();
         }
     }
 #endif

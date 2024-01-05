@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System.IO;
 using System;
+using System.IO;
+using LitJson;
 
 public struct GameData
 {
@@ -12,14 +13,21 @@ public struct GameData
     public int RemainSnackCount;
 
     public float RemainPlayerHP;//남은 체력 기억.
-    public float[] ARemainHPs;
+    public List<float> ARemainHPs;
 
-    public Vector3 PlayerLastPosition;
+    public float PlayerLastPositionX;
+    public float PlayerLastPositionY;
 
-    public Vector3[] SnackPositions;
+    public List<float> SnackPositionsXs;
+    public List<float> SnackPositionsYs;
 
-    public Vector4[] CylinderPosAndSizes;
-    public Vector4[] BoxPosAndSizes;
+    public List<float> CylinderPositionXs;
+    public List<float> CylinderPositionYs;
+    public List<float> CylinderScales;
+
+    public List<float> BoxPositionXs;
+    public List<float> BoxPositionYs;
+    public List<float> BoxScales;
 }
 
 
@@ -27,8 +35,10 @@ public class GameSetting : MonoBehaviour
 {
     private static GameSetting instance;
 
-    public static GameSetting Instance {
-        get {
+    public static GameSetting Instance
+    {
+        get
+        {
             GameSetting[] templates = FindObjectsOfType<GameSetting>();
 
             if (templates != null)
@@ -48,9 +58,9 @@ public class GameSetting : MonoBehaviour
 
     public MissionData CurrentMissionData;
     public MissionLevel CurrentMissionLevel;
- 
+
     public Options options;
-    
+
     public GameObject BGMAudioGroup;
     public GameObject EffectAudioGroup;
 
@@ -59,10 +69,24 @@ public class GameSetting : MonoBehaviour
     private AudioSource[] BGMAudios;
     private AudioSource[] EffectAudios;
 
+    public string GameOptionPath;
+    public string SaveDataPath;
+
+    private JsonData jsonDataOption;
+    private JsonData jsonDataSaveData;
+
     void Awake()
     {
         BGMAudios = BGMAudioGroup.GetComponentsInChildren<AudioSource>();
         EffectAudios = EffectAudioGroup.GetComponentsInChildren<AudioSource>();
+
+        options = ScriptableObject.CreateInstance<Options>();
+        jsonDataOption = LoadFromJson(Path.Combine(Application.persistentDataPath + GameOptionPath), options);
+        options.LoadFromJson(jsonDataOption);
+
+        CurrentSaveData = ScriptableObject.CreateInstance<SaveData>();
+        jsonDataSaveData = LoadFromJson(Path.Combine(Application.persistentDataPath + SaveDataPath), CurrentSaveData);
+        CurrentSaveData.LoadFromJson(jsonDataSaveData);
 
         foreach (AudioSource a in BGMAudios)
         {
@@ -92,38 +116,45 @@ public class GameSetting : MonoBehaviour
     }
     public void GammaChange(float value)
     {
-        GammaPanel.color = new Color(GammaPanel.color.r, GammaPanel.color.g, GammaPanel.color.b, 
-            0.5f - options.Gamma/2);
+        GammaPanel.color = new Color(GammaPanel.color.r, GammaPanel.color.g, GammaPanel.color.b,
+            0.5f - options.Gamma / 2);
         options.Gamma = value;
     }
     public void SaveToInstance()
     {
         if (CurrentSaveData != null)
         {
-            CurrentSaveData.IsFirst = false;
-
-            CurrentSaveData.CurrentLevel = CurrentGameData.CurrentLevel;
-            CurrentSaveData.ARemainCount = CurrentGameData.ARemainCount;
-            CurrentSaveData.RemainSnackCount = CurrentGameData.RemainSnackCount;
-
-            CurrentSaveData.RemainPlayerHP = CurrentGameData.RemainPlayerHP;
-            CurrentSaveData.ARemainHPs = CurrentGameData.ARemainHPs;
-
-            CurrentSaveData.PlayerLastPosition = CurrentGameData.PlayerLastPosition;
-            CurrentSaveData.SnackPositions = CurrentGameData.SnackPositions;
-
-            CurrentSaveData.CylinderPosAndSizes = CurrentGameData.CylinderPosAndSizes;
-            CurrentSaveData.BoxPosAndSizes = CurrentGameData.BoxPosAndSizes;
-
-            CurrentSaveData.LastPlayTime = DateTime.Now;
+            CurrentSaveData.SaveToJson(CurrentGameData);
+            SaveToJson(Path.Combine(Application.persistentDataPath + GameOptionPath), options);
         }
         else
         {
             Debug.Log("SaveData is empty");
         }
     }
+
+
     private void OnApplicationQuit()// 강제종료시도 저장
     {
         SaveToInstance();
+    }
+    private void SaveToJson(string path, object obj)
+    {
+        string json = JsonMapper.ToJson(obj);
+        File.WriteAllText(path, json);
+    }
+    private JsonData LoadFromJson(string path, object obj)
+    {
+        JsonData data = new JsonData();
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            data = JsonMapper.ToObject(json);
+        }
+        else
+        {
+            SaveToJson(path, obj);
+        }
+        return data;
     }
 }

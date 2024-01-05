@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace UnityEngine.UI
 {
@@ -37,7 +37,7 @@ namespace UnityEngine.UI
             Vector2 scrollRange = scrollRect.content.rect.size - viewportSize;
             Vector2 scrollPosition = scrollRect.content.anchoredPosition;
             Vector2 elementSize = childTransform.sizeDelta;
-            Vector2 elementOffset = childTransform.anchoredPosition - (elementSize * pivot) + viewportSize + scrollPosition;
+            Vector2 elementOffset = childTransform.anchoredPosition - Vector2.Scale(elementSize, pivot) + viewportSize + scrollPosition;
             if (scrollRect.horizontal && scrollRect.horizontalScrollbar != null && scrollRange.x > 0f)
             {
                 if (elementOffset.x < elementSize.x)

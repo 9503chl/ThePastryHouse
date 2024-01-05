@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b87b131792eb2e4fb4db357a98f5b8d, type: 3}
   m_Name: Normal MissionData
   m_EditorClassIdentifier: 
-  Level: 2
+  Level: 1
   SiteRange: 2
   PlayerMaxHP: 125
   EnemyMaxHP: 125

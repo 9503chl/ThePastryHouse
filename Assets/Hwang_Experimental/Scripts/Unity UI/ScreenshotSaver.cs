@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 
 namespace UnityEngine
 {
+    [DisallowMultipleComponent]
     public class ScreenshotSaver : MonoBehaviour
     {
         private const string DefaultScreenshotName = "Screenshot/{P}_{D}_{T}";
@@ -30,7 +31,11 @@ namespace UnityEngine
             {
                 if (instance == null)
                 {
+#if UNITY_2020_1_OR_NEWER
+                    ScreenshotSaver[] templates = FindObjectsOfType<ScreenshotSaver>(true);
+#else
                     ScreenshotSaver[] templates = FindObjectsOfType<ScreenshotSaver>();
+#endif
                     if (templates.Length > 0)
                     {
                         instance = templates[0];
@@ -133,7 +138,7 @@ namespace UnityEngine
         public string GetScreenshotPath()
         {
 #if UNITY_EDITOR || UNITY_STANDALONE
-            string dir = System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(Application.streamingAssetsPath)).Replace('\\', '/');
+            string dir = Path.GetDirectoryName(Path.GetDirectoryName(Application.streamingAssetsPath)).Replace('\\', '/');
 #else
             string dir = Application.persistentDataPath;
 #endif
@@ -152,7 +157,7 @@ namespace UnityEngine
 
         public void SaveScreenshot(string path)
         {
-            string dir = System.IO.Path.GetDirectoryName(path);
+            string dir = Path.GetDirectoryName(path);
             if (!Directory.Exists(dir))
             {
                 try
@@ -176,8 +181,8 @@ namespace UnityEngine
                 RenderTexture activeTexture = RenderTexture.active;
                 TargetCamera.targetTexture = renderTexture;
                 TargetCamera.Render();
-                Texture2D texture = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGB24, false);
                 RenderTexture.active = renderTexture;
+                Texture2D texture = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGB24, false);
                 texture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
                 texture.Apply();
                 TargetCamera.targetTexture = targetTexture;

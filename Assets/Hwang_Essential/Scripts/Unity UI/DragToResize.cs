@@ -17,6 +17,7 @@ namespace UnityEngine.UI
             TopRight = Top | Right,
             BottomLeft = Bottom | Left,
             BottomRight = Bottom | Right,
+            InsideOfBorders = 16
         }
 
         public enum DragBorderMode
@@ -47,7 +48,7 @@ namespace UnityEngine.UI
         public Vector2 MaximumSize = Vector2.zero;
         public Vector2 AspectRatio = Vector2.one;
         public bool KeepAspectRatio = false;
-        public bool ResizeByCenter = false;
+        //public bool ResizeByCenter = false;
         public CustomCursor HorizontalCursor;
         public CustomCursor VerticalCursor;
         public CustomCursor MainDiagonalCursor;
@@ -188,9 +189,9 @@ namespace UnityEngine.UI
                         borderType |= DragBorderType.Top;
                     }
                 }
-                if (targetRect.Contains(screenPoint) && IsBorderDraggable(borderType))
+                if (targetRect.Contains(screenPoint))
                 {
-                    return borderType;
+                    return IsBorderDraggable(borderType) ? borderType : DragBorderType.InsideOfBorders;
                 }
             }
             return DragBorderType.None;
@@ -206,40 +207,40 @@ namespace UnityEngine.UI
                 switch (borderType)
                 {
                     case DragBorderType.None:
-                        offset.position = delta * new Vector2(0.5f - pivot.x, 0.5f - pivot.y);
+                        offset.position = Vector2.Scale(delta, new Vector2(0.5f - pivot.x, 0.5f - pivot.y));
                         offset.size = delta;
                         break;
                     case DragBorderType.Left:
-                        offset.position = delta * new Vector2(1f - pivot.x, 0f);
-                        offset.size = delta * new Vector2(-1f, 0f);
+                        offset.position = Vector2.Scale(delta, new Vector2(1f - pivot.x, 0f));
+                        offset.size = Vector2.Scale(delta, new Vector2(-1f, 0f));
                         break;
                     case DragBorderType.Right:
-                        offset.position = delta * new Vector2(pivot.x, 0f);
-                        offset.size = delta * new Vector2(1f, 0f);
+                        offset.position = Vector2.Scale(delta, new Vector2(pivot.x, 0f));
+                        offset.size = Vector2.Scale(delta, new Vector2(1f, 0f));
                         break;
                     case DragBorderType.Top:
-                        offset.position = delta * new Vector2(0f, pivot.y);
-                        offset.size = delta * new Vector2(0f, 1f);
+                        offset.position = Vector2.Scale(delta, new Vector2(0f, pivot.y));
+                        offset.size = Vector2.Scale(delta, new Vector2(0f, 1f));
                         break;
                     case DragBorderType.Bottom:
-                        offset.position = delta * new Vector2(0f, 1f - pivot.y);
-                        offset.size = delta * new Vector2(0f, -1f);
+                        offset.position = Vector2.Scale(delta, new Vector2(0f, 1f - pivot.y));
+                        offset.size = Vector2.Scale(delta, new Vector2(0f, -1f));
                         break;
                     case DragBorderType.TopLeft:
-                        offset.position = delta * new Vector2(1f - pivot.x, pivot.y);
-                        offset.size = delta * new Vector2(-1f, 1f);
+                        offset.position = Vector2.Scale(delta, new Vector2(1f - pivot.x, pivot.y));
+                        offset.size = Vector2.Scale(delta, new Vector2(-1f, 1f));
                         break;
                     case DragBorderType.TopRight:
-                        offset.position = delta * pivot;
+                        offset.position = Vector2.Scale(delta, pivot);
                         offset.size = delta;
                         break;
                     case DragBorderType.BottomLeft:
-                        offset.position = delta * new Vector2(1f - pivot.x, 1f - pivot.y);
-                        offset.size = delta * new Vector2(-1f, -1f);
+                        offset.position = Vector2.Scale(delta, new Vector2(1f - pivot.x, 1f - pivot.y));
+                        offset.size = Vector2.Scale(delta, new Vector2(-1f, -1f));
                         break;
                     case DragBorderType.BottomRight:
-                        offset.position = delta * new Vector2(pivot.x, 1f - pivot.y);
-                        offset.size = delta * new Vector2(1f, -1f);
+                        offset.position = Vector2.Scale(delta, new Vector2(pivot.x, 1f - pivot.y));
+                        offset.size = Vector2.Scale(delta, new Vector2(1f, -1f));
                         break;
                 }
             }
@@ -275,39 +276,39 @@ namespace UnityEngine.UI
                 switch (borderType)
                 {
                     case DragBorderType.None:
-                        offset.position = delta * new Vector2(pivot.x - 0.5f, pivot.y - 0.5f);
+                        offset.position = Vector2.Scale(delta, new Vector2(pivot.x - 0.5f, pivot.y - 0.5f));
                         offset.size = delta;
                         break;
                     case DragBorderType.Left:
-                        offset.position = delta * new Vector2(pivot.x - 1f, 0f);
-                        offset.size = delta * new Vector2(1f, 0f);
+                        offset.position = Vector2.Scale(delta, new Vector2(pivot.x - 1f, 0f));
+                        offset.size = Vector2.Scale(delta, new Vector2(1f, 0f));
                         break;
                     case DragBorderType.Right:
-                        offset.position = delta * new Vector2(pivot.x, 0f);
-                        offset.size = delta * new Vector2(1f, 0f);
+                        offset.position = Vector2.Scale(delta, new Vector2(pivot.x, 0f));
+                        offset.size = Vector2.Scale(delta, new Vector2(1f, 0f));
                         break;
                     case DragBorderType.Top:
-                        offset.position = delta * new Vector2(0f, pivot.y);
-                        offset.size = delta * new Vector2(0f, 1f);
+                        offset.position = Vector2.Scale(delta, new Vector2(0f, pivot.y));
+                        offset.size = Vector2.Scale(delta, new Vector2(0f, 1f));
                         break;
                     case DragBorderType.Bottom:
-                        offset.position = delta * new Vector2(0f, pivot.y - 1f);
-                        offset.size = delta * new Vector2(0f, 1f);
+                        offset.position = Vector2.Scale(delta, new Vector2(0f, pivot.y - 1f));
+                        offset.size = Vector2.Scale(delta, new Vector2(0f, 1f));
                         break;
                     case DragBorderType.TopLeft:
-                        offset.position = delta * new Vector2(pivot.x - 1f, pivot.y);
+                        offset.position = Vector2.Scale(delta, new Vector2(pivot.x - 1f, pivot.y));
                         offset.size = delta;
                         break;
                     case DragBorderType.TopRight:
-                        offset.position = delta * pivot;
+                        offset.position = Vector2.Scale(delta, pivot);
                         offset.size = delta;
                         break;
                     case DragBorderType.BottomLeft:
-                        offset.position = delta * new Vector2(pivot.x - 1f, pivot.y - 1f);
+                        offset.position = Vector2.Scale(delta, new Vector2(pivot.x - 1f, pivot.y - 1f));
                         offset.size = delta;
                         break;
                     case DragBorderType.BottomRight:
-                        offset.position = delta * new Vector2(pivot.x, pivot.y - 1f);
+                        offset.position = Vector2.Scale(delta, new Vector2(pivot.x, pivot.y - 1f));
                         offset.size = delta;
                         break;
                 }
@@ -417,40 +418,40 @@ namespace UnityEngine.UI
                 switch (borderType)
                 {
                     case DragBorderType.None:
-                        offset.position = delta * new Vector2(1f - pivot.x, 1f - pivot.y);
+                        offset.position = Vector2.Scale(delta, new Vector2(1f - pivot.x, 1f - pivot.y));
                         offset.size = delta;
                         break;
                     case DragBorderType.Left:
-                        offset.position = delta * new Vector2(1f - pivot.x, 0f);
-                        offset.size = delta * new Vector2(-1f, 0f);
+                        offset.position = Vector2.Scale(delta, new Vector2(1f - pivot.x, 0f));
+                        offset.size = Vector2.Scale(delta, new Vector2(-1f, 0f));
                         break;
                     case DragBorderType.Right:
-                        offset.position = delta * new Vector2(pivot.x, 0f);
-                        offset.size = delta * new Vector2(1f, 0f);
+                        offset.position = Vector2.Scale(delta, new Vector2(pivot.x, 0f));
+                        offset.size = Vector2.Scale(delta, new Vector2(1f, 0f));
                         break;
                     case DragBorderType.Top:
-                        offset.position = delta * new Vector2(0f, pivot.y);
-                        offset.size = delta * new Vector2(0f, 1f);
+                        offset.position = Vector2.Scale(delta, new Vector2(0f, pivot.y));
+                        offset.size = Vector2.Scale(delta, new Vector2(0f, 1f));
                         break;
                     case DragBorderType.Bottom:
-                        offset.position = delta * new Vector2(0f, 1f - pivot.y);
-                        offset.size = delta * new Vector2(0f, -1f);
+                        offset.position = Vector2.Scale(delta, new Vector2(0f, 1f - pivot.y));
+                        offset.size = Vector2.Scale(delta, new Vector2(0f, -1f));
                         break;
                     case DragBorderType.TopLeft:
-                        offset.position = delta * new Vector2(1f - pivot.x, pivot.y);
-                        offset.size = delta * new Vector2(-1f, 1f);
+                        offset.position = Vector2.Scale(delta, new Vector2(1f - pivot.x, pivot.y));
+                        offset.size = Vector2.Scale(delta, new Vector2(-1f, 1f));
                         break;
                     case DragBorderType.TopRight:
-                        offset.position = delta * pivot;
+                        offset.position = Vector2.Scale(delta, pivot);
                         offset.size = delta;
                         break;
                     case DragBorderType.BottomLeft:
-                        offset.position = delta * new Vector2(1f - pivot.x, 1f - pivot.y);
-                        offset.size = delta * new Vector2(-1f, -1f);
+                        offset.position = Vector2.Scale(delta, new Vector2(1f - pivot.x, 1f - pivot.y));
+                        offset.size = Vector2.Scale(delta, new Vector2(-1f, -1f));
                         break;
                     case DragBorderType.BottomRight:
-                        offset.position = delta * new Vector2(pivot.x, 1f - pivot.y);
-                        offset.size = delta * new Vector2(1f, -1f);
+                        offset.position = Vector2.Scale(delta, new Vector2(pivot.x, 1f - pivot.y));
+                        offset.size = Vector2.Scale(delta, new Vector2(1f, -1f));
                         break;
                 }
                 offset.size = new Vector2(-Mathf.Abs(delta.x), -Mathf.Abs(delta.y));
@@ -464,24 +465,24 @@ namespace UnityEngine.UI
             {
                 switch (borderType)
                 {
-                    case DragBorderType.None:
-                        CustomCursor.Reset();
-                        break;
                     case DragBorderType.Left:
                     case DragBorderType.Right:
-                        CustomCursor.Apply(HorizontalCursor);
+                        CustomCursor.Apply(this, HorizontalCursor);
                         break;
                     case DragBorderType.Top:
                     case DragBorderType.Bottom:
-                        CustomCursor.Apply(VerticalCursor);
+                        CustomCursor.Apply(this, VerticalCursor);
                         break;
                     case DragBorderType.TopLeft:
                     case DragBorderType.BottomRight:
-                        CustomCursor.Apply(MainDiagonalCursor);
+                        CustomCursor.Apply(this, MainDiagonalCursor);
                         break;
                     case DragBorderType.TopRight:
                     case DragBorderType.BottomLeft:
-                        CustomCursor.Apply(AntiDiagonalCursor);
+                        CustomCursor.Apply(this, AntiDiagonalCursor);
+                        break;
+                    default:
+                        CustomCursor.Reset(this);
                         break;
                 }
                 dragBorderType = borderType;
@@ -541,13 +542,19 @@ namespace UnityEngine.UI
 
         protected override void OnEnter()
         {
-            ApplyCustomCursor(GetBorderType(Input.mousePosition / ScaleFactor));
+            if (!Input.GetMouseButton(0))
+            {
+                ApplyCustomCursor(GetBorderType(Input.mousePosition / ScaleFactor));
+            }
         }
 
         protected override void OnExit()
         {
             dragBorderType = DragBorderType.None;
-            CustomCursor.Reset();
+            if (!Input.GetMouseButton(0))
+            {
+                CustomCursor.Reset(this);
+            }
         }
 
         protected override void OnBeginDrag()

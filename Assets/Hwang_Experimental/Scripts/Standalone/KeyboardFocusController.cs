@@ -238,7 +238,14 @@ public class KeyboardFocusController : MonoBehaviour
                             Vector2Int selections = inputFieldSelections[inputField];
                             if (selections.x == selections.y)
                             {
+#if UNITY_2019_1_OR_NEWER
                                 inputField.SetTextWithoutNotify(inputField.text.Remove(selections.x - 1, 1));
+#else
+                                InputField.OnChangeEvent changeEvent = inputField.onValueChanged;
+                                inputField.onValueChanged = new InputField.OnChangeEvent();
+                                inputField.text = inputField.text.Remove(selections.x - 1, 1);
+                                inputField.onValueChanged = changeEvent;
+#endif
                             }
                         }
                         inputField.MoveTextStart(false);

@@ -13,14 +13,14 @@ namespace UnityEngine.UI
         public Text ContentText;
 
         public TextAnchor TooltipAnchor = TextAnchor.MiddleCenter;
-        public Vector2 TooltipOffset = new Vector2(0f, -50f);
+        public Vector2 TooltipOffset = new Vector2(0f, -80f);
+        public Vector2 ExpandSize = new Vector2(5f, 0f);
         public RectOffset ScreenPadding = new RectOffset();
-        public float ExpandWidth = 5f;
         public float ShowDelay = 0.5f;
         public float HideDelay = 5.5f;
 
-        public bool AutoPopup = false;
-        public bool SeeThrough = false;
+        public bool AutoPopup = true;
+        public bool PassThrough = true;
         public string TooltipTitle;
         public string TooltipContent;
 
@@ -80,7 +80,7 @@ namespace UnityEngine.UI
                     return;
                 }
 
-                if (!Input.anyKey && EventSystemRaycaster.Instance.IsPointerOverGameObject(gameObject, SeeThrough))
+                if (!Input.anyKey && EventSystemRaycaster.Instance.IsPointerOverGameObject(gameObject, PassThrough))
                 {
                     if (!isRollOver)
                     {
@@ -100,7 +100,9 @@ namespace UnityEngine.UI
             yield return new WaitForSeconds(ShowDelay);
             if (MoveTooltip(rectTransform))
             {
+                TooltipObject.transform.localScale = Vector3.zero;
                 TooltipObject.SetActive(true);
+                TooltipObject.transform.localScale = Vector3.one;
                 hideRoutine = StartCoroutine(DelayedHide());
             }
             showRoutine = null;
@@ -130,19 +132,22 @@ namespace UnityEngine.UI
                 RectTransform titleRectTransform = TitleText.GetComponent<RectTransform>();
                 ContentText.SetTextAndFitWidth(content, ContentText.fontSize);
                 TitleText.SetTextAndFitWidth(title, TitleText.fontSize);
-                objectRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Max(contentRectTransform.rect.width, titleRectTransform.rect.width) + ExpandWidth);
+                objectRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Max(contentRectTransform.rect.width, titleRectTransform.rect.width) + ExpandSize.x);
+                objectRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, contentRectTransform.rect.height + titleRectTransform.rect.height + contentRectTransform.rect.y - titleRectTransform.rect.y + ExpandSize.y);
             }
             else if (ContentText != null)
             {
                 RectTransform contentRectTransform = ContentText.GetComponent<RectTransform>();
                 ContentText.SetTextAndFitWidth(content, ContentText.fontSize);
-                objectRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, contentRectTransform.rect.width + ExpandWidth);
+                objectRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, contentRectTransform.rect.width + ExpandSize.x);
+                objectRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, contentRectTransform.rect.height + ExpandSize.y);
             }
             else if (TitleText != null)
             {
                 RectTransform titleRectTransform = TitleText.GetComponent<RectTransform>();
                 TitleText.SetTextAndFitWidth(title, TitleText.fontSize);
-                objectRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, titleRectTransform.rect.width + ExpandWidth);
+                objectRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, titleRectTransform.rect.width + ExpandSize.x);
+                objectRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, titleRectTransform.rect.height + ExpandSize.y);
             }
         }
 
@@ -164,13 +169,13 @@ namespace UnityEngine.UI
             Rect screenRect = new Rect(0, 0, Screen.width / ScaleFactor, Screen.height / ScaleFactor);
             screenRect.position += new Vector2(ScreenPadding.left, ScreenPadding.bottom);
             screenRect.size -= new Vector2(ScreenPadding.left + ScreenPadding.right, ScreenPadding.top + ScreenPadding.bottom);
-            Vector2 screenPoint = (Vector2)rectTransform.position / ScaleFactor - rectTransform.rect.size * (rectTransform.pivot - new Vector2(0.5f, 0.5f));
+            Vector2 screenPoint = (Vector2)rectTransform.position / ScaleFactor - Vector2.Scale(rectTransform.rect.size, rectTransform.pivot - new Vector2(0.5f, 0.5f));
             Rect contentRect = new Rect(rectTransform.position.x / ScaleFactor, (rectTransform.position.y - rectTransform.rect.height) / ScaleFactor, rectTransform.rect.width / ScaleFactor, rectTransform.rect.height / ScaleFactor);
             if (screenRect.Overlaps(contentRect))
             {
                 RectTransform tooltipRectTransform = TooltipObject.GetComponent<RectTransform>();
                 Vector2 tooltipSize = tooltipRectTransform.rect.size;
-                Vector2 contentSize = rectTransform.rect.size + new Vector2(ExpandWidth, 0f);
+                Vector2 contentSize = rectTransform.rect.size + ExpandSize;
                 if (ContentText != null)
                 {
                     contentSize += new Vector2(ContentText.fontSize, 0f);

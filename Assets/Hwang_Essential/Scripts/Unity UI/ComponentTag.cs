@@ -12,7 +12,7 @@ namespace UnityEngine.UI
         public object Value;
     }
 
-    public static class ComponentTagExtension
+    public static class ComponentTagExtensions
     {
         public static string GetDescription(this Component component)
         {

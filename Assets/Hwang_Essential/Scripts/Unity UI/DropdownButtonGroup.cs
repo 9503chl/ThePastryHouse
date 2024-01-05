@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 namespace UnityEngine.UI
 {
+    [DisallowMultipleComponent]
+    [RequireComponent(typeof(Button))]
     public sealed class DropdownButtonGroup : MonoBehaviour
     {
         public enum ButtonOrder
@@ -16,17 +19,102 @@ namespace UnityEngine.UI
         }
 
         [SerializeField]
-        private int defaultIndex = -1;
+        private int selectedIndex = -1;
 
-        public Image DropdownBackground;
+        public int SelectedIndex
+        {
+            get
+            {
+                for (int i = 0; i < buttons.Count; i++)
+                {
+                    if (buttons[i] == selectedButton)
+                    {
+                        return i;
+                    }
+                }
+                return -1;
+            }
+            set
+            {
+                Button deselectedButton = selectedButton;
+                selectedIndex = value;
+                if (value >= 0 && value < buttons.Count)
+                {
+                    selectedButton = buttons[value];
+                }
+                else
+                {
+                    selectedButton = null;
+                }
+                if (selectedButton != deselectedButton)
+                {
+                    SetButtonSibling(deselectedButton, false);
+                    SetButtonSibling(selectedButton, true);
+                }
+            }
+        }
 
-        public Button DropdownButton;
-        public Sprite CollapsedImage;
-        public Sprite ExpandedImage;
+        [NonSerialized]
+        private Button selectedButton;
+
+        public Button SelectedButton
+        {
+            get
+            {
+                return selectedButton;
+            }
+            set
+            {
+                Button deselectedButton = selectedButton;
+                if (value != null)
+                {
+                    selectedIndex = buttons.IndexOf(value);
+                }
+                else
+                {
+                    selectedIndex = -1;
+                }
+                selectedButton = value;
+                if (selectedButton != deselectedButton)
+                {
+                    SetButtonSibling(deselectedButton, false);
+                    SetButtonSibling(selectedButton, true);
+                }
+            }
+        }
+
+        public Image BackgroundImage;
+        public Image CollapsedImage;
+        public Image ExpandedImage;
+
+        [NonSerialized]
+        private Button dropdownButton;
 
         public ButtonOrder ChangeButtonOrder;
 
-        public Button[] Buttons = new Button[0];
+        [SerializeField]
+        private List<Button> buttons = new List<Button>();
+
+        public Button this[int index]
+        {
+            get
+            {
+                return buttons[index];
+            }
+        }
+
+        public int Count
+        {
+            get
+            {
+                return buttons.Count;
+            }
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return buttons.GetEnumerator();
+        }
 
         public UnityEvent onClick;
         public UnityEvent onCancel;
@@ -46,68 +134,39 @@ namespace UnityEngine.UI
             }
         }
 
+
+#if UNITY_EDITOR
         [NonSerialized]
-        private Button selectedButton;
+        private int buttonCount = 0;
 
-        public Button SelectedButton
+        private void FixedUpdate()
         {
-            get
+            if (SelectedIndex != selectedIndex)
             {
-                return selectedButton;
+                SelectedIndex = selectedIndex;
+                SetDropdownState(isDroppedDown);
             }
-            set
+            else if (buttonCount != buttons.Count)
             {
-                Button deselectedButton = selectedButton;
-                selectedButton = value;
-                if (selectedButton != deselectedButton)
-                {
-                    SetButtonSibling(deselectedButton, false);
-                    SetButtonSibling(selectedButton, true);
-                }
+                buttonCount = buttons.Count;
+                SetDropdownState(IsDroppedDown);
             }
         }
-
-        public int SelectedIndex
-        {
-            get
-            {
-                for (int i = 0; i < Buttons.Length; i++)
-                {
-                    if (Buttons[i] == selectedButton)
-                    {
-                        return i;
-                    }
-                }
-                return -1;
-            }
-            set
-            {
-                Button deselectedButton = selectedButton;
-                selectedButton = null;
-                if (value >= 0 && value < Buttons.Length)
-                {
-                    selectedButton = Buttons[value];
-                }
-                if (selectedButton != deselectedButton)
-                {
-                    SetButtonSibling(deselectedButton, false);
-                    SetButtonSibling(selectedButton, true);
-                }
-            }
-        }
+#endif
 
         private void Awake()
         {
-            foreach (Button button in Buttons)
+            dropdownButton = GetComponent<Button>();
+            if (dropdownButton != null)
+            {
+                dropdownButton.onClick.AddListener(delegate { SetDropdownState(!isDroppedDown); });
+            }
+            foreach (Button button in buttons)
             {
                 if (button != null)
                 {
                     button.onClick.AddListener(delegate { ButtonClick(button); });
                 }
-            }
-            if (DropdownButton != null)
-            {
-                DropdownButton.onClick.AddListener(delegate { SetDropdownState(!isDroppedDown); });
             }
         }
 
@@ -115,9 +174,9 @@ namespace UnityEngine.UI
         {
             if (selectedButton == null)
             {
-                if (defaultIndex >= 0 && defaultIndex < Buttons.Length)
+                if (selectedIndex >= 0 && selectedIndex < buttons.Count)
                 {
-                    selectedButton = Buttons[defaultIndex];
+                    selectedButton = buttons[selectedIndex];
                     SetButtonSibling(selectedButton, true);
                 }
             }
@@ -138,20 +197,20 @@ namespace UnityEngine.UI
 
         private IEnumerator Checkup()
         {
-            EventSystem.current.SetSelectedGameObject(DropdownButton.gameObject);
+            EventSystem.current.SetSelectedGameObject(dropdownButton.gameObject);
             yield return new WaitForEndOfFrame();
 
             while (isDroppedDown)
             {
                 GameObject currentSelected = EventSystem.current.currentSelectedGameObject;
                 bool cancel = true;
-                if (currentSelected == DropdownButton.gameObject)
+                if (currentSelected == dropdownButton.gameObject)
                 {
                     cancel = false;
                 }
                 else
                 {
-                    foreach (Button button in Buttons)
+                    foreach (Button button in buttons)
                     {
                         if (button != null && currentSelected == button.gameObject)
                         {
@@ -176,20 +235,24 @@ namespace UnityEngine.UI
         {
             if (expanded)
             {
-                for (int i = 0; i < Buttons.Length; i++)
+                for (int i = 0; i < buttons.Count; i++)
                 {
-                    if (Buttons[i] != null)
+                    if (buttons[i] != null)
                     {
-                        Buttons[i].gameObject.SetActive(true);
+                        buttons[i].gameObject.SetActive(true);
                     }
                 }
-                if (DropdownBackground != null)
+                if (BackgroundImage != null)
                 {
-                    DropdownBackground.gameObject.SetActive(true);
+                    BackgroundImage.gameObject.SetActive(true);
                 }
-                if (DropdownButton != null)
+                if (CollapsedImage != null)
                 {
-                    DropdownButton.image.sprite = ExpandedImage;
+                    CollapsedImage.gameObject.SetActive(false);
+                }
+                if (ExpandedImage != null)
+                {
+                    ExpandedImage.gameObject.SetActive(true);
                 }
                 isDroppedDown = true;
                 if (isActiveAndEnabled)
@@ -199,20 +262,24 @@ namespace UnityEngine.UI
             }
             else
             {
-                for (int i = 0; i < Buttons.Length; i++)
+                for (int i = 0; i < buttons.Count; i++)
                 {
-                    if (Buttons[i] != null && Buttons[i] != selectedButton)
+                    if (buttons[i] != null && buttons[i] != selectedButton)
                     {
-                        Buttons[i].gameObject.SetActive(false);
+                        buttons[i].gameObject.SetActive(false);
                     }
                 }
-                if (DropdownBackground != null)
+                if (BackgroundImage != null)
                 {
-                    DropdownBackground.gameObject.SetActive(false);
+                    BackgroundImage.gameObject.SetActive(false);
                 }
-                if (DropdownButton != null)
+                if (CollapsedImage != null)
                 {
-                    DropdownButton.image.sprite = CollapsedImage;
+                    CollapsedImage.gameObject.SetActive(true);
+                }
+                if (ExpandedImage != null)
+                {
+                    ExpandedImage.gameObject.SetActive(false);
                 }
                 isDroppedDown = false;
             }
@@ -236,11 +303,11 @@ namespace UnityEngine.UI
                 }
                 else
                 {
-                    for (int i = 0; i < Buttons.Length; i++)
+                    for (int i = 0; i < buttons.Count; i++)
                     {
-                        if (Buttons[i] == button)
+                        if (buttons[i] == button)
                         {
-                            Buttons[i].transform.SetSiblingIndex(i);
+                            buttons[i].transform.SetSiblingIndex(i);
                             break;
                         }
                     }
@@ -271,6 +338,56 @@ namespace UnityEngine.UI
         public void SetActive(bool value)
         {
             gameObject.SetActive(value);
+        }
+
+
+        public void SetInteractable(bool value)
+        {
+            dropdownButton.interactable = value;
+            foreach (Button button in buttons)
+            {
+                if (button != null)
+                {
+                    button.interactable = value;
+                }
+            }
+        }
+
+        public void Add(Button button)
+        {
+            if (button != null)
+            {
+                buttons.Add(button);
+                button.onClick.AddListener(delegate { ButtonClick(button); });
+            }
+        }
+
+        public void Remove(Button button)
+        {
+            if (button != null)
+            {
+                if (button == selectedButton)
+                {
+                    selectedIndex = -1;
+                    selectedButton = null;
+                }
+                buttons.Remove(button);
+                button.onClick.RemoveAllListeners();
+            }
+        }
+
+        public void Clear()
+        {
+            selectedIndex = -1;
+            selectedButton = null;
+            foreach (Button button in buttons)
+            {
+                if (button != null)
+                {
+                    button.onClick.RemoveAllListeners();
+                }
+            }
+            buttons.Clear();
         }
     }
 }

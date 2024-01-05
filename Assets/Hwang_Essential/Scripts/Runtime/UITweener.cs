@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace UnityEngine.UI
@@ -64,13 +65,13 @@ namespace UnityEngine.UI
         public float Delay = 0f;
         public float Duration = 3f;
         public bool InitOnPlay = true;
-        public bool PlayOnStart = true;
-        public bool PlayOnEnable = false;
+        public bool PlayOnEnable = true;
         public int StopAfterLoop = 0;
         public bool IgnoreTimeScale = true;
 
         public UnityEvent onFinish = new UnityEvent();
 
+        public event UnityAction<UITweener> OnStartLoop;
         public event UnityAction<UITweener> OnEndLoop;
 
         [HideInInspector]
@@ -116,14 +117,6 @@ namespace UnityEngine.UI
             }
         }
 
-        protected virtual void Start()
-        {
-            if (PlayOnStart && !isPlaying)
-            {
-                PlayForward();
-            }
-        }
-
         protected virtual void OnEnable()
         {
             if (PlayOnEnable && !isPlaying)
@@ -153,6 +146,7 @@ namespace UnityEngine.UI
                     else
                     {
                         isFirst = false;
+                        FireOnStartLoop();
                     }
                     return;
                 }
@@ -186,6 +180,7 @@ namespace UnityEngine.UI
                             isPlaying = true;
                             current = 0f;
                             direction = TweeningDirection.Forward;
+                            FireOnStartLoop();
                         }
                         else if (current <= 0f && Direction == TweeningDirection.Reverse)
                         {
@@ -197,6 +192,7 @@ namespace UnityEngine.UI
                             isPlaying = true;
                             current = Duration;
                             direction = TweeningDirection.Reverse;
+                            FireOnStartLoop();
                         }
                         break;
                     case TweeningLoopType.PingPong:
@@ -213,6 +209,7 @@ namespace UnityEngine.UI
                             }
                             current = Duration;
                             direction = TweeningDirection.Reverse;
+                            FireOnStartLoop();
                         }
                         else if (current <= 0f && Direction == TweeningDirection.Reverse)
                         {
@@ -227,6 +224,7 @@ namespace UnityEngine.UI
                             }
                             current = 0f;
                             direction = TweeningDirection.Forward;
+                            FireOnStartLoop();
                         }
                         break;
                 }
@@ -392,6 +390,14 @@ namespace UnityEngine.UI
             if (onFinish != null)
             {
                 onFinish.Invoke();
+            }
+        }
+
+        private void FireOnStartLoop()
+        {
+            if (OnStartLoop != null)
+            {
+                OnStartLoop.Invoke(this);
             }
         }
 

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 
 namespace UnityEngine.UI
@@ -33,7 +32,7 @@ namespace UnityEngine.UI
                 EditorGUILayout.PropertyField(property, true);
 
                 // Add a button below of "Buttons" property when expanded
-                if (string.Compare(property.name, "Buttons") == 0 && property.isExpanded)
+                if (string.Compare(property.name, "buttons") == 0 && property.isExpanded)
                 {
                     EditorGUILayout.BeginHorizontal();
                     GUILayout.Space(20);
@@ -43,16 +42,15 @@ namespace UnityEngine.UI
                         foreach (ButtonGroup group in targets)
                         {
                             // Exclude from result if Button is on ButtonGroup itself
-                            List<Button> buttons = new List<Button>(group.gameObject.GetComponentsInChildren<Button>(true));
+                            Button[] buttons = group.gameObject.GetComponentsInChildren<Button>(true);
+                            group.Clear();
                             foreach (Button button in buttons)
                             {
-                                if (button.gameObject == group.gameObject)
+                                if (button.gameObject != group.gameObject)
                                 {
-                                    buttons.Remove(button);
-                                    break;
+                                    group.Add(button);
                                 }
                             }
-                            group.Buttons = buttons.ToArray();
                         }
                     }
                     GUILayout.Space(20);

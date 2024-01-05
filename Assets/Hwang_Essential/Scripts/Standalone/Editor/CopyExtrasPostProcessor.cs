@@ -44,9 +44,9 @@ public class CopyExtrasPostProcessor
 
         if (!string.IsNullOrEmpty(platformDir))
         {
-            string extraPath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Application.dataPath), "Extras");
-            string extraPlatformPath = System.IO.Path.Combine(extraPath, platformDir);
-            string buildPath = System.IO.Path.GetDirectoryName(path);
+            string extraPath = Path.Combine(Path.GetDirectoryName(Application.dataPath), "Extras");
+            string extraPlatformPath = Path.Combine(extraPath, platformDir);
+            string buildPath = Path.GetDirectoryName(path);
             if (Directory.Exists(extraPath) && Directory.Exists(extraPlatformPath))
             {
                 int count = CopyAllFiles(extraPlatformPath, buildPath, true);
@@ -78,9 +78,9 @@ public class CopyExtrasPostProcessor
             string[] entries = Directory.GetFileSystemEntries(sourcePath);
             foreach (string entry in entries)
             {
-                string entryName = System.IO.Path.GetFileName(entry);
-                string sourceFilePath = System.IO.Path.Combine(sourcePath, entryName);
-                string targetFilePath = System.IO.Path.Combine(targetPath, entryName);
+                string entryName = Path.GetFileName(entry);
+                string sourceFilePath = Path.Combine(sourcePath, entryName);
+                string targetFilePath = Path.Combine(targetPath, entryName);
                 if (File.Exists(sourceFilePath))
                 {
                     try

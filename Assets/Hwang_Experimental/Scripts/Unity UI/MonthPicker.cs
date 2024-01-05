@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -16,8 +16,11 @@ namespace UnityEngine.UI
         public LayoutGroup MonthGrid;
         public Image CurrentCellImage;
         public Image SelectedCellImage;
+
+        public Font CalendarFont = null;
         public Color NormalTextColor = Color.white;
-        public Color OutsideTextColor = Color.gray;
+        [Range(0f, 1f)]
+        public float OutsideTextAlpha = 0.5f;
 
         private const string YEAR_TEXT_FORMAT = "yyyy";
         private const string MONTH_TEXT_FORMAT = "MMMM";
@@ -267,52 +270,20 @@ namespace UnityEngine.UI
             }
         }
 
-        private CultureInfo GetCultureInfo()
-        {
-            if (calendarLanguage != SystemLanguage.Unknown)
-            {
-                CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
-                string languageName = string.Format("{0}", calendarLanguage);
-                if (calendarLanguage == SystemLanguage.Chinese)
-                {
-                    languageName = "zh-CN"; // "Chinese (Simplified)"
-                }
-                else if (calendarLanguage == SystemLanguage.ChineseSimplified)
-                {
-                    languageName = "zh-Hans"; // "zh-CHS" is legacy name of "Chinese (Simplified)"
-                }
-                else if (calendarLanguage == SystemLanguage.ChineseTraditional)
-                {
-                    languageName = "zh-Hant"; // "zh-CHT" is legacy name of "Chinese (Traditional)"
-                }
-                else if (calendarLanguage == SystemLanguage.SerboCroatian)
-                {
-                    languageName = "hr"; // "Serbo-Croatian" and "sh" are deprecated. "Bosnian", "bs", "Croatian", "hr", "Serbian" or "sr" should be used.
-                }
-                foreach (CultureInfo culture in cultures)
-                {
-                    if (string.Compare(culture.Name, languageName, true) == 0 || string.Compare(culture.DisplayName, languageName, true) == 0)
-                    {
-                        return culture;
-                    }
-                }
-            }
-            return CultureInfo.CurrentCulture;
-        }
-
         private string GetDateTimeText(DateTime dt, string format, string defFormat)
         {
+            CultureInfo culture = calendarLanguage.GetCultureInfo();
             if (!string.IsNullOrEmpty(format))
             {
                 try
                 {
-                    return dt.ToString(format, GetCultureInfo());
+                    return dt.ToString(format, culture);
                 }
                 catch (Exception)
                 {
                 }
             }
-            return dt.ToString(defFormat, GetCultureInfo());
+            return dt.ToString(defFormat, culture);
         }
 
         private void SetCurrentCell(Cell cell)
@@ -375,6 +346,10 @@ namespace UnityEngine.UI
             SetSelectedCell(null);
             if (CurrentYearText != null)
             {
+                if (CalendarFont != null)
+                {
+                    CurrentYearText.font = CalendarFont;
+                }
                 CurrentYearText.text = GetDateTimeText(currentDate, yearTextFormat, YEAR_TEXT_FORMAT);
             }
             DateTime todayDate = DateTime.Today;
@@ -398,14 +373,18 @@ namespace UnityEngine.UI
                 else if (cell.CellValue < 0)
                 {
                     cellDate = new DateTime(currentDate.Year, 1, 1).AddMonths(cell.CellValue);
-                    cell.CellText.color = OutsideTextColor;
+                    cell.CellText.color = NormalTextColor * OutsideTextAlpha;
                     cell.CellText.enabled = showOutsideCells;
                 }
                 else
                 {
                     cellDate = new DateTime(currentDate.Year, 12, 1).AddMonths(cell.CellValue);
-                    cell.CellText.color = OutsideTextColor;
+                    cell.CellText.color = NormalTextColor * OutsideTextAlpha;
                     cell.CellText.enabled = showOutsideCells;
+                }
+                if (CalendarFont != null)
+                {
+                    cell.CellText.font = CalendarFont;
                 }
                 cell.CellText.text = GetDateTimeText(cellDate, monthTextFormat, MONTH_TEXT_FORMAT);
                 cell.CellButton.enabled = cell.CellText.enabled;
@@ -467,6 +446,14 @@ namespace UnityEngine.UI
         {
             FillMonthCells();
             RebuildCalendar();
+        }
+
+        private void Reset()
+        {
+            if (CalendarFont == null)
+            {
+                CalendarFont = new Font("Arial");
+            }
         }
 #endif
     }

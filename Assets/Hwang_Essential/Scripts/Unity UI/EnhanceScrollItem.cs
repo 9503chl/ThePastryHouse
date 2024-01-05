@@ -13,7 +13,7 @@ public class EnhanceScrollItem : MonoBehaviour, IBeginDragHandler, IDragHandler,
     private Color selectedColor = Color.white;
 
     [SerializeField]
-    private Color deselectedColor = new Color(0.8f, 0.8f, 0.8f);
+    private Color deselectedColor = Color.white;
 
     [NonSerialized]
     private bool isCentered = false;

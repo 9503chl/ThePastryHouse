@@ -1,14 +1,75 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace UnityEngine.UI
 {
-    public sealed class ButtonGroup : MonoBehaviour
+    [DisallowMultipleComponent]
+    public sealed class ButtonGroup : MonoBehaviour, IEnumerable
     {
         [SerializeField]
-        private int defaultIndex = -1;
+        private int selectedIndex = -1;
+
+        public int SelectedIndex
+        {
+            get
+            {
+                for (int i = 0; i < buttons.Count; i++)
+                {
+                    if (buttons[i] == selectedButton)
+                    {
+                        return i;
+                    }
+                }
+                return -1;
+            }
+            set
+            {
+                Button deselectedButton = selectedButton;
+                selectedIndex = value;
+                selectedButton = null;
+                if (value >= 0 && value < buttons.Count)
+                {
+                    selectedButton = buttons[value];
+                }
+                if (selectedButton != deselectedButton && !hideSelection)
+                {
+                    SetButtonSelected(deselectedButton, false);
+                    SetButtonSelected(selectedButton, true);
+                }
+            }
+        }
+
+        [NonSerialized]
+        private Button selectedButton;
+
+        public Button SelectedButton
+        {
+            get
+            {
+                return selectedButton;
+            }
+            set
+            {
+                Button deselectedButton = selectedButton;
+                if (value != null)
+                {
+                    selectedIndex = buttons.IndexOf(value);
+                }
+                else
+                {
+                    selectedIndex = -1;
+                }
+                selectedButton = value;
+                if (selectedButton != deselectedButton && !hideSelection)
+                {
+                    SetButtonSelected(deselectedButton, false);
+                    SetButtonSelected(selectedButton, true);
+                }
+            }
+        }
 
 #if UNITY_2019_1_OR_NEWER
         [Tooltip("Use pressed state instead of selected state for transition.")]
@@ -28,81 +89,57 @@ namespace UnityEngine.UI
             set
             {
                 hideSelection = value;
-                SetButtonPressed(selectedButton, !hideSelection);
+                SetButtonSelected(selectedButton, !hideSelection);
             }
         }
 
-        public Button[] Buttons = new Button[0];
+        [SerializeField]
+        private List<Button> buttons = new List<Button>();
+
+        public Button this[int index]
+        {
+            get
+            {
+                return buttons[index];
+            }
+        }
+
+        public int Count
+        {
+            get
+            {
+                return buttons.Count;
+            }
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return buttons.GetEnumerator();
+        }
 
         public UnityEvent onClick;
 
         public event UnityAction<Button, bool> OnSelect;
 
         [NonSerialized]
-        private Dictionary<Button, Sprite> buttonSprites = new Dictionary<Button, Sprite>();
-
-        [NonSerialized]
-        private Button selectedButton;
-
-        public Button SelectedButton
-        {
-            get
-            {
-                return selectedButton;
-            }
-            set
-            {
-                Button deselectedButton = selectedButton;
-                selectedButton = value;
-                if (selectedButton != deselectedButton && !hideSelection)
-                {
-                    SetButtonPressed(deselectedButton, false);
-                    SetButtonPressed(selectedButton, true);
-                }
-            }
-        }
-
-        public int SelectedIndex
-        {
-            get
-            {
-                for (int i = 0; i < Buttons.Length; i++)
-                {
-                    if (Buttons[i] == selectedButton)
-                    {
-                        return i;
-                    }
-                }
-                return -1;
-            }
-            set
-            {
-                Button deselectedButton = selectedButton;
-                selectedButton = null;
-                if (value >= 0 && value < Buttons.Length)
-                {
-                    selectedButton = Buttons[value];
-                }
-                if (selectedButton != deselectedButton && !hideSelection)
-                {
-                    SetButtonPressed(deselectedButton, false);
-                    SetButtonPressed(selectedButton, true);
-                }
-            }
-        }
+        private readonly Dictionary<Button, Sprite> buttonSprites = new Dictionary<Button, Sprite>();
 
 #if UNITY_EDITOR
         [NonSerialized]
         private bool showSelection = true;
 
-        private void OnValidate()
+        public void FixedUpdate()
         {
             if (Application.isPlaying)
             {
+                if (SelectedIndex != selectedIndex)
+                {
+                    SelectedIndex = selectedIndex;
+                }
                 if (showSelection == hideSelection)
                 {
                     showSelection = !hideSelection;
-                    SetButtonPressed(selectedButton, !hideSelection);
+                    SetButtonSelected(selectedButton, !hideSelection);
                 }
             }
         }
@@ -110,7 +147,7 @@ namespace UnityEngine.UI
 
         private void Awake()
         {
-            foreach (Button button in Buttons)
+            foreach (Button button in buttons)
             {
                 if (button != null)
                 {
@@ -127,18 +164,18 @@ namespace UnityEngine.UI
         {
             if (selectedButton == null)
             {
-                if (defaultIndex >= 0 && defaultIndex < Buttons.Length)
+                if (selectedIndex >= 0 && selectedIndex < buttons.Count)
                 {
-                    selectedButton = Buttons[defaultIndex];
+                    selectedButton = buttons[selectedIndex];
                     if (!hideSelection)
                     {
-                        SetButtonPressed(selectedButton, true);
+                        SetButtonSelected(selectedButton, true);
                     }
                 }
             }
         }
 
-        private void SetButtonPressed(Button button, bool pressed)
+        private void SetButtonSelected(Button button, bool selected)
         {
             if (button != null)
             {
@@ -148,9 +185,9 @@ namespace UnityEngine.UI
                         if (button.image != null)
                         {
 #if UNITY_2019_1_OR_NEWER
-                            button.image.color = pressed ? (usePressedState ? button.colors.pressedColor : button.colors.selectedColor) : button.colors.normalColor;
+                            button.image.color = selected ? (usePressedState ? button.colors.pressedColor : button.colors.selectedColor) : button.colors.normalColor;
 #else
-                            button.image.color = pressed ? button.colors.pressedColor : button.colors.normalColor;
+                            button.image.color = selected ? button.colors.pressedColor : button.colors.normalColor;
 #endif
                         }
                         break;
@@ -162,9 +199,9 @@ namespace UnityEngine.UI
                                 buttonSprites.Add(button, button.image.sprite);
                             }
 #if UNITY_2019_1_OR_NEWER
-                            button.image.sprite = pressed ? (usePressedState ? button.spriteState.pressedSprite : button.spriteState.selectedSprite) : buttonSprites[button];
+                            button.image.sprite = selected ? (usePressedState ? button.spriteState.pressedSprite : button.spriteState.selectedSprite) : buttonSprites[button];
 #else
-                            button.image.sprite = pressed ? button.spriteState.pressedSprite : buttonSprites[button];
+                            button.image.sprite = selected ? button.spriteState.pressedSprite : buttonSprites[button];
 #endif
                         }
                         break;
@@ -172,16 +209,16 @@ namespace UnityEngine.UI
                         if (button.animator != null)
                         {
 #if UNITY_2019_1_OR_NEWER
-                            button.animator.SetTrigger(pressed ? (usePressedState ? button.animationTriggers.pressedTrigger : button.animationTriggers.selectedTrigger) : button.animationTriggers.normalTrigger);
+                            button.animator.SetTrigger(selected ? (usePressedState ? button.animationTriggers.pressedTrigger : button.animationTriggers.selectedTrigger) : button.animationTriggers.normalTrigger);
 #else
-                            button.animator.SetTrigger(pressed ? button.animationTriggers.pressedTrigger : button.animationTriggers.normalTrigger);
+                            button.animator.SetTrigger(selected ? button.animationTriggers.pressedTrigger : button.animationTriggers.normalTrigger);
 #endif
                         }
                         break;
                 }
                 if (OnSelect != null)
                 {
-                    OnSelect.Invoke(button, pressed);
+                    OnSelect.Invoke(button, selected);
                 }
             }
         }
@@ -205,7 +242,7 @@ namespace UnityEngine.UI
 
         public void SetInteractable(bool value)
         {
-            foreach (Button button in Buttons)
+            foreach (Button button in buttons)
             {
                 if (button != null)
                 {
@@ -218,9 +255,7 @@ namespace UnityEngine.UI
         {
             if (button != null)
             {
-                List<Button> buttons = new List<Button>(Buttons);
                 buttons.Add(button);
-                Buttons = buttons.ToArray();
                 if (!buttonSprites.ContainsKey(button) && button.image != null)
                 {
                     buttonSprites.Add(button, button.image.sprite);
@@ -237,24 +272,23 @@ namespace UnityEngine.UI
                 {
                     if (!hideSelection)
                     {
-                        SetButtonPressed(button, false);
+                        SetButtonSelected(button, false);
                     }
+                    selectedIndex = -1;
                     selectedButton = null;
                 }
-                List<Button> buttons = new List<Button>(Buttons);
                 buttons.Remove(button);
                 if (buttonSprites.ContainsKey(button))
                 {
                     buttonSprites.Remove(button);
                 }
                 button.onClick.RemoveAllListeners();
-                Buttons = buttons.ToArray();
             }
         }
 
         public void Clear()
         {
-            foreach (Button button in Buttons)
+            foreach (Button button in buttons)
             {
                 if (button != null)
                 {
@@ -265,8 +299,9 @@ namespace UnityEngine.UI
                     button.onClick.RemoveAllListeners();
                 }
             }
-            Buttons = new Button[0];
+            buttons.Clear();
             buttonSprites.Clear();
+            selectedIndex = -1;
             selectedButton = null;
         }
     }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -25,7 +25,11 @@ namespace UnityEngine
         {
             get
             {
+#if UNITY_2020_1_OR_NEWER
+                SceneLoader[] templates = FindObjectsOfType<SceneLoader>(true);
+#else
                 SceneLoader[] templates = FindObjectsOfType<SceneLoader>();
+#endif
                 if (templates.Length > 0)
                 {
                     instance = templates[0];
@@ -59,7 +63,7 @@ namespace UnityEngine
         public void LoadScene(string sceneName)
         {
             Scene activeScene = SceneManager.GetActiveScene();
-            if (!string.IsNullOrEmpty(sceneName) && SceneManager.GetSceneByName(sceneName) != null)
+            if (!string.IsNullOrEmpty(sceneName) && SceneManager.GetSceneByName(sceneName).IsValid())
             {
                 if (string.Compare(sceneName, activeScene.name, true) == 0)
                 {
@@ -101,7 +105,7 @@ namespace UnityEngine
         public void LoadScene(int sceneIndex)
         {
             Scene activeScene = SceneManager.GetActiveScene();
-            if (sceneIndex >= 0 && sceneIndex < SceneManager.sceneCountInBuildSettings && SceneManager.GetSceneByBuildIndex(sceneIndex) != null)
+            if (sceneIndex >= 0 && sceneIndex < SceneManager.sceneCountInBuildSettings && SceneManager.GetSceneByBuildIndex(sceneIndex).IsValid())
             {
                 if (sceneIndex == activeScene.buildIndex)
                 {

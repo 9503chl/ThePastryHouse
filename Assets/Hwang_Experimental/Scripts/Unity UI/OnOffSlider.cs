@@ -7,18 +7,13 @@ namespace UnityEngine.UI
 {
     [ExecuteInEditMode]
     [RequireComponent(typeof(Slider))]
-    public class OnOffSlider : MonoBehaviour
+    public class OnOffSlider : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         public Color ColorIsOn = Color.green;
         public Color ColorIsOff = Color.red;
         public Color ColorDisabled = Color.white;
 
-        public bool ClickToToggle = true;
-
-        [Serializable]
-        public class OnOffSliderEvent : UnityEvent<bool> { }
-
-        public OnOffSliderEvent onChanged = new OnOffSliderEvent();
+        public bool ToggleOnClick = true;
 
         [NonSerialized]
         private Slider slider;
@@ -27,10 +22,13 @@ namespace UnityEngine.UI
         private Image image;
 
         [NonSerialized]
-        private Button button;
+        private bool beforeDown = false;
 
         [NonSerialized]
-        private bool wasOn = false;
+        private float oldValue = 0f;
+
+        [SerializeField]
+        private bool _isOn = false;
 
         public bool isOn
         {
@@ -38,132 +36,49 @@ namespace UnityEngine.UI
             {
                 if (slider != null)
                 {
-                    return (slider.normalizedValue >= 0.5f);
+                    _isOn = slider.normalizedValue >= 0.5f;
                 }
-                return wasOn;
+                return _isOn;
             }
             set
             {
-                if (slider != null)
-                {
-                    SliderOnOff(value);
-                }
-                wasOn = value;
+                SetIsOn(value);
             }
         }
 
-        private void Start()
-        {
-            slider = GetComponent<Slider>();
-            slider.onValueChanged.AddListener(SliderValueChanged);
-            image = slider.handleRect.GetComponent<Image>();
-            SetIsOnWithoutNotify(isOn);
-            wasOn = isOn;
-        }
+        [Serializable]
+        public class OnOffSliderEvent : UnityEvent<bool> { }
+
+        public OnOffSliderEvent onChanged = new OnOffSliderEvent();
 
         private void OnEnable()
         {
-            if (slider == null)
+            slider = GetComponent<Slider>();
+            slider.onValueChanged.AddListener(SliderValueChanged);
+            if (slider.handleRect != null)
             {
-                slider = GetComponent<Slider>();
-                slider.onValueChanged.AddListener(SliderValueChanged);
+                image = slider.handleRect.GetComponent<Image>();
             }
-            image = slider.handleRect.GetComponent<Image>();
             SetIsOnWithoutNotify(isOn);
-            wasOn = isOn;
-            if (Application.isPlaying)
-            {
-                button = slider.handleRect.GetComponent<Button>();
-                if (button == null)
-                {
-                    button = slider.handleRect.gameObject.AddComponent<Button>();
-                    button.transition = Selectable.Transition.None;
-                    EventTrigger eventTrigger = button.gameObject.AddComponent<EventTrigger>();
-                    eventTrigger.AddListener(EventTriggerType.PointerDown, slider.OnPointerDown);
-                    eventTrigger.AddListener(EventTriggerType.PointerUp, slider.OnPointerUp);
-                    eventTrigger.AddListener(EventTriggerType.Drag, slider.OnDrag);
-                }
-                button.onClick.AddListener(ButtonClick);
-            }
+            oldValue = slider.value;
         }
 
         private void OnDisable()
         {
-            if (image != null)
-            {
-                image.color = ColorDisabled;
-            }
-            if (Application.isPlaying)
-            {
-                if (button != null)
-                {
-                    button.onClick.RemoveListener(ButtonClick);
-                }
-            }
-            slider = null;
-        }
-
-        private void SliderOnOff(bool turnOn)
-        {
-            if (turnOn)
-            {
-                image.color = ColorIsOn;
-                if (Application.isPlaying)
-                {
-                    slider.value = slider.maxValue;
-                }
-                else
-                {
-                    slider.SetValueWithoutNotify(slider.maxValue);
-                }
-                if (!wasOn)
-                {
-                    onChanged.Invoke(true);
-                }
-            }
-            else
-            {
-                image.color = ColorIsOff;
-                if (Application.isPlaying)
-                {
-                    slider.value = slider.minValue;
-                }
-                else
-                {
-                    slider.SetValueWithoutNotify(slider.minValue);
-                }
-                if (wasOn)
-                {
-                    onChanged.Invoke(false);
-                }
-            }
-            wasOn = turnOn;
-        }
-
-        private void SliderValueChanged(float value)
-        {
+            SetIsOnWithoutNotify(isOn);
             if (slider != null)
             {
-                SliderOnOff(slider.normalizedValue >= 0.5f);
-            }
-        }
-
-        private void ButtonClick()
-        {
-            if (ClickToToggle && slider.enabled)
-            {
-                SliderOnOff(!wasOn);
+                slider.onValueChanged.RemoveListener(SliderValueChanged);
+                slider = null;
             }
         }
 
 #if UNITY_EDITOR
-        private float oldValue;
-
         private void Update()
         {
-            if (slider != null)
+            if (Application.isPlaying)
             {
-                if (oldValue != slider.value)
+                if (slider != null && oldValue != slider.value)
                 {
                     oldValue = slider.value;
                     SetIsOnWithoutNotify(slider.normalizedValue >= 0.5f);
@@ -177,43 +92,90 @@ namespace UnityEngine.UI
             {
                 slider = GetComponent<Slider>();
             }
-            if (slider != null && slider.handleRect != null)
+            bool wasOn = slider.normalizedValue >= 0.5f;
+            if (wasOn != _isOn)
             {
-                image = slider.handleRect.GetComponent<Image>();
-                if (image != null)
-                {
-                    if (isActiveAndEnabled)
-                    {
-                        if (isOn)
-                        {
-                            image.color = ColorIsOn;
-                        }
-                        else
-                        {
-                            image.color = ColorIsOff;
-                        }
-                    }
-                    else
-                    {
-                        image.color = ColorDisabled;
-                    }
-                }
+                SetIsOnWithoutNotify(_isOn);
             }
         }
 #endif
 
-        public void SetIsOnWithoutNotify(bool isOn)
+        private void SliderValueChanged(float value)
         {
-            if (isOn)
+            if (slider != null)
             {
-                image.color = ColorIsOn;
+                SetIsOn(slider.normalizedValue >= 0.5f);
             }
-            else
+        }
+
+        public void SetIsOn(bool value)
+        {
+            if (image != null)
             {
-                image.color = ColorIsOff;
+                image.color = enabled ? (value ? ColorIsOn : ColorIsOff) : ColorDisabled;
             }
-            slider.SetValueWithoutNotify(isOn ? slider.maxValue : slider.minValue);
-            wasOn = isOn;
+            if (slider != null)
+            {
+                bool wasOn = _isOn;
+#if UNITY_2019_1_OR_NEWER
+                slider.SetValueWithoutNotify(value ? slider.maxValue : slider.minValue);
+#else
+                Slider.SliderEvent sliderEvent = slider.onValueChanged;
+                slider.onValueChanged = new Slider.SliderEvent();
+                slider.value = value ? slider.maxValue : slider.minValue;
+                slider.onValueChanged = sliderEvent;
+#endif
+                oldValue = slider.value;
+                if (wasOn != value)
+                {
+                    _isOn = value;
+                    onChanged.Invoke(value);
+                }
+            }
+        }
+
+        public void SetIsOnWithoutNotify(bool value)
+        {
+            if (image != null)
+            {
+                image.color = enabled ? (value ? ColorIsOn : ColorIsOff) : ColorDisabled;
+            }
+            if (slider != null)
+            {
+#if UNITY_2019_1_OR_NEWER
+                slider.SetValueWithoutNotify(value ? slider.maxValue : slider.minValue);
+#else
+                Slider.SliderEvent sliderEvent = slider.onValueChanged;
+                slider.onValueChanged = new Slider.SliderEvent();
+                slider.value = value ? slider.maxValue : slider.minValue;
+                slider.onValueChanged = sliderEvent;
+#endif
+                oldValue = slider.value;
+                _isOn = value;
+            }
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            if (ToggleOnClick && eventData.button == PointerEventData.InputButton.Left)
+            {
+                beforeDown = slider.normalizedValue >= 0.5f;
+            }
+        }
+
+        public void OnPointerUp(PointerEventData eventData)
+        {
+            if (ToggleOnClick && eventData.button == PointerEventData.InputButton.Left)
+            {
+                if (eventData.pointerCurrentRaycast.gameObject == eventData.pointerPressRaycast.gameObject)
+                {
+                    bool afterUp = slider.normalizedValue >= 0.5f;
+                    if (beforeDown == afterUp)
+                    {
+                        SetIsOn(!beforeDown);
+                    }
+                }
+            }
         }
     }
 }

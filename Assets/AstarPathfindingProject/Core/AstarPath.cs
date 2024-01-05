@@ -1256,7 +1256,7 @@ public class AstarPath : VersionedMonoBehaviour {
 		navmeshUpdates.OnEnable();
 
 		if (scanOnStartup && (!data.cacheStartup || data.file_cachedStartup == null)) {
-			Scan();
+			//Scan();
 		}
 	}
 

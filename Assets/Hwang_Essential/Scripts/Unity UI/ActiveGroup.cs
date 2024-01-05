@@ -1,18 +1,43 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace UnityEngine.UI
 {
-    public sealed class ActiveGroup : MonoBehaviour
+    [DisallowMultipleComponent]
+    public sealed class ActiveGroup : MonoBehaviour, IEnumerable
     {
         [SerializeField]
         private int activedIndex = -1;
 
-        [SerializeField]
-        private bool active0ToIndex = false;
-
-        public GameObject[] GameObjects = new GameObject[0];
+        public int ActivedIndex
+        {
+            get
+            {
+                for (int i = 0; i < gameObjects.Count; i++)
+                {
+                    if (gameObjects[i] == activedObject)
+                    {
+                        return i;
+                    }
+                }
+                return -1;
+            }
+            set
+            {
+                activedIndex = value;
+                if (value >= 0 && value < gameObjects.Count)
+                {
+                    activedObject = gameObjects[value];
+                }
+                else
+                {
+                    activedObject = null;
+                }
+                SetGameObjectActive();
+            }
+        }
 
         [NonSerialized]
         private GameObject activedObject;
@@ -24,37 +49,21 @@ namespace UnityEngine.UI
             }
             set
             {
-                GameObject deactivedObject = activedObject;
+                if (value != null)
+                {
+                    activedIndex = gameObjects.IndexOf(value);
+                }
+                else
+                {
+                    activedIndex = -1;
+                }
                 activedObject = value;
                 SetGameObjectActive();
             }
         }
 
-        public int ActivedIndex
-        {
-            get
-            {
-                for (int i = 0; i < GameObjects.Length; i++)
-                {
-                    if (GameObjects[i] == activedObject)
-                    {
-                        return i;
-                    }
-                }
-                return -1;
-            }
-            set
-            {
-                GameObject deactivedObject = activedObject;
-                activedObject = null;
-                if (value >= 0 && value < GameObjects.Length)
-                {
-                    activedObject = GameObjects[value];
-                    activedIndex = value;
-                }
-                SetGameObjectActive();
-            }
-        }
+        [SerializeField]
+        private bool active0ToIndex = false;
 
         public bool Active0ToIndex
         {
@@ -69,6 +78,30 @@ namespace UnityEngine.UI
             }
         }
 
+        [SerializeField]
+        private List<GameObject> gameObjects = new List<GameObject>();
+
+        public GameObject this[int index]
+        {
+            get
+            {
+                return gameObjects[index];
+            }
+        }
+
+        public int Count
+        {
+            get
+            {
+                return gameObjects.Count;
+            }
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return gameObjects.GetEnumerator();
+        }
+
 #if UNITY_EDITOR
         [NonSerialized]
         private int objectCount = 0;
@@ -76,15 +109,15 @@ namespace UnityEngine.UI
         [NonSerialized]
         private bool zeroToIndex = false;
 
-        public void OnValidate()
+        private void OnValidate()
         {
             if (ActivedIndex != activedIndex)
             {
                 ActivedIndex = activedIndex;
             }
-            else if (objectCount != GameObjects.Length || zeroToIndex != active0ToIndex)
+            else if (objectCount != gameObjects.Count || zeroToIndex != active0ToIndex)
             {
-                objectCount = GameObjects.Length;
+                objectCount = gameObjects.Count;
                 zeroToIndex = active0ToIndex;
                 SetGameObjectActive();
             }
@@ -95,9 +128,9 @@ namespace UnityEngine.UI
         {
             if (activedObject == null)
             {
-                if (activedIndex >= 0 && activedIndex < GameObjects.Length)
+                if (activedIndex >= 0 && activedIndex < gameObjects.Count)
                 {
-                    activedObject = GameObjects[activedIndex];
+                    activedObject = gameObjects[activedIndex];
                 }
             }
             SetGameObjectActive();
@@ -105,11 +138,11 @@ namespace UnityEngine.UI
 
         private void SetGameObjectActive()
         {
-            for (int i = 0; i < GameObjects.Length; i++)
+            for (int i = 0; i < gameObjects.Count; i++)
             {
-                if (GameObjects[i] != null)
+                if (gameObjects[i] != null)
                 {
-                    GameObjects[i].SetActive(active0ToIndex ? (i <= ActivedIndex) : (GameObjects[i] == activedObject));
+                    gameObjects[i].SetActive(active0ToIndex ? (i <= ActivedIndex) : (gameObjects[i] == activedObject));
                 }
             }
         }
@@ -123,9 +156,7 @@ namespace UnityEngine.UI
         {
             if (go != null)
             {
-                List<GameObject> gameObjects = new List<GameObject>(GameObjects);
                 gameObjects.Add(go);
-                GameObjects = gameObjects.ToArray();
                 SetGameObjectActive();
             }
         }
@@ -136,19 +167,20 @@ namespace UnityEngine.UI
             {
                 if (go == activedObject)
                 {
+                    activedIndex = -1;
                     activedObject = null;
                 }
-                List<GameObject> gameObjects = new List<GameObject>(GameObjects);
                 gameObjects.Remove(go);
-                GameObjects = gameObjects.ToArray();
                 SetGameObjectActive();
             }
         }
 
         public void Clear()
         {
-            GameObjects = new GameObject[0];
+            activedIndex = -1;
             activedObject = null;
+            gameObjects.Clear();
+            SetGameObjectActive();
         }
     }
 }

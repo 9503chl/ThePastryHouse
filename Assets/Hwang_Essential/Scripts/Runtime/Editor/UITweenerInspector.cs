@@ -36,7 +36,6 @@ namespace UnityEngine.UI
             startDelayProperty = serializedObject.FindProperty("Delay");
             durationProperty = serializedObject.FindProperty("Duration");
             initOnPlayProperty = serializedObject.FindProperty("InitOnPlay");
-            playOnStartProperty = serializedObject.FindProperty("PlayOnStart");
             playOnEnableProperty = serializedObject.FindProperty("PlayOnEnable");
             stopAfterLoopProperty = serializedObject.FindProperty("StopAfterLoop");
             ignoreTimeScaleProperty = serializedObject.FindProperty("IgnoreTimeScale");
@@ -76,24 +75,7 @@ namespace UnityEngine.UI
             EditorGUILayout.PropertyField(startDelayProperty, new GUIContent("Start Delay"));
             EditorGUILayout.PropertyField(durationProperty);
             EditorGUILayout.PropertyField(initOnPlayProperty);
-            EditorGUI.BeginChangeCheck();
-            EditorGUILayout.PropertyField(playOnStartProperty);
-            if (EditorGUI.EndChangeCheck())
-            {
-                if (playOnStartProperty.boolValue)
-                {
-                    playOnEnableProperty.boolValue = false;
-                }
-            }
-            EditorGUI.BeginChangeCheck();
             EditorGUILayout.PropertyField(playOnEnableProperty);
-            if (EditorGUI.EndChangeCheck())
-            {
-                if (playOnEnableProperty.boolValue)
-                {
-                    playOnStartProperty.boolValue = false;
-                }
-            }
             if (loopTypeProperty.intValue != (int)TweeningLoopType.Once)
             {
                 EditorGUILayout.PropertyField(stopAfterLoopProperty);

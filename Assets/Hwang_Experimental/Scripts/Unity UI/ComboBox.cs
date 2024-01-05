@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Events;
@@ -176,6 +176,14 @@ namespace UnityEngine.UI
         public InputField inputField { get { return m_InputField; } set { m_InputField = value; RefreshShownValue(); } }
 
         [Space]
+
+        [SerializeField]
+        private Button m_ArrowButton;
+
+        /// <summary>
+        /// The Text component to hold the text of the item.
+        /// </summary>
+        public Button arrowButton { get { return m_ArrowButton; } set { m_ArrowButton = value; RefreshShownValue(); } }
 
         [SerializeField]
         private Text m_ItemText;
@@ -548,6 +556,9 @@ namespace UnityEngine.UI
 
             if (m_InputField)
                 m_InputField.onValueChanged.AddListener(InputFieldValueChanged);
+
+            if (m_ArrowButton)
+                m_ArrowButton.onClick.AddListener(ArrowButtonClick);
 
             m_AlphaTweenRunner = new TweenRunner<FloatTween>();
             m_AlphaTweenRunner.Init(this);
@@ -1260,6 +1271,12 @@ namespace UnityEngine.UI
                 m_Value = selectedIndex;
                 m_OnValueChanged.Invoke(m_Value);
             }
+        }
+
+        private void ArrowButtonClick()
+        {
+            if (m_Dropdown != null) Hide();
+            else Show();
         }
 
         private void Update()

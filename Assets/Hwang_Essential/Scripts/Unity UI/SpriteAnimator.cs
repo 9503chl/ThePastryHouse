@@ -10,36 +10,6 @@ namespace UnityEngine.UI
     {
         [SerializeField]
         private int startIndex = -1;
-        private int StartIndex
-        {
-            get
-            {
-                return startIndex;
-            }
-            set
-            {
-                SpriteIndex = value;
-                startIndex = spriteIndex;
-            }
-        }
-
-        public Sprite[] Sprites = new Sprite[0];
-
-        public float StartDelay = 0f;
-        public float Duration = 1f;
-        public int LoopCount = -1;
-        public bool PlayOnStart = true;
-        public bool PlayOnEnable = false;
-        public bool IgnoreTimeScale = true;
-
-        [NonSerialized]
-        private bool isPlaying = false;
-
-        [NonSerialized]
-        private float interval = 0f;
-
-        [NonSerialized]
-        private int numLooping = 0;
 
         [NonSerialized]
         private int spriteIndex = -1;
@@ -51,13 +21,27 @@ namespace UnityEngine.UI
             }
             set
             {
-                if (value >= -1 && value < Sprites.Length)
-                {
-                    spriteIndex = value;
-                    UpdateSprite();
-                }
+                spriteIndex = value;
+                UpdateSprite();
             }
         }
+
+        public Sprite[] Sprites = new Sprite[0];
+
+        public float StartDelay = 0f;
+        public float Duration = 1f;
+        public int LoopCount = -1;
+        public bool PlayOnEnable = true;
+        public bool IgnoreTimeScale = true;
+
+        [NonSerialized]
+        private bool isPlaying = false;
+
+        [NonSerialized]
+        private float interval = 0f;
+
+        [NonSerialized]
+        private int numLooping = 0;
 
         [NonSerialized]
         private Image _image;
@@ -76,14 +60,9 @@ namespace UnityEngine.UI
         [NonSerialized]
         private Coroutine updatingRoutine;
 
-        private void Start()
+        private void Awake()
         {
             _image = GetComponent<Image>();
-
-            if (PlayOnStart)
-            {
-                Play();
-            }
         }
 
         private void OnEnable()
@@ -105,17 +84,11 @@ namespace UnityEngine.UI
         {
             if (isActiveAndEnabled && spriteIndex >= 0 && spriteIndex < Sprites.Length)
             {
-                if (image != null)
-                {
-                    image.overrideSprite = Sprites[spriteIndex];
-                }
+                image.overrideSprite = Sprites[spriteIndex];
             }
             else
             {
-                if (image != null)
-                {
-                    image.overrideSprite = null;
-                }
+                image.overrideSprite = null;
             }
         }
 
@@ -186,9 +159,6 @@ namespace UnityEngine.UI
 
 #if UNITY_EDITOR
         [NonSerialized]
-        private int spriteCount = 0;
-
-        [NonSerialized]
         private float duration = 1f;
 
         private void OnValidate()
@@ -200,15 +170,6 @@ namespace UnityEngine.UI
                     interval = Duration / (Sprites.Length + 1);
                     duration = Duration;
                 }
-            }
-            else
-            {
-                if (spriteIndex != startIndex || spriteCount != Sprites.Length)
-                {
-                    spriteIndex = startIndex;
-                    spriteCount = Sprites.Length;
-                }
-                UpdateSprite();
             }
         }
 

@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace UnityEngine.UI
 {
+    [DisallowMultipleComponent]
+    [RequireComponent(typeof(Text))]
     public class FpsCounter : MonoBehaviour
     {
         [Tooltip("Display format\r\ncurrent: {0}, average: {1}, maximum: {2}, minimum: {3}")]

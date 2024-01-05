@@ -54,7 +54,9 @@ namespace UnityEngine.UI
 
         [NonSerialized]
         private Renderer _renderer;
-        private new Renderer renderer
+#pragma warning disable CS0108 
+        private Renderer renderer
+#pragma warning restore CS0108 
         {
             get
             {

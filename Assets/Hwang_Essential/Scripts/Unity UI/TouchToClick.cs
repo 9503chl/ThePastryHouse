@@ -7,7 +7,7 @@ namespace UnityEngine.UI
     [DisallowMultipleComponent]
     public class TouchToClick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
-        public float TouchInterval = 0.1f;
+        public float TouchInterval = 0.5f;
         public bool LButtonToTouch = true;
         public bool PressToRepeat = false;
         public float LongPressDelay = 0.5f;
@@ -41,7 +41,7 @@ namespace UnityEngine.UI
             if (isActiveAndEnabled && eventData.pointerId >= (LButtonToTouch ? -1 : 0))
             {
                 float currentTime = Time.realtimeSinceStartup;
-                if (button != null && button.enabled && button.interactable)
+                if (button != null && button.isActiveAndEnabled && button.interactable)
                 {
                     touched = true;
                     if (clickedEvent == null && button.onClick != null)
@@ -84,6 +84,11 @@ namespace UnityEngine.UI
         private IEnumerator Untouching()
         {
             yield return null;
+            if (repeatRoutine != null)
+            {
+                StopCoroutine(repeatRoutine);
+                repeatRoutine = null;
+            }
             if (touched)
             {
                 if (button != null && clickedEvent != null)
@@ -98,7 +103,7 @@ namespace UnityEngine.UI
         private IEnumerator Repeating()
         {
             float currentTime = Time.realtimeSinceStartup;
-            if (button != null && button.enabled && button.interactable)
+            if (button != null && button.isActiveAndEnabled && button.interactable)
             {
                 yield return new WaitForSeconds(LongPressDelay);
                 while (touched)

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 
 namespace UnityEngine.UI
@@ -33,7 +32,7 @@ namespace UnityEngine.UI
                 EditorGUILayout.PropertyField(property, true);
 
                 // Add a button below of "GameObjects" property when expanded
-                if (string.Compare(property.name, "GameObjects") == 0 && property.isExpanded)
+                if (string.Compare(property.name, "gameObjects") == 0 && property.isExpanded)
                 {
                     EditorGUILayout.BeginHorizontal();
                     GUILayout.Space(20);
@@ -43,13 +42,11 @@ namespace UnityEngine.UI
                         foreach (ActiveGroup group in targets)
                         {
                             // Add children of ActiveGroup
-                            List<GameObject> gameObjects = new List<GameObject>();
+                            group.Clear();
                             for (int i = 0; i < group.transform.childCount; i++)
                             {
-                                gameObjects.Add(group.transform.GetChild(i).gameObject);
+                                group.Add(group.transform.GetChild(i).gameObject);
                             }
-                            group.GameObjects = gameObjects.ToArray();
-                            group.OnValidate();
                         }
                     }
                     GUILayout.Space(20);

@@ -14,7 +14,9 @@ namespace UnityEngine.UI
 
         [NonSerialized]
         private Rigidbody2D _rigidbody2D;
-        private new Rigidbody2D rigidbody2D
+#pragma warning disable CS0108 
+        private Rigidbody2D rigidbody2D
+#pragma warning restore CS0108 
         {
             get
             {
@@ -37,7 +39,9 @@ namespace UnityEngine.UI
 
         [NonSerialized]
         private Rigidbody _rigidbody;
-        private new Rigidbody rigidbody
+#pragma warning disable CS0108 
+        private Rigidbody rigidbody
+#pragma warning restore CS0108 
         {
             get
             {

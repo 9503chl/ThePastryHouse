@@ -56,10 +56,19 @@ public class ForegroundWindowGuard : MonoBehaviour
     private static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
 
     [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool IsIconic(IntPtr hwnd);
+
+    [DllImport("user32.dll")]
+    private static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
+
+    [DllImport("user32.dll")]
     private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy, uint dwFlags);
 
     private const int HWND_TOPMOST = -1;
     private const int HWND_NOTOPMOST = -2;
+    private const int SW_MINIMIZE = 6;
+    private const int SW_RESTORE = 9;
     private const int SWP_NOSIZE = 0x0001;
     private const int SWP_NOMOVE = 0x0002;
     private const int SWP_NOACTIVATE = 0x0010;
@@ -83,6 +92,16 @@ public class ForegroundWindowGuard : MonoBehaviour
     {
         if (!Application.isEditor)
         {
+            if (hWndDisplays.Count == 0)
+            {
+                IntPtr hWnd = GetForegroundWindow();
+                IntPtr hWndDisplay = FindWindow("UnityWndClass", Application.productName);
+                if (hWndDisplay != hWnd)
+                {
+                    Debug.Log(string.Format("Unity window found : {0}", (int)hWndDisplay));
+                    SetForegroundWindow(hWndDisplay);
+                }
+            }
             StartCoroutine(Foreground());
         }
     }
@@ -198,7 +217,7 @@ public class ForegroundWindowGuard : MonoBehaviour
     {
         while (enabled)
         {
-            if (hWndDisplays.Count > 0)
+            if (hWndDisplays.Count > 0 && !IsIconic(hWndDisplays[0]))
             {
                 if (delayedTopMost)
                 {
@@ -244,5 +263,24 @@ public class ForegroundWindowGuard : MonoBehaviour
         }
     }
 
+    public bool MinimizeWindow()
+    {
+        if (hWndDisplays.Count > 0 && !IsIconic(hWndDisplays[0]))
+        {
+            Debug.Log("Minimize Unity window.");
+            return ShowWindowAsync(hWndDisplays[0], SW_MINIMIZE);
+        }
+        return false;
+    }
+
+    public bool RestoreWindow()
+    {
+        if (hWndDisplays.Count > 0 && IsIconic(hWndDisplays[0]))
+        {
+            Debug.Log("Restore Unity window.");
+            return ShowWindowAsync(hWndDisplays[0], SW_RESTORE);
+        }
+        return false;
+    }
 #endif
 }
