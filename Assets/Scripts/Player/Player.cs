@@ -57,6 +57,7 @@ public class Player : Creature
     }
     IEnumerator DamageDelay(float damage)
     {
+        HPManager.Instance.OnHit(transform, null, HP, HP - damage);
         isDamaged = false;
         CurrentHP -= damage;
         m_Sprite.color = new Color(m_Sprite.color.r, m_Sprite.color.g, m_Sprite.color.b, 0.5f);

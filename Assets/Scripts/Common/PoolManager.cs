@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEditor;
+using UnityEngine.UI;
 
 public class PoolManager : MonoBehaviour
 {
@@ -17,18 +18,27 @@ public class PoolManager : MonoBehaviour
     public int EnemyCapacity;
     public int EnemyPoolSize;
 
+    public int HPBarCapacity;
+    public int HPBarPoolSize;
+
     public GameObject BoxPrefab;
     public GameObject CirclePrefab;
     public GameObject EnemyPrefab;
+    public GameObject HPBarPrefab;
 
     public Transform ObjectTf;
 
+    public Vector3 VectorAway;
+
     private Enemy enemyProp;
+    private Image imageProp;
 
 
     public IObjectPool<GameObject> BoxPool { get; private set; }
     public IObjectPool<GameObject> CirclePool { get; private set; }
     public IObjectPool<GameObject> EnemyPool { get; private set; }
+
+    public IObjectPool<GameObject> HPBar { get; private set; }
 
 
     private void Awake()
@@ -42,14 +52,18 @@ public class PoolManager : MonoBehaviour
 
     private void Init()
     {
-        BoxPool = new ObjectPool<GameObject>(CreateBox, OnTakeFromPool, OnReturnedToPool,
+        BoxPool = new UnityEngine.Pool.ObjectPool<GameObject>(CreateBox, OnTakeFromPool, OnReturnedToPool,
         OnDestroyPoolObject, true, BoxCapacity, BoxPoolSize);
 
-        CirclePool = new ObjectPool<GameObject>(CreateCircle, OnTakeFromPool, OnReturnedToPool,
+        CirclePool = new UnityEngine.Pool.ObjectPool<GameObject>(CreateCircle, OnTakeFromPool, OnReturnedToPool,
         OnDestroyPoolObject, true, CircleCapacity, CirclePoolSize);
 
-        EnemyPool = new ObjectPool<GameObject>(CreateEnemy, OnTakeFromPool, OnReturnedToPool,
-     OnDestroyPoolObject, true, EnemyCapacity, EnemyPoolSize);
+        EnemyPool = new UnityEngine.Pool.ObjectPool<GameObject>(CreateEnemy, OnTakeFromPool, OnReturnedToPool,
+        OnDestroyPoolObject, true, EnemyCapacity, EnemyPoolSize);
+
+        HPBar = new UnityEngine.Pool.ObjectPool<GameObject>(CreateHPBox, OnTakeFromPool, OnReturnedToPool,
+        OnDestroyPoolObject, true, EnemyCapacity, EnemyPoolSize);
+
 
 
         // 미리 오브젝트 생성 해놓기
@@ -71,6 +85,11 @@ public class PoolManager : MonoBehaviour
             GameObject Enemy = CreateEnemy();
             EnemyPool.Release(Enemy);
         }
+        for (int i = 0; i < EnemyCapacity; i++)
+        {
+            GameObject HPBar = CreateEnemy();
+            EnemyPool.Release(HPBar);
+        }
     }
 
 
@@ -90,7 +109,11 @@ public class PoolManager : MonoBehaviour
         GameObject poolGo = Instantiate(EnemyPrefab, ObjectTf);
         return poolGo;
     }
-
+    private GameObject CreateHPBox()
+    {
+        GameObject poolGo = Instantiate(HPBarPrefab, ObjectTf);
+        return poolGo;
+    }
     private void OnTakeFromPool(GameObject poolGo)
     {
 
@@ -99,13 +122,18 @@ public class PoolManager : MonoBehaviour
     // 반환
     private void OnReturnedToPool(GameObject poolGo)
     {
-        poolGo.transform.SetParent(ObjectTf);
+        poolGo.transform.position = VectorAway;
 
         enemyProp = poolGo.GetComponent<Enemy>();
         if(enemyProp != null )
         {
             enemyProp.enabled = false;
             enemyProp.FullHP();
+        }
+        imageProp = poolGo.GetComponent<Image>();
+        if (imageProp != null)
+        {
+            imageProp.enabled = false;
         }
     }
     // 삭제
