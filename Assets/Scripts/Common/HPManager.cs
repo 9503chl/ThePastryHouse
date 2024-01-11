@@ -10,7 +10,7 @@ public class HPManager : MonoBehaviour
 
     private Coroutine coroutine;
 
-    private Image imageProp;
+    private Image[] imageProps;
 
     private IObjectPool<GameObject> HPBar;
     private GameObject objProp;
@@ -20,37 +20,47 @@ public class HPManager : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
         HPBar = PoolManager.Instance.HPBar;
     }
 
-    public void OnHit(Transform tf, Image? image, float totalHP, float targetHP)
+    public void OnHit(Transform tf, float totalHP, float targetHP)
     {
-        imageProp = tf.GetComponentInChildren<Image>();
-        StopCoroutine(coroutine);
-        if(imageProp == null)
+        imageProps = tf.GetComponentsInChildren<Image>();
+        if(coroutine != null)
+            StopCoroutine(coroutine);
+        if(imageProps.Length == 0)
         {
             SpawnHPBar(tf);
-            coroutine = StartCoroutine(HPProgress(imageProp, totalHP, targetHP));
+            imageProps = tf.GetComponentsInChildren<Image>();
+            if(imageProps.Length > 0)
+                coroutine = StartCoroutine(HPProgress(imageProps, totalHP, targetHP));
         }          
-        else coroutine = StartCoroutine(HPProgress(image, totalHP, targetHP));
+        else coroutine = StartCoroutine(HPProgress(imageProps, totalHP, targetHP));
     }
     private void SpawnHPBar(Transform tf)
     {
         objProp = HPBar.Get();
         objProp.transform.SetParent(tf);
-        objProp.transform.position = Vector3.zero;
-        objProp.transform.position += Vector3.up * 1.5f; 
+        objProp.transform.localPosition = Vector3.up * 1.5f;
     }
-    private IEnumerator HPProgress(Image image, float totalHP, float targetHP)
+    private IEnumerator HPProgress(Image[] image, float totalHP, float targetHP)
     {
-        image.color = Color.white;
-        image.fillAmount = targetHP / totalHP;
+        time = 0;
+        for(int i = 0; i < image.Length; i++) 
+        {
+            image[i].color = Color.white;
+            image[i].fillAmount = targetHP / totalHP;
+        }
         while (time < TargetTime)//아직 프로그레시브 없음
         {
-            time -= Time.deltaTime;
-            image.color = new Color(image.color.r, image.color.g, image.color.b,  Mathf.Lerp(0, TargetTime, time));
+            time += Time.deltaTime;
+            for (int i = 0; i < image.Length; i++)    
+                image[i].color = new Color(image[i].color.r, image[i].color.g, image[i].color.b,  1 - Mathf.Lerp(0, TargetTime, time));
             yield return new WaitForSeconds(Time.deltaTime);
         }
-        image.color = new Color(image.color.r, image.color.g, image.color.b, 0);
+        for (int i = 0; i < image.Length; i++)
+            image[i].color = new Color(image[i].color.r, image[i].color.g, image[i].color.b, 0);
+        coroutine = null;
     }
 }

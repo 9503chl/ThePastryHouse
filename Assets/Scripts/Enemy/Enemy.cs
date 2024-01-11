@@ -16,16 +16,7 @@ public class Enemy : Creature
 
     private AILerp aILerp;
 
-    private IAstarAI aiProp;
-
     private float followTime;
-
-    //private float MaxX = 1920f;
-    //private float MaxZ = 1080f;
-    //private float MinX = -1920f;
-    //private float MinZ = -1080f;
-
-    //private Vector2 randomVec2;
 
     public override void OnStart()
     {
@@ -44,13 +35,16 @@ public class Enemy : Creature
         base.OnAwake();
         childTr = transform.GetChild(0);
         aIDestinationSetter = GetComponent<AIDestinationSetter>();
-        aiProp = GetComponent<IAstarAI>();
         aILerp = GetComponent<AILerp>();
     }
     public override void EnableOn()
     {
         base.EnableOn();
         aIDestinationSetter.enabled = true;
+        aILerp.enabled = true;
+        if (searchingCor!= null)
+            StopCoroutine(searchingCor);
+        searchingCor = null;
         searchingCor = StartCoroutine(Searching());
     }
     public void FullHP()
@@ -59,16 +53,20 @@ public class Enemy : Creature
     }
     private IEnumerator Searching()
     {
-        childTr.position = transform.position;
         while (isActiveAndEnabled)
         {
             yield return new WaitForSeconds(2);
+            childTr.position = transform.position;
+            childTr.position += new Vector3(1, 1, 0) * Random.Range(-10, 10);
+            aILerp.SearchPath();
+            yield return new WaitUntil(() => aILerp.reachedEndOfPath);
         }
     }
     public override void DisableOn()
     {
         base.DisableOn();
         aIDestinationSetter.enabled = false;
+        aILerp.enabled = false;
     }
 
     public override void TriggerEnterOn(Collider2D collider)
@@ -76,7 +74,7 @@ public class Enemy : Creature
         base.TriggerEnterOn(collider);
         if (collider.transform.tag == "Player")
         {
-            if(searchingCor != null) StopCoroutine(searchingCor);
+            if (searchingCor != null) StopCoroutine(searchingCor);
             if(trackingCor == null) trackingCor = StartCoroutine(DelayTracking(collider.gameObject));
         }
     }
@@ -86,13 +84,16 @@ public class Enemy : Creature
         {
             yield return new WaitForSeconds(Time.deltaTime);
             childTr.position = playerObj.transform.position;
-            aiProp.SearchPath();
+            aILerp.SearchPath();
         }
     }
     public override void TriggerExitOn(Collider2D collider)
     {
-        base.TriggerExitOn(collider);
-        StartCoroutine(DelayStopTrack());
+        if (collider.transform.tag == "Player")
+        {
+            base.TriggerExitOn(collider);
+            StartCoroutine(DelayStopTrack());
+        }
     }
     private IEnumerator DelayStopTrack()
     {
@@ -102,7 +103,6 @@ public class Enemy : Creature
             StopCoroutine(trackingCor);
             trackingCor = null;
         }
-
         searchingCor = StartCoroutine(Searching());
     }
 }

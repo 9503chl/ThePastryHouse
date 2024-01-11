@@ -17,13 +17,21 @@ public class PlayerInput : BaseInput
     private Vector2 dir = Vector2.zero;
     
     private Camera mainCamera;
+
+    public float CameraMaxX;
+    public float CameraMaxY;
+
     public override void OnUpdate()
     {
         base.OnUpdate();
         #region 캐릭터 상호작용
         if (Player != null)//아직 화면 벗어나기 설정안함
         {
-            mainCamera.transform.position = new Vector3(Player.transform.position.x, Player.transform.position.y, mainCamera.transform.position.z);
+            mainCamera.transform.position = new Vector3(Mathf.Clamp(Player.transform.position.x, -CameraMaxX, CameraMaxX),
+                                                        Mathf.Clamp(Player.transform.position.y, -CameraMaxY, CameraMaxY), 
+                                                        mainCamera.transform.position.z);
+            if (Input.GetKeyDown(KeyCode.A)) PlayerComponent.m_Sprite.flipX = true;
+            if (Input.GetKeyDown(KeyCode.D)) PlayerComponent.m_Sprite.flipX = false;
             InputAndDir();
         }
         #endregion
@@ -37,10 +45,6 @@ public class PlayerInput : BaseInput
     void InputAndDir()
     {
         dir.x = Input.GetAxis("Horizontal");   // x축 방향 키 입력
-
-        if(dir.x < 0) PlayerComponent.m_Sprite.flipX = true; // 스프라이트 뒤집기, 차후 확인필요.
-        else PlayerComponent.m_Sprite.flipX = false;
-
         dir.y = Input.GetAxis("Vertical");     // z축 방향 키 입력
         if (dir != Vector2.zero)   // 키입력이 존재하는 경우
         {
@@ -62,15 +66,15 @@ public class PlayerInput : BaseInput
         PlayerInputInstance = this;
     }
 
-    public void ColliderGetComponent()
+    public void PlayerColliderGetComponent()
     {
         collider2D = Player.GetComponent<Collider2D>();
     }
-    public void ColliderOff()
+    public void PlayerColliderOff()
     {
         collider2D.enabled = false;
     }
-    public void ColliderOn()
+    public void PlayerColliderOn()
     {
         collider2D.enabled = true;
     }

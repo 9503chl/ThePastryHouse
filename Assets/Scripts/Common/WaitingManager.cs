@@ -33,14 +33,13 @@ public class WaitingManager : MonoBehaviour
     {
         ProgressiveImage.fillAmount = 0;
         currentTime = 0;
-        Time.timeScale = 0f;//이거 왜 하는거지.
         StartCoroutine(WaitingCor());
     }
     IEnumerator WaitingCor()
     {
         WaitingBG.SetActive(true);
         PlayerInput.PlayerInputInstance.isEscapeOK = false;
-        PlayerInput.PlayerInputInstance.ColliderOff();
+        PlayerInput.PlayerInputInstance.PlayerColliderOff();
         int whileCnt = 0;
         int dotCnt = 0;
         while (currentTime < 3.5f)
@@ -63,8 +62,8 @@ public class WaitingManager : MonoBehaviour
         WaitingBG.SetActive(false);
         currentTime = 0;
         PlayerInput.PlayerInputInstance.isEscapeOK = true;
-        Time.timeScale = 1;
-        PlayerInput.PlayerInputInstance.ColliderOn();
+        PlayerInput.PlayerInputInstance.PlayerComponent.enabled = true;
+        PlayerInput.PlayerInputInstance.PlayerColliderOn();
         EnemyManager.Instance.EnemyComponentOn();
         AstarPath.active.Scan();
     }

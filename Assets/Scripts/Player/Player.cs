@@ -14,18 +14,21 @@ public class Player : Creature
 
     private Enemy enemyProp;
 
+    private Collider2D collider2DProp;
+
     private bool isDamaged = true;
 
 
     public override void OnAwake()
     {
         base.OnAwake();
-        missionData = GameSetting.Instance.CurrentMissionData;
         m_Sprite = GetComponent<SpriteRenderer>();
+        collider2DProp = GetComponent<Collider2D>();
     }
     public override void OnStart()
     {
         base.OnStart();
+        missionData = GameSetting.Instance.CurrentMissionData;
         HP = missionData.PlayerMaxHP;
         Speed = missionData.PlayerSpeed;
         CurrentHP = HP;
@@ -35,6 +38,8 @@ public class Player : Creature
     public override void EnableOn()
     {
         base.EnableOn();
+        transform.position = Vector3.zero;
+        collider2DProp.enabled = true;
         DamageImage.color = new Color(DamageImage.color.r, DamageImage.color.g, DamageImage.color.b, 0);
     }
     public void DamageCount(float damage)
@@ -57,7 +62,7 @@ public class Player : Creature
     }
     IEnumerator DamageDelay(float damage)
     {
-        HPManager.Instance.OnHit(transform, null, HP, HP - damage);
+        HPManager.Instance.OnHit(transform, HP, HP - damage);
         isDamaged = false;
         CurrentHP -= damage;
         m_Sprite.color = new Color(m_Sprite.color.r, m_Sprite.color.g, m_Sprite.color.b, 0.5f);
