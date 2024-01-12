@@ -25,7 +25,7 @@ public class PlayerInput : BaseInput
     {
         base.OnUpdate();
         #region 캐릭터 상호작용
-        if (Player != null)//아직 화면 벗어나기 설정안함
+        if (Player != null)
         {
             mainCamera.transform.position = new Vector3(Mathf.Clamp(Player.transform.position.x, -CameraMaxX, CameraMaxX),
                                                         Mathf.Clamp(Player.transform.position.y, -CameraMaxY, CameraMaxY), 
