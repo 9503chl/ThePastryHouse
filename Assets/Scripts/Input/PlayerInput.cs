@@ -70,12 +70,15 @@ public class PlayerInput : BaseInput
     {
         collider2D = Player.GetComponent<Collider2D>();
     }
-    public void PlayerColliderOff()
+    public void PlayerComponentOff()
     {
+        PlayerComponent.enabled = false;
         collider2D.enabled = false;
     }
-    public void PlayerColliderOn()
+    public void PlayerComponentOn()
     {
+        PlayerComponent.enabled = true;
         collider2D.enabled = true;
+        Player.transform.position = Vector3.zero;
     }
 }

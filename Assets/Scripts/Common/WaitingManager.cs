@@ -38,8 +38,9 @@ public class WaitingManager : MonoBehaviour
     IEnumerator WaitingCor()
     {
         WaitingBG.SetActive(true);
-        PlayerInput.PlayerInputInstance.isEscapeOK = false;
-        PlayerInput.PlayerInputInstance.PlayerColliderOff();
+
+        ComponentController.Instance.DisableComponents();
+
         int whileCnt = 0;
         int dotCnt = 0;
         while (currentTime < 3.5f)
@@ -61,10 +62,9 @@ public class WaitingManager : MonoBehaviour
         ProgressiveImage.fillAmount = 1;
         WaitingBG.SetActive(false);
         currentTime = 0;
-        PlayerInput.PlayerInputInstance.isEscapeOK = true;
-        PlayerInput.PlayerInputInstance.PlayerComponent.enabled = true;
-        PlayerInput.PlayerInputInstance.PlayerColliderOn();
-        EnemyManager.Instance.EnemyComponentOn();
+
+        ComponentController.Instance.EnableComponents();
+
         AstarPath.active.Scan();
     }
 }

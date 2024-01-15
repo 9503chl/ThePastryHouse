@@ -1010,7 +1010,8 @@ Transform:
   m_LocalPosition: {x: -5000, y: -5000, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 889579362}
   m_Father: {fileID: 413926125}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1730,6 +1731,138 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 814230848}
   m_CullTransparentMesh: 0
+--- !u!1 &889579361
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 889579362}
+  - component: {fileID: 889579364}
+  - component: {fileID: 889579363}
+  m_Layer: 7
+  m_Name: Lantern
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &889579362
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 889579361}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 675012319}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &889579363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 889579361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 498146588786b36488d783b59f244c56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Sprite: {fileID: 0}
+  LanternColor: {r: 0, g: 0, b: 0, a: 0}
+  Radius: 10
+  Angle: 60
+--- !u!68 &889579364
+EdgeCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 889579361}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_EdgeRadius: 0
+  m_Points:
+  - {x: 0, y: 0}
+  - {x: 5, y: 8.6602545}
+  - {x: 4.848097, y: 8.746197}
+  - {x: 4.694716, y: 8.829475}
+  - {x: 4.5399055, y: 8.910065}
+  - {x: 4.3837113, y: 8.987941}
+  - {x: 4.226183, y: 9.063078}
+  - {x: 4.067367, y: 9.135454}
+  - {x: 3.9073112, y: 9.205049}
+  - {x: 3.7460659, y: 9.271838}
+  - {x: 3.5836794, y: 9.335804}
+  - {x: 3.4202015, y: 9.396926}
+  - {x: 3.2556815, y: 9.455186}
+  - {x: 3.0901704, y: 9.510565}
+  - {x: 2.9237173, y: 9.563047}
+  - {x: 2.756374, y: 9.612617}
+  - {x: 2.5881908, y: 9.659258}
+  - {x: 2.419219, y: 9.702957}
+  - {x: 2.2495108, y: 9.743701}
+  - {x: 2.079117, y: 9.781476}
+  - {x: 1.90809, y: 9.816272}
+  - {x: 1.7364818, y: 9.848078}
+  - {x: 1.5643446, y: 9.8768835}
+  - {x: 1.3917313, y: 9.90268}
+  - {x: 1.2186935, y: 9.925462}
+  - {x: 1.0452847, y: 9.945219}
+  - {x: 0.87155753, y: 9.961947}
+  - {x: 0.6975648, y: 9.97564}
+  - {x: 0.52335966, y: 9.986296}
+  - {x: 0.348995, y: 9.993908}
+  - {x: 0.17452407, y: 9.998477}
+  - {x: 0, y: 10}
+  - {x: -0.17452407, y: 9.998477}
+  - {x: -0.348995, y: 9.993908}
+  - {x: -0.52335966, y: 9.986296}
+  - {x: -0.6975648, y: 9.97564}
+  - {x: -0.87155753, y: 9.961947}
+  - {x: -1.0452847, y: 9.945219}
+  - {x: -1.2186935, y: 9.925462}
+  - {x: -1.3917313, y: 9.90268}
+  - {x: -1.5643446, y: 9.8768835}
+  - {x: -1.7364818, y: 9.848078}
+  - {x: -1.90809, y: 9.816272}
+  - {x: -2.079117, y: 9.781476}
+  - {x: -2.2495108, y: 9.743701}
+  - {x: -2.419219, y: 9.702957}
+  - {x: -2.5881908, y: 9.659258}
+  - {x: -2.756374, y: 9.612617}
+  - {x: -2.9237173, y: 9.563047}
+  - {x: -3.0901704, y: 9.510565}
+  - {x: -3.2556815, y: 9.455186}
+  - {x: -3.4202015, y: 9.396926}
+  - {x: -3.5836794, y: 9.335804}
+  - {x: -3.7460659, y: 9.271838}
+  - {x: -3.9073112, y: 9.205049}
+  - {x: -4.067367, y: 9.135454}
+  - {x: -4.226183, y: 9.063078}
+  - {x: -4.3837113, y: 8.987941}
+  - {x: -4.5399055, y: 8.910065}
+  - {x: -4.694716, y: 8.829475}
+  - {x: -4.848097, y: 8.746197}
+  - {x: -5, y: 8.6602545}
+  - {x: 0, y: 0}
+  m_AdjacentStartPoint: {x: 0, y: 0}
+  m_AdjacentEndPoint: {x: 0, y: 0}
+  m_UseAdjacentStartPoint: 0
+  m_UseAdjacentEndPoint: 0
 --- !u!1 &938781480
 GameObject:
   m_ObjectHideFlags: 0
@@ -1998,7 +2131,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4a6c9caf0328b54688c437e37896e56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  a: {fileID: 116408842205441643}
 --- !u!1 &1107162557
 GameObject:
   m_ObjectHideFlags: 0

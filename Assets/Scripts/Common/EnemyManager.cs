@@ -6,7 +6,7 @@ public class EnemyManager : MonoBehaviour
     public static EnemyManager Instance;
 
     private GameObject prop;
-    private Collider[] colliderProps;
+    private Collider2D[] colliderProps;
 
     private Enemy enemyProp;
 
@@ -35,20 +35,6 @@ public class EnemyManager : MonoBehaviour
             prop.transform.localPosition = new Vector3(Random.Range(MinX, MaxX) * 10, Random.Range(MinY, MaxY) * 10, 0);
             prop.transform.localRotation = Quaternion.Euler(0, 0, 0);
 
-            enemyProp = prop.GetComponent<Enemy>();
-            colliderProps = prop.GetComponents<Collider>();
-
-            if (enemyProp != null)
-            {
-                enemyProp.enabled = true;
-            }
-            if(colliderProps != null)
-            {
-                for(int j = 0; j<colliderProps.Length; j++)//이거 되는지 확인해야됨.
-                {
-                     colliderProps[j].enabled = true;
-                }
-            }
             enemies.Add(prop);
         }
         EnemyComponentOff();
@@ -58,26 +44,7 @@ public class EnemyManager : MonoBehaviour
         for(int i= 0; i< enemies.Count; i++) 
         {
             enemies[i].GetComponent<Enemy>().enabled = false;
-        }
-    }
-    public void EnemyComponentOn()
-    {
-        for (int i = 0; i < enemies.Count; i++)
-        {
-            enemies[i].GetComponent<Enemy>().enabled = true;
-        }
-    }
-
-    public void EnemyReset()//회수
-    {
-        for (int i = 0; i < enemies.Count; i++)
-        {
-            enemyProp = enemies[i].GetComponent<Enemy>();
-            colliderProps = prop.GetComponents<Collider>();
-            if (enemyProp != null)
-            {
-                enemyProp.enabled = false;
-            }
+            colliderProps = prop.GetComponents<Collider2D>();
             if (colliderProps != null)
             {
                 for (int j = 0; j < colliderProps.Length; j++)//이거 되는지 확인해야됨.
@@ -85,7 +52,29 @@ public class EnemyManager : MonoBehaviour
                     colliderProps[j].enabled = false;
                 }
             }
-            PoolManager.Instance.EnemyPool.Release(enemies[i]);
         }
+    }
+    public void EnemyComponentOn()
+    {
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            enemies[i].GetComponent<Enemy>().enabled = true;
+            colliderProps = prop.GetComponents<Collider2D>();
+            if (colliderProps != null)
+            {
+                for (int j = 0; j < colliderProps.Length; j++)//이거 되는지 확인해야됨.
+                {
+                    colliderProps[j].enabled = true;
+                }
+            }
+        }
+    }
+
+    public void EnemyDie(Enemy enemy, Collider2D collider2D)//회수
+    {
+        enemy.enabled = false;
+        collider2D.enabled = false;
+        enemy.transform.position = PoolManager.Instance.VectorAway;
+        PoolManager.Instance.EnemyPool.Release(enemy.gameObject);
     }
 }
