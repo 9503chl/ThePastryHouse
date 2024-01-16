@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class Lantern : Object
 {
@@ -9,18 +9,33 @@ public class Lantern : Object
 
     public Color LanternColor;
 
+    private Light2D light2D;
+
     public float Radius;
+
     public int Angle;
 
-    private EdgeCollider2D edgeCollider;
+    private Vector2 target,mouse;
+    private float angleForCamera;
 
     private Enemy enemyProp;
-
+    #region 부채꼴 만들기
     //private Vector2 baseVector2 = Vector3.up;
 
     //public List<Vector2> Vector2List;
+    //private void CreateCollider()
+    //{
+    //    baseVector2 *= Radius;
 
+    //    Vector2List.Add(Vector2.zero);
 
+    //    for (int i = -Angle / 2; i <= Angle / 2; i++)
+    //    {
+    //        Vector2List.Add(Quaternion.AngleAxis(i, Vector3.forward) * baseVector2);
+    //    }
+    //    Vector2List.Add(Vector2.zero);
+    //}
+    #endregion
     public override void TriggerEnterOn(Collider2D collider)
     {
         base.TriggerEnterOn(collider);
@@ -44,18 +59,21 @@ public class Lantern : Object
     {
         base.OnAwake();
 
-        edgeCollider = GetComponent<EdgeCollider2D>();
+        light2D = GetComponentInChildren<Light2D>();
+        light2D.color = LanternColor;
+        light2D.pointLightOuterRadius = Radius;
+        light2D.pointLightInnerAngle = Angle;
+        light2D.pointLightOuterAngle = Angle;
+    }
+    public override void OnUpdate()
+    {
+        base.OnUpdate();
 
-        //baseVector2 *= Radius;
+        target = transform.position;
 
-        //Vector2List.Add(Vector2.zero);
-
-        //for (int i = -Angle / 2; i<= Angle / 2; i++) 
-        //{
-        //    Vector2List.Add(Quaternion.AngleAxis(i, Vector3.forward) * baseVector2);
-        //}
-        //Vector2List.Add(Vector2.zero);
-
+        mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        angleForCamera = Mathf.Atan2(mouse.y - target.y, mouse.x - target.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.AngleAxis(angleForCamera - 90, Vector3.forward);
     }
     IEnumerator ListDamageCor()
     {

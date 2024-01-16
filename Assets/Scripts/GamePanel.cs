@@ -20,6 +20,7 @@ public class GamePanel : View
         if(PlayerInput.BaseInputInstance.Player != null)
         {
             PlayerInput.PlayerInputInstance.PlayerComponent = PlayerInput.PlayerInputInstance.Player.GetComponent<Player>();
+            PlayerInput.PlayerInputInstance.LanternComponent = PlayerInput.PlayerInputInstance.Player.GetComponentInChildren<Lantern>();
             PlayerInput.PlayerInputInstance.PlayerColliderGetComponent();
             PlayerInput.PlayerInputInstance.CharRigidbody = PlayerInput.BaseInputInstance.Player.GetComponent<Rigidbody2D>();
         }

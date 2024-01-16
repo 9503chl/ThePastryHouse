@@ -7,6 +7,7 @@ public class PlayerInput : BaseInput
     public static PlayerInput PlayerInputInstance;
 
     public Player PlayerComponent;
+    public Lantern LanternComponent;    
 
     public bool isEscapeOK = true;
 
@@ -74,11 +75,13 @@ public class PlayerInput : BaseInput
     {
         PlayerComponent.enabled = false;
         collider2D.enabled = false;
+        LanternComponent.enabled = false;   
     }
     public void PlayerComponentOn()
     {
         PlayerComponent.enabled = true;
         collider2D.enabled = true;
         Player.transform.position = Vector3.zero;
+        LanternComponent.enabled = true;
     }
 }
