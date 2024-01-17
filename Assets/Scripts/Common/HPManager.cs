@@ -15,9 +15,13 @@ public class HPManager : MonoBehaviour
     private IObjectPool<GameObject> HPBar;
     private GameObject objProp;
 
-    private float time;
     public float TargetTime;
+    private float time;
 
+    public GameObject InfoGroup;
+    public Text HpText;
+    public Text DamageText;
+    
     private void Awake()
     {
         Instance = this;

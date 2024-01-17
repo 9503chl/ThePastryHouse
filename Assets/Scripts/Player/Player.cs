@@ -8,6 +8,8 @@ public class Player : Creature
 {
     public Image DamageImage;
 
+    public Text DamageText;
+
     private float damageInterval;
 
     private Lantern lantern;
@@ -36,6 +38,7 @@ public class Player : Creature
         damageInterval = missionData.DamageInterval;
         Damage = 1;
         lantern.Damage = Damage;
+        DamageText.text = Damage.ToString();
     }
     public override void EnableOn()
     {
@@ -47,6 +50,7 @@ public class Player : Creature
     public override void DamageCount(float damage, float damageInterval, Image damageImage)
     {
        base.DamageCount(damage, damageInterval, damageImage);
+       HPManager.Instance.HpText.text = CurrentHP.ToString();
     }
     public override void CollisionStayOn(Collision2D collision)
     {

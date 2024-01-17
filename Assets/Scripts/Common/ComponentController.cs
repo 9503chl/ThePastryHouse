@@ -28,7 +28,7 @@ public class ComponentController : MonoBehaviour
     {
         for(int i = 0; i < CanDiableMonos.Count; i++)
         {
-            switch (monoBehaviours[i])
+            switch (CanDiableMonos[i])
             {
                 case EnemyManager:
                     EnemyManager.Instance.EnemyComponentOff();
@@ -39,6 +39,7 @@ public class ComponentController : MonoBehaviour
                     break;
                 case HPManager: 
                     HPManager.Instance.enabled = false; 
+                    HPManager.Instance.InfoGroup.SetActive(false);
                     break;
             }
         }
@@ -47,7 +48,7 @@ public class ComponentController : MonoBehaviour
     {
         for (int i = 0; i < CanDiableMonos.Count; i++)
         {
-            switch (monoBehaviours[i])
+            switch (CanDiableMonos[i])
             {
                 case EnemyManager:
                     EnemyManager.Instance.EnemyComponentOn();
@@ -59,6 +60,7 @@ public class ComponentController : MonoBehaviour
                     break;
                 case HPManager:
                     HPManager.Instance.enabled = true;
+                    HPManager.Instance.InfoGroup.SetActive(true);
                     break;
             }
         }
