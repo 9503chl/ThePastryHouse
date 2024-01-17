@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using DG.Tweening;
 
 public class Creature : MonoBehaviour
 {
@@ -12,7 +14,48 @@ public class Creature : MonoBehaviour
 
     public float Damage;
 
+    public bool isDamaged = true;
+
     public SpriteRenderer m_Sprite;
+
+    public virtual void DamageCount(float damage, float damageInterval, Image damageImage)
+    {
+        if (isDamaged == true)
+            StartCoroutine(DamageDelay(damage, damageInterval,  damageImage));
+    }
+    public virtual void DamageCount(float damage, float damageInterval)
+    {
+        if (isDamaged == true)
+            StartCoroutine(DamageDelay(damage, damageInterval));
+    }
+    IEnumerator DamageDelay(float damage, float damageInterval, Image DamageImage)
+    {
+        HPManager.Instance.OnHit(transform, HP, HP - damage);
+        isDamaged = false;
+        CurrentHP -= damage;
+        m_Sprite.color = new Color(m_Sprite.color.r, m_Sprite.color.g, m_Sprite.color.b, 0.5f);
+        DamageImage.DOColor(new Color(DamageImage.color.r, DamageImage.color.g, DamageImage.color.b, 0.4f), 0.125f);
+        yield return new WaitForSeconds(0.125f);
+        DamageImage.DOColor(new Color(DamageImage.color.r, DamageImage.color.g, DamageImage.color.b, 0), 0.125f);
+        yield return new WaitForSeconds(0.125f + damageInterval - 0.25f);
+
+        m_Sprite.color = new Color(m_Sprite.color.r, m_Sprite.color.g, m_Sprite.color.b, 1);
+        isDamaged = true;
+    }
+    IEnumerator DamageDelay(float damage, float damageInterval)
+    {
+        HPManager.Instance.OnHit(transform, HP, HP - damage);
+        isDamaged = false;
+        CurrentHP -= damage;
+        m_Sprite.color = new Color(m_Sprite.color.r, m_Sprite.color.g, m_Sprite.color.b, 0.5f);
+        //DamageImage.DOColor(new Color(DamageImage.color.r, DamageImage.color.g, DamageImage.color.b, 0.4f), 0.125f);
+        yield return new WaitForSeconds(0.125f);
+       // DamageImage.DOColor(new Color(DamageImage.color.r, DamageImage.color.g, DamageImage.color.b, 0), 0.125f);
+        yield return new WaitForSeconds(0.125f + damageInterval - 0.25f);
+
+        m_Sprite.color = new Color(m_Sprite.color.r, m_Sprite.color.g, m_Sprite.color.b, 1);
+        isDamaged = true;
+    }
 
     private void Reset()
     {

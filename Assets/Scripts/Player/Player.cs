@@ -2,21 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using DG.Tweening;
+using UnityEditor;
 
 public class Player : Creature
 {
     public Image DamageImage;
 
-    private float DamageInterval;
+    private float damageInterval;
+
+    private Lantern lantern;
 
     private MissionData missionData;
 
     private Enemy enemyProp;
 
     private Collider2D collider2DProp;
-
-    private bool isDamaged = true;
 
 
     public override void OnAwake()
@@ -29,11 +29,13 @@ public class Player : Creature
     {
         base.OnStart();
         missionData = GameSetting.Instance.CurrentMissionData;
+        lantern = GetComponentInChildren<Lantern>();
         HP = missionData.PlayerMaxHP;
         Speed = missionData.PlayerSpeed;
         CurrentHP = HP;
-        DamageInterval = missionData.DamageInterval;
+        damageInterval = missionData.DamageInterval;
         Damage = 1;
+        lantern.Damage = Damage;
     }
     public override void EnableOn()
     {
@@ -42,10 +44,9 @@ public class Player : Creature
         collider2DProp.enabled = true;
         DamageImage.color = new Color(DamageImage.color.r, DamageImage.color.g, DamageImage.color.b, 0);
     }
-    public void DamageCount(float damage)
+    public override void DamageCount(float damage, float damageInterval, Image damageImage)
     {
-        if(isDamaged == true) 
-            StartCoroutine(DamageDelay(damage));
+       base.DamageCount(damage, damageInterval, damageImage);
     }
     public override void CollisionStayOn(Collision2D collision)
     {
@@ -56,22 +57,8 @@ public class Player : Creature
             {
                 enemyProp = collision.gameObject.GetComponent<Enemy>();
                 if(enemyProp != null) 
-                    DamageCount(enemyProp.Damage);
+                    DamageCount(enemyProp.Damage, damageInterval, DamageImage);
             }
         }
-    }
-    IEnumerator DamageDelay(float damage)
-    {
-        HPManager.Instance.OnHit(transform, HP, HP - damage);
-        isDamaged = false;
-        CurrentHP -= damage;
-        m_Sprite.color = new Color(m_Sprite.color.r, m_Sprite.color.g, m_Sprite.color.b, 0.5f);
-        DamageImage.DOColor(new Color(DamageImage.color.r, DamageImage.color.g, DamageImage.color.b, 0.4f), 0.125f);
-        yield return new WaitForSeconds(0.125f);
-        DamageImage.DOColor(new Color(DamageImage.color.r, DamageImage.color.g, DamageImage.color.b, 0), 0.125f);
-        yield return new WaitForSeconds(0.125f + DamageInterval - 0.25f);
-
-        m_Sprite.color = new Color(m_Sprite.color.r, m_Sprite.color.g, m_Sprite.color.b, 1);
-        isDamaged = true;
     }
 }

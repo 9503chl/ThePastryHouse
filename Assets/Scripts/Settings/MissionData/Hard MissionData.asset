@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Hard MissionData
   m_EditorClassIdentifier: 
   Level: 2
+  PlayerBaseDamage: 1
   SiteRange: 1
   PlayerMaxHP: 100
   EnemyMaxHP: 150

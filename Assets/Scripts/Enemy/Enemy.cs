@@ -33,6 +33,7 @@ public class Enemy : Creature
     public override void OnAwake()
     {
         base.OnAwake();
+        m_Sprite = GetComponent<SpriteRenderer>();
         childTr = transform.GetChild(0);
         aIDestinationSetter = GetComponent<AIDestinationSetter>();
         aILerp = GetComponent<AILerp>();
@@ -104,5 +105,13 @@ public class Enemy : Creature
             trackingCor = null;
         }
         searchingCor = StartCoroutine(Searching());
+    }
+    public override void OnUpdate()
+    {
+        base.OnUpdate();
+        if (aIDestinationSetter.target.localPosition.x < 0)
+            m_Sprite.flipX = true;
+        else
+            m_Sprite.flipX = false;
     }
 }
