@@ -17,6 +17,7 @@ public class Enemy : Creature
     private AILerp aILerp;
 
     private float followTime;
+    private float time;
 
     public override void OnStart()
     {
@@ -76,36 +77,23 @@ public class Enemy : Creature
         if (collider.transform.tag == "Player")
         {
             if (searchingCor != null) StopCoroutine(searchingCor);
-            if(trackingCor == null) trackingCor = StartCoroutine(DelayTracking(collider.gameObject));
+            if (trackingCor == null) trackingCor = StartCoroutine(DelayTracking(collider.gameObject));
         }
     }
     private IEnumerator DelayTracking(GameObject playerObj)
     {
-        while (isActiveAndEnabled)
+        time = 0;
+        while (time < followTime)
         {
             yield return new WaitForSeconds(Time.deltaTime);
+            time += Time.deltaTime;
             childTr.position = playerObj.transform.position;
             aILerp.SearchPath();
         }
-    }
-    public override void TriggerExitOn(Collider2D collider)
-    {
-        if (collider.transform.tag == "Player")
-        {
-            base.TriggerExitOn(collider);
-            StartCoroutine(DelayStopTrack());
-        }
-    }
-    private IEnumerator DelayStopTrack()
-    {
-        yield return new WaitForSeconds(followTime);
-        if (trackingCor != null)
-        {
-            StopCoroutine(trackingCor);
-            trackingCor = null;
-        }
         searchingCor = StartCoroutine(Searching());
+        trackingCor = null;
     }
+
     public override void OnUpdate()
     {
         base.OnUpdate();

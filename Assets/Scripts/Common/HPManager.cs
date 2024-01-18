@@ -20,12 +20,11 @@ public class HPManager : MonoBehaviour
 
     public GameObject InfoGroup;
     public Text HpText;
-    public Text DamageText;
-    
+
     private void Awake()
     {
         Instance = this;
-        HPBar = PoolManager.Instance.HPBar;
+        HPBar = PoolManager.Instance.HPBarPool;
     }
 
     public void OnHit(Transform tf, float totalHP, float targetHP)

@@ -38,7 +38,7 @@ public class PoolManager : MonoBehaviour
     public IObjectPool<GameObject> CirclePool { get; private set; }
     public IObjectPool<GameObject> EnemyPool { get; private set; }
 
-    public IObjectPool<GameObject> HPBar { get; private set; }
+    public IObjectPool<GameObject> HPBarPool { get; private set; }
 
 
     private void Awake()
@@ -61,7 +61,7 @@ public class PoolManager : MonoBehaviour
         EnemyPool = new UnityEngine.Pool.ObjectPool<GameObject>(CreateEnemy, OnTakeFromPool, OnReturnedToPool,
         OnDestroyPoolObject, true, EnemyCapacity, EnemyPoolSize);
 
-        HPBar = new UnityEngine.Pool.ObjectPool<GameObject>(CreateHPBox, OnTakeFromPool, OnReturnedToPool,
+        HPBarPool = new UnityEngine.Pool.ObjectPool<GameObject>(CreateHPBox, OnTakeFromPool, OnReturnedToPool,
         OnDestroyPoolObject, true, EnemyCapacity, EnemyPoolSize);
 
 
@@ -85,11 +85,12 @@ public class PoolManager : MonoBehaviour
             GameObject Enemy = CreateEnemy();
             EnemyPool.Release(Enemy);
         }
-        for (int i = 0; i < EnemyCapacity; i++)
+        for (int i = 0; i < HPBarCapacity; i++)
         {
-            GameObject HPBar = CreateEnemy();
-            EnemyPool.Release(HPBar);
+            GameObject HPBar = CreateHPBox();
+            HPBarPool.Release(HPBar);
         }
+        PlayerInput.PlayerInputInstance.sight2Ds = FindObjectsOfType<Sight2D>();
     }
 
 

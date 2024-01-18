@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 2817357596332877154}
   - component: {fileID: 2817357596332877153}
   - component: {fileID: 2817357596332877157}
-  - component: {fileID: 4711999214337749938}
+  - component: {fileID: -1038166092921907659}
   m_Layer: 6
   m_Name: Enemy
   m_TagString: Untagged
@@ -218,22 +218,29 @@ MonoBehaviour:
   Damage: 0
   isDamaged: 1
   m_Sprite: {fileID: 0}
---- !u!58 &4711999214337749938
-CircleCollider2D:
+--- !u!114 &-1038166092921907659
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2817357596332877180}
   m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 10
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df5d44af54f740a4abc6d588be98581a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_bDebugMode: 0
+  m_horizontalViewAngle: 120
+  m_viewRadius: 10
+  m_viewRotateZ: 0
+  m_viewTargetMask:
+    serializedVersion: 2
+    m_Bits: 8
+  m_viewObstacleMask:
+    serializedVersion: 2
+    m_Bits: 65
+  target: {fileID: 2817357597654912096}
 --- !u!1 &2817357597654912127
 GameObject:
   m_ObjectHideFlags: 0

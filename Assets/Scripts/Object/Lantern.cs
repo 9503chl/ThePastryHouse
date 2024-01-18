@@ -6,7 +6,7 @@ using UnityEngine.Rendering.Universal;
 
 public class Lantern : Object
 {
-    private List <Enemy> enemyList= new List <Enemy>();//Enemy에 함수 만들어서 처리하기.
+    public List <Enemy> enemyList= new List <Enemy>();//Enemy에 함수 만들어서 처리하기.
 
     public Color LanternColor;
 
@@ -19,34 +19,8 @@ public class Lantern : Object
 
     public int Angle;
 
-    private CircleCollider2D circleCollider2D;
-
     private Vector2 target, mouse;
 
-    private Enemy enemyProp;
-
-    public override void TriggerEnterOn(Collider2D collider)
-    {
-        base.TriggerEnterOn(collider);
-        circleCollider2D = collider as CircleCollider2D;
-        if(circleCollider2D != null && circleCollider2D.radius != 10)
-        {
-            enemyProp = collider.GetComponent<Enemy>();
-            if (enemyProp != null)
-                enemyList.Add(enemyProp);
-        }
-    }
-    public override void TriggerExitOn(Collider2D collider)
-    {
-        base.TriggerExitOn(collider);
-        circleCollider2D = collider as CircleCollider2D;
-        if (circleCollider2D != null && circleCollider2D.radius != 10)
-        {
-            enemyProp = collider.GetComponent<Enemy>();
-            if (enemyProp != null)
-                enemyList.Remove(enemyProp);
-        }
-    }
     public override void OnStart()
     {
         base.OnStart();

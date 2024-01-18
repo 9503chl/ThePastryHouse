@@ -10,7 +10,7 @@ public class Player : Creature
 
     public Text DamageText;
 
-    private float damageInterval;
+    public float damageInterval;
 
     private Lantern lantern;
 
@@ -18,7 +18,7 @@ public class Player : Creature
 
     private Enemy enemyProp;
 
-    private Collider2D collider2DProp;
+    public Collider2D collider2DProp;
 
 
     public override void OnAwake()

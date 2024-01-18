@@ -7,7 +7,8 @@ public class PlayerInput : BaseInput
     public static PlayerInput PlayerInputInstance;
 
     public Player PlayerComponent;
-    public Lantern LanternComponent;    
+    public Lantern LanternComponent;
+    public Sight2D[] sight2Ds;
 
     public bool isEscapeOK = true;
 
@@ -76,6 +77,9 @@ public class PlayerInput : BaseInput
         PlayerComponent.enabled = false;
         collider2D.enabled = false;
         LanternComponent.enabled = false;   
+        for(int i = 0; i <sight2Ds.Length; i++)
+            sight2Ds[i].enabled = false;
+        
     }
     public void PlayerComponentOn()
     {
@@ -83,5 +87,7 @@ public class PlayerInput : BaseInput
         collider2D.enabled = true;
         Player.transform.position = Vector3.zero;
         LanternComponent.enabled = true;
+        for (int i = 0; i < sight2Ds.Length; i++)
+            sight2Ds[i].enabled = true;
     }
 }
