@@ -14,7 +14,7 @@ public class PlayerInput : BaseInput
 
     public Rigidbody2D CharRigidbody;//이걸로 이동해보자.
 
-    public Collider2D collider2D;
+    public Collider2D PlayerCollider2D;
 
     private Vector2 dir = Vector2.zero;
     
@@ -70,12 +70,12 @@ public class PlayerInput : BaseInput
 
     public void PlayerColliderGetComponent()
     {
-        collider2D = Player.GetComponent<Collider2D>();
+        PlayerCollider2D = Player.GetComponent<Collider2D>();
     }
     public void PlayerComponentOff()
     {
         PlayerComponent.enabled = false;
-        collider2D.enabled = false;
+        PlayerCollider2D.enabled = false;
         LanternComponent.enabled = false;   
         for(int i = 0; i <sight2Ds.Length; i++)
             sight2Ds[i].enabled = false;
@@ -84,7 +84,7 @@ public class PlayerInput : BaseInput
     public void PlayerComponentOn()
     {
         PlayerComponent.enabled = true;
-        collider2D.enabled = true;
+        PlayerCollider2D.enabled = true;
         Player.transform.position = Vector3.zero;
         LanternComponent.enabled = true;
         for (int i = 0; i < sight2Ds.Length; i++)
