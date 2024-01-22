@@ -20,7 +20,6 @@ public class Player : Creature
 
     public Collider2D collider2DProp;
 
-
     public override void OnAwake()
     {
         base.OnAwake();

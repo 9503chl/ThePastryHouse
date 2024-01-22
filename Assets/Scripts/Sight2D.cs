@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
 
 public class Sight2D : MonoBehaviour
@@ -21,7 +22,7 @@ public class Sight2D : MonoBehaviour
 
     private Enemy enemyProp;
 
-    private Lantern lanternProp;
+    private Image imageProp;
 
     private float m_horizontalViewHalfAngle = 0f; // 시야각의 절반 값
     private float angle;
@@ -31,6 +32,8 @@ public class Sight2D : MonoBehaviour
     private void Awake()
     {
         m_horizontalViewHalfAngle = m_horizontalViewAngle * 0.5f;
+        imageProp = GetComponentInChildren<Image>();
+        imageProp.fillAmount = Mathf.Lerp(0, 1, m_viewRotateZ);
     }
 
     private void OnDrawGizmos()
@@ -64,8 +67,8 @@ public class Sight2D : MonoBehaviour
         hitedTargetContainer.Clear();
 
         angle = Mathf.Atan2(target.position.y - transform.position.y, target.position.x - transform.position.x) * Mathf.Rad2Deg;
-        //transform.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
         m_viewRotateZ = angle;
+        imageProp.transform.rotation = Quaternion.Euler(0, 0, angle - 30);
 
         Vector2 originPos = transform.position;
         Collider2D[] hitedTargets = Physics2D.OverlapCircleAll(originPos, m_viewRadius, m_viewTargetMask);

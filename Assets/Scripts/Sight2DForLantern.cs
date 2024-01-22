@@ -20,6 +20,9 @@ public class Sight2DForLantern : MonoBehaviour
     private List<Collider2D> hitedTargetContainer = new List<Collider2D>(); // 인식한 물체들을 보관할 컨테이너
 
     private List<Enemy> enemyList = new List<Enemy>();
+
+    private Player playerProp;
+
     private Enemy enemyProp;
 
     private Lantern lanternProp;
@@ -30,6 +33,7 @@ public class Sight2DForLantern : MonoBehaviour
     private void Start()
     {
         lanternProp = GetComponent<Lantern>();
+        playerProp = GetComponentInParent<Player>();
 
         m_horizontalViewAngle = lanternProp.Angle;
         m_viewRadius = lanternProp.Radius;
@@ -94,6 +98,7 @@ public class Sight2DForLantern : MonoBehaviour
                 {
                     enemyProp = hitedTarget.GetComponent<Enemy>();
                     if (enemyProp != null)
+                        enemyProp.TriggerEnterOn(playerProp.collider2DProp);
                         enemyList.Add(enemyProp);
                     hitedTargetContainer.Add(hitedTarget);
                     if (m_bDebugMode)

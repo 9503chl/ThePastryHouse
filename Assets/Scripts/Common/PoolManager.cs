@@ -131,11 +131,11 @@ public class PoolManager : MonoBehaviour
             enemyProp.enabled = false;
             enemyProp.FullHP();
         }
-        imageProp = poolGo.GetComponent<Image>();
-        if (imageProp != null)
-        {
-            imageProp.enabled = false;
-        }
+        //imageProp = poolGo.GetComponent<Image>();
+        //if (imageProp != null)
+        //{
+        //    imageProp.enabled = false;
+        //}
     }
     // ªË¡¶
     private void OnDestroyPoolObject(GameObject poolGo)

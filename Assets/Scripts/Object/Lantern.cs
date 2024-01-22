@@ -6,7 +6,7 @@ using UnityEngine.Rendering.Universal;
 
 public class Lantern : Object
 {
-    public List <Enemy> enemyList= new List <Enemy>();//Enemy에 함수 만들어서 처리하기.
+    public List <Enemy> enemyList= new List <Enemy>();
 
     public Color LanternColor;
 
