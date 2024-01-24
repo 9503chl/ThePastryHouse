@@ -8,8 +8,8 @@ public class HPManager : MonoBehaviour
 {
     public static HPManager Instance;
 
-    private List<Image[]> imagesList = new List<Image[]>();
-    
+    private Dictionary<string, Image[]> imageDictionary = new Dictionary<string, Image[]>();
+    private List<string> nameList = new List<string>();
     private Image[] imageProps = new Image[2];
 
     private IObjectPool<GameObject> HPBar;
@@ -39,7 +39,7 @@ public class HPManager : MonoBehaviour
             SpawnHPBar(tf);
             getImages = tf.GetComponentsInChildren<Image>();
         }
-        
+
         if (getImages.Length == 3)
         {
             imageProps[0] = getImages[1];
@@ -52,8 +52,11 @@ public class HPManager : MonoBehaviour
         for (int i = 0; i < imageProps.Length; i++)
             imageProps[i].color = Color.white;
         imageProps[imageProps.Length - 1].fillAmount = targetHP / totalHP;
-        if(!imagesList.Contains(imageProps))
-            imagesList.Add(imageProps);
+        if (!imageDictionary.ContainsKey(tf.name))
+        {
+            imageDictionary.Add(tf.name, imageProps);
+            nameList.Add(tf.name);
+        }
     }
     private void SpawnHPBar(Transform tf)
     {
@@ -65,14 +68,21 @@ public class HPManager : MonoBehaviour
     {
         while (isActiveAndEnabled)
         {
-            for (int i = 0; i < imagesList.Count; i++)
-                for (int j = 0; j < imagesList[i].Length; j++)
+            for (int i = 0; i < imageDictionary.Count; i++)
+            {
+                Image[] tempImages = imageDictionary[nameList[i]];
+                for (int j = 0; j < tempImages.Length; j++)
                 {
-                    if (imagesList[i][imagesList[i].Length - 1].color.a == 0)
-                        imagesList.Remove(imagesList[i]);
-                    imagesList[i][j].color = new Color(imagesList[i][j].color.r, imagesList[i][j].color.g, imagesList[i][j].color.b, imagesList[i][j].color.a - Speed);
+                    if (tempImages[tempImages.Length - 1].color.a == 0)
+                    {
+                        imageDictionary.Remove(nameList[i]);
+                        nameList.RemoveAt(i);
+                    }
+                    tempImages[j].color = new Color(tempImages[j].color.r, tempImages[j].color.g, tempImages[j].color.b, tempImages[j].color.a - Speed);
                 }
-            yield return new WaitForSeconds(Time.deltaTime);
+                yield return new WaitForSeconds(Time.deltaTime);
+            }
+            yield return new WaitUntil(() => nameList.Count > 0);
         }
     }
 }

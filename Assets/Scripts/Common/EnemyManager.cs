@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 public class EnemyManager : MonoBehaviour
 {
@@ -31,6 +32,7 @@ public class EnemyManager : MonoBehaviour
         for(int i = 0; i < enemyCount; i++)
         {
             prop = PoolManager.Instance.EnemyPool.Get();
+            prop.transform.name = i.ToString();
             prop.transform.SetParent(targetTF);
             prop.transform.localPosition = new Vector3(Random.Range(MinX, MaxX) * 10, Random.Range(MinY, MaxY) * 10, 0);
             prop.transform.localRotation = Quaternion.Euler(0, 0, 0);
@@ -47,7 +49,7 @@ public class EnemyManager : MonoBehaviour
             colliderProps = prop.GetComponents<Collider2D>();
             if (colliderProps != null)
             {
-                for (int j = 0; j < colliderProps.Length; j++)//이거 되는지 확인해야됨.
+                for (int j = 0; j < colliderProps.Length; j++)
                 {
                     colliderProps[j].enabled = false;
                 }
@@ -62,7 +64,7 @@ public class EnemyManager : MonoBehaviour
             colliderProps = prop.GetComponents<Collider2D>();
             if (colliderProps != null)
             {
-                for (int j = 0; j < colliderProps.Length; j++)//이거 되는지 확인해야됨.
+                for (int j = 0; j < colliderProps.Length; j++)
                 {
                     colliderProps[j].enabled = true;
                 }
@@ -70,7 +72,7 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
-    public void EnemyDie(Enemy enemy, Collider2D collider2D)//회수
+    public void EnemyDie(Enemy enemy, Collider2D collider2D)
     {
         enemy.enabled = false;
         collider2D.enabled = false;

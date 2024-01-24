@@ -1,7 +1,5 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Experimental.Rendering.Universal;
-using UnityEngine.UI;
 
 public class ScreenResolutionManager : MonoBehaviour
 {
