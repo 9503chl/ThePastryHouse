@@ -60,7 +60,8 @@ public class EnemyManager : MonoBehaviour
     {
         for (int i = 0; i < enemies.Count; i++)
         {
-            enemies[i].GetComponent<Enemy>().enabled = true;
+            enemyProp = enemies[i].GetComponent<Enemy>();
+            enemyProp.enabled = true;
             colliderProps = prop.GetComponents<Collider2D>();
             if (colliderProps != null)
             {

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
+using Mono.Cecil.Cil;
 
 public class Enemy : Creature
 {
@@ -35,6 +36,22 @@ public class Enemy : Creature
     {
         base.OnAwake();
         m_Sprite = GetComponent<SpriteRenderer>();
+        #region 컴포넌트 얻고 자신 컴포넌트는 마지막에 넣기.
+        MonoBehaviour[] monos = GetComponents<MonoBehaviour>();
+        foreach (MonoBehaviour mono in monos)
+        {
+            monoList.Add(mono);
+        }
+
+        monos = GetComponentsInChildren<MonoBehaviour>();
+        foreach (MonoBehaviour mono in monos)
+        {
+            monoList.Add(mono);
+        }
+
+        monoList.Remove(GetComponent<Enemy>());
+        monoList.Add(GetComponent<Enemy>());
+        #endregion
         childTr = transform.GetChild(0);
         aIDestinationSetter = GetComponent<AIDestinationSetter>();
         aILerp = GetComponent<AILerp>();
@@ -42,8 +59,9 @@ public class Enemy : Creature
     public override void EnableOn()
     {
         base.EnableOn();
-        aIDestinationSetter.enabled = true;
-        aILerp.enabled = true;
+
+        ComponentOn(monoList);
+
         if (searchingCor!= null)
             StopCoroutine(searchingCor);
         searchingCor = null;
@@ -64,12 +82,6 @@ public class Enemy : Creature
             yield return new WaitUntil(() => aILerp.reachedEndOfPath);
         }
     }
-    public override void DisableOn()
-    {
-        base.DisableOn();
-        aIDestinationSetter.enabled = false;
-        aILerp.enabled = false;
-    }
 
     public override void TriggerEnterOn(Collider2D collider)
     {
@@ -79,6 +91,28 @@ public class Enemy : Creature
             if (searchingCor != null) StopCoroutine(searchingCor);
             if (trackingCor == null) trackingCor = StartCoroutine(DelayTracking(collider.gameObject));
         }
+    }
+    public override void DamageCount(float damage, float damageInterval)
+    {
+        if(CurrentHP > 0)
+        {
+            base.DamageCount(damage, damageInterval);
+        }
+        else
+        {
+            StartCoroutine(DieCor());
+        }
+    }
+    public override IEnumerator DieCor()
+    {
+        yield return base.DieCor();
+
+        ComponentOff(monoList);
+
+        yield return new WaitForSeconds(m_Animator.GetCurrentAnimatorClipInfo(0).Length);
+
+        gameObject.transform.position = PoolManager.Instance.VectorAway;
+        PoolManager.Instance.EnemyPool.Release(gameObject);
     }
     private IEnumerator DelayTracking(GameObject playerObj)
     {

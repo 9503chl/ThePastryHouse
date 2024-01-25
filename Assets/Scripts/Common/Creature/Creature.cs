@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.Pool;
 
 public class Creature : MonoBehaviour
 {
@@ -18,6 +19,15 @@ public class Creature : MonoBehaviour
 
     public SpriteRenderer m_Sprite;
 
+    public Animator m_Animator;
+
+    public string AnimatorTrigger;
+
+    public float animationTime;
+
+    public List<MonoBehaviour> monoList = new List<MonoBehaviour>();
+
+
     public virtual void DamageCount(float damage, float damageInterval, Image damageImage)
     {
         if (isDamaged == true)
@@ -28,6 +38,7 @@ public class Creature : MonoBehaviour
         if (isDamaged == true)
             StartCoroutine(DamageDelay(damage, damageInterval));
     }
+
     IEnumerator DamageDelay(float damage, float damageInterval, Image DamageImage)
     {
         HPManager.Instance.OnHit(transform, HP, HP - damage);
@@ -35,10 +46,11 @@ public class Creature : MonoBehaviour
         CurrentHP -= damage;
         m_Sprite.color = new Color(m_Sprite.color.r, m_Sprite.color.g, m_Sprite.color.b, 0.5f);
         DamageImage.DOColor(new Color(DamageImage.color.r, DamageImage.color.g, DamageImage.color.b, 0.4f), 0.125f);
+
         yield return new WaitForSeconds(0.125f);
         DamageImage.DOColor(new Color(DamageImage.color.r, DamageImage.color.g, DamageImage.color.b, 0), 0.125f);
-        yield return new WaitForSeconds(0.125f + damageInterval - 0.25f);
 
+        yield return new WaitForSeconds(damageInterval - 0.125f);
         m_Sprite.color = new Color(m_Sprite.color.r, m_Sprite.color.g, m_Sprite.color.b, 1);
         isDamaged = true;
     }
@@ -48,13 +60,17 @@ public class Creature : MonoBehaviour
         isDamaged = false;
         CurrentHP -= damage;
         m_Sprite.color = new Color(m_Sprite.color.r, m_Sprite.color.g, m_Sprite.color.b, 0.5f);
-        //DamageImage.DOColor(new Color(DamageImage.color.r, DamageImage.color.g, DamageImage.color.b, 0.4f), 0.125f);
-        yield return new WaitForSeconds(0.125f);
-       // DamageImage.DOColor(new Color(DamageImage.color.r, DamageImage.color.g, DamageImage.color.b, 0), 0.125f);
-        yield return new WaitForSeconds(0.125f + damageInterval - 0.25f);
 
+        yield return new WaitForSeconds(damageInterval);
         m_Sprite.color = new Color(m_Sprite.color.r, m_Sprite.color.g, m_Sprite.color.b, 1);
         isDamaged = true;
+    }
+    public virtual IEnumerator DieCor()
+    {
+        m_Animator.SetTrigger(AnimatorTrigger);
+        yield return new WaitForEndOfFrame();
+
+        animationTime = m_Animator.GetCurrentAnimatorClipInfo(0).Length;
     }
 
     private void Reset()
@@ -163,5 +179,19 @@ public class Creature : MonoBehaviour
     public virtual void CollisionStayOn(Collision2D collision)
     {
 
+    }
+    public virtual void ComponentOff(List <MonoBehaviour> monos)
+    {
+        for(int i = 0; i< monos.Count; i++)
+        {
+            monos[i].enabled = false;
+        }
+    }
+    public virtual void ComponentOn(List<MonoBehaviour> monos)
+    {
+        for (int i = 0; i < monos.Count; i++)
+        {
+            monos[i].enabled = true;
+        }
     }
 }

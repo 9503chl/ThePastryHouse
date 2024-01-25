@@ -15,8 +15,9 @@ GameObject:
   - component: {fileID: 2817357596332877155}
   - component: {fileID: 2817357596332877154}
   - component: {fileID: 2817357596332877153}
-  - component: {fileID: 2817357596332877157}
   - component: {fileID: -1038166092921907659}
+  - component: {fileID: 2817357596332877157}
+  - component: {fileID: 7300371992404834139}
   m_Layer: 6
   m_Name: Enemy
   m_TagString: Untagged
@@ -201,24 +202,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &2817357596332877157
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2817357596332877180}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 879779608fd410f4abcb0093faba7758, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HP: 0
-  Speed: 0
-  CurrentHP: 0
-  Damage: 0
-  isDamaged: 1
-  m_Sprite: {fileID: 0}
 --- !u!114 &-1038166092921907659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -242,6 +225,47 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 65
   target: {fileID: 2817357597654912096}
+--- !u!114 &2817357596332877157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2817357596332877180}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 879779608fd410f4abcb0093faba7758, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HP: 0
+  Speed: 0
+  CurrentHP: 0
+  Damage: 0
+  isDamaged: 1
+  m_Sprite: {fileID: 0}
+  m_Animator: {fileID: 0}
+  AnimatorTrigger: 
+  animationTime: 0
+--- !u!95 &7300371992404834139
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2817357596332877180}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2817357597654912127
 GameObject:
   m_ObjectHideFlags: 0

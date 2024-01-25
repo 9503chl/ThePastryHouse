@@ -46,17 +46,17 @@ public class PlayerInput : BaseInput
 
     void InputAndDir()
     {
-        dir.x = Input.GetAxis("Horizontal");   // x축 방향 키 입력
-        dir.y = Input.GetAxis("Vertical");     // z축 방향 키 입력
-        if (dir != Vector2.zero)   // 키입력이 존재하는 경우
+        dir.x = Input.GetAxis("Horizontal");  
+        dir.y = Input.GetAxis("Vertical");    
+        if (dir != Vector2.zero)  
         {
-            transform.forward = dir;	// 키 입력 시, 입력된 방향으로 캐릭터의 방향을 바꿈
+            transform.forward = dir;
         }
     }
     public override void OnFixedUpdate()
     {
         base.OnFixedUpdate();
-        if (Player != null)//아직 화면 벗어나기 설정안함
+        if (Player != null)
         {
             CharRigidbody.MovePosition(CharRigidbody.position + dir * PlayerComponent.Speed * Time.deltaTime);
         }

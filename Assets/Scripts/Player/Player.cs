@@ -23,6 +23,24 @@ public class Player : Creature
     public override void OnAwake()
     {
         base.OnAwake();
+
+        #region 컴포넌트 얻고 자신 컴포넌트는 마지막에 넣기.
+        MonoBehaviour[] monos = GetComponents<MonoBehaviour>();
+        foreach (MonoBehaviour mono in monos)
+        {
+            monoList.Add(mono);
+        }
+
+        monos = GetComponentsInChildren<MonoBehaviour>();
+        foreach (MonoBehaviour mono in monos)
+        {
+            monoList.Add(mono);
+        }
+
+        monoList.Remove(GetComponent<Player>());
+        monoList.Add(GetComponent<Player>());
+        #endregion
+
         m_Sprite = GetComponent<SpriteRenderer>();
         collider2DProp = GetComponent<Collider2D>();
     }
@@ -44,12 +62,32 @@ public class Player : Creature
         base.EnableOn();
         transform.position = Vector3.zero;
         collider2DProp.enabled = true;
+
+        ComponentOn(monoList);
+
         DamageImage.color = new Color(DamageImage.color.r, DamageImage.color.g, DamageImage.color.b, 0);
     }
     public override void DamageCount(float damage, float damageInterval, Image damageImage)
     {
-       base.DamageCount(damage, damageInterval, damageImage);
-       HPManager.Instance.HpText.text = CurrentHP.ToString();
+        if(CurrentHP > 0)
+        {
+            base.DamageCount(damage, damageInterval, damageImage);
+            HPManager.Instance.HpText.text = CurrentHP.ToString();
+        }
+        else
+        {
+            StartCoroutine(DieCor());
+        }
+    }
+    public override IEnumerator DieCor()
+    {
+        yield return base.DieCor();
+
+        ComponentOff(monoList);
+
+        yield return new WaitForSeconds(m_Animator.GetCurrentAnimatorClipInfo(0).Length);
+
+        //팝업 띄우기.
     }
     public override void CollisionStayOn(Collision2D collision)
     {
