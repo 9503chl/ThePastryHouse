@@ -74,20 +74,25 @@ public class PlayerInput : BaseInput
     }
     public void PlayerComponentOff()
     {
-        PlayerComponent.enabled = false;
-        PlayerCollider2D.enabled = false;
-        LanternComponent.enabled = false;   
-        for(int i = 0; i <sight2Ds.Length; i++)
-            sight2Ds[i].enabled = false;
-        
+        if (PlayerComponent != null)
+        {
+            PlayerComponent.enabled = false;
+            PlayerCollider2D.enabled = false;
+            LanternComponent.enabled = false;
+            for (int i = 0; i < sight2Ds.Length; i++)
+                sight2Ds[i].enabled = false;
+        }
     }
     public void PlayerComponentOn()
     {
-        PlayerComponent.enabled = true;
-        PlayerCollider2D.enabled = true;
-        Player.transform.position = Vector3.zero;
-        LanternComponent.enabled = true;
-        for (int i = 0; i < sight2Ds.Length; i++)
-            sight2Ds[i].enabled = true;
+        if (PlayerComponent != null)
+        {
+            PlayerComponent.enabled = true;
+            PlayerCollider2D.enabled = true;
+            Player.transform.position = Vector3.zero;
+            LanternComponent.enabled = true;
+            for (int i = 0; i < sight2Ds.Length; i++)
+                sight2Ds[i].enabled = true;
+        }
     }
 }

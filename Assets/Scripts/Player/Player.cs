@@ -53,7 +53,7 @@ public class Player : Creature
         Speed = missionData.PlayerSpeed;
         CurrentHP = HP;
         damageInterval = missionData.DamageInterval;
-        Damage = 1;
+        Damage = 75;
         lantern.Damage = Damage;
         DamageText.text = Damage.ToString();
     }
@@ -84,6 +84,8 @@ public class Player : Creature
         yield return base.DieCor();
 
         ComponentOff(monoList);
+
+        ComponentController.Instance.DisableComponents();
 
         yield return new WaitForSeconds(m_Animator.GetCurrentAnimatorClipInfo(0).Length);
 

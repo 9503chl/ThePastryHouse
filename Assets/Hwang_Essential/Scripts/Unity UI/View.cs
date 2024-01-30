@@ -54,7 +54,6 @@ namespace UnityEngine.UI
                 return _rectTransform;
             }
         }
-
         private void SetInteractable(bool interactable)
         {
             CanvasGroup canvasGroup = GetComponent<CanvasGroup>();

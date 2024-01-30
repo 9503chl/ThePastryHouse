@@ -73,7 +73,6 @@ public class PanelManager : MonoBehaviour
     private void Start()
     {
         titlePanel.Show();
-        activeView = ViewKind.Title; 
     }
 
     public void ChangeActiveView(ViewKind targetView)

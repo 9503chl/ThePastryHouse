@@ -28,7 +28,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 3448114079235645850}
   m_Father: {fileID: 3448114077904667766}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -220,7 +221,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3448114077904667766}
-  - {fileID: 3448114079235645850}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -302,8 +302,10 @@ MonoBehaviour:
   Damage: 0
   isDamaged: 1
   m_Sprite: {fileID: 0}
-  m_animator: {fileID: 0}
+  m_Animator: {fileID: 0}
   AnimatorTrigger: 
+  animationTime: 0
+  monoList: []
   DamageImage: {fileID: 0}
   DamageText: {fileID: 0}
   damageInterval: 0
@@ -394,8 +396,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3448114078260018635}
-  m_RootOrder: 1
+  m_Father: {fileID: 3448114077688301979}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3448114079235645851
 MonoBehaviour:
@@ -462,8 +464,8 @@ MonoBehaviour:
   m_LocalBounds:
     m_Center: {x: 0, y: -0.00000011920929, z: 0}
     m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
-  m_PointLightInnerAngle: 360
-  m_PointLightOuterAngle: 360
+  m_PointLightInnerAngle: 160
+  m_PointLightOuterAngle: 160
   m_PointLightInnerRadius: 0
   m_PointLightOuterRadius: 10
   m_ShapeLightParametricSides: 5

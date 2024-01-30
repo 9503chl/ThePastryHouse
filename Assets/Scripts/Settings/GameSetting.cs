@@ -21,13 +21,37 @@ public struct GameData
     public List<float> SnackPositionsXs;
     public List<float> SnackPositionsYs;
 
-    public List<float> CylinderPositionXs;
-    public List<float> CylinderPositionYs;
-    public List<float> CylinderScales;
+    public List<float> CirclePositionXs;
+    public List<float> CirclePositionYs;
+    public List<float> CircleScales;
 
     public List<float> BoxPositionXs;
     public List<float> BoxPositionYs;
     public List<float> BoxScales;
+
+    public void SetGameDate(SaveData saveData)
+    {
+        CurrentLevel= saveData.CurrentLevel;
+        ARemainCount= saveData.ARemainCount;
+        RemainSnackCount= saveData.RemainSnackCount;
+
+        RemainPlayerHP= saveData.RemainPlayerHP;
+        ARemainHPs = saveData.ARemainHPs;
+
+        PlayerLastPositionX = saveData.PlayerLastPositionX;
+        PlayerLastPositionY = saveData.PlayerLastPositionY;
+
+        SnackPositionsXs= saveData.SnackPositionsXs;
+        SnackPositionsYs= saveData.SnackPositionsYs;
+
+        CirclePositionXs= saveData.CylinderPositionXs;
+        CirclePositionYs= saveData.CylinderPositionYs;    
+        CircleScales= saveData.CylinderScales;
+
+        BoxPositionXs= saveData.BoxPositionXs;
+        BoxPositionYs= saveData.BoxPositionYs;
+        BoxScales= saveData.BoxScales;
+    }
 }
 
 
@@ -120,6 +144,52 @@ public class GameSetting : MonoBehaviour
             0.5f - options.Gamma / 2);
         options.Gamma = value;
     }
+    public void SaveGameData()//여기다 다 적용하고 호출하기.
+    {
+        #region 적
+        List<GameObject> listProp = EnemyManager.Instance.EnemyList;
+        CurrentGameData.ARemainCount = listProp.Count;
+
+        Enemy enemyProp;
+        for (int i = 0; i < listProp.Count; i++)
+        {
+            enemyProp = listProp[i].GetComponent<Enemy>();
+            CurrentGameData.ARemainHPs.Add(enemyProp.CurrentHP);
+
+            listProp[i].transform.position = PoolManager.Instance.VectorAway;
+            PoolManager.Instance.EnemyPool.Release(listProp[i].gameObject);
+        }
+        #endregion
+
+        #region 플레이어
+        CurrentGameData.PlayerLastPositionX = PlayerInput.PlayerInputInstance.PlayerComponent.transform.position.x;
+        CurrentGameData.PlayerLastPositionY = PlayerInput.PlayerInputInstance.PlayerComponent.transform.position.y;
+        #endregion
+
+        #region 맵
+        listProp = MapManager.Instance.CircleList;
+        for(int i =0; i<listProp.Count; i++)
+        {
+            CurrentGameData.CirclePositionXs.Add(listProp[i].transform.position.x);
+            CurrentGameData.CirclePositionYs.Add(listProp[i].transform.position.y);
+            CurrentGameData.CircleScales.Add(listProp[i].transform.localScale.x);
+        }
+
+        listProp = MapManager.Instance.BoxList;
+        for (int i = 0; i < listProp.Count; i++)
+        {
+            CurrentGameData.BoxPositionXs.Add(listProp[i].transform.position.x);
+            CurrentGameData.BoxPositionYs.Add(listProp[i].transform.position.y);
+            CurrentGameData.BoxScales.Add(listProp[i].transform.localScale.x);
+        }
+        #endregion
+
+        #region 초기화
+        EnemyManager.Instance.EnemyReset();
+        MapManager.Instance.BoxNCubeReset();
+        #endregion
+    }
+
     public void SaveToInstance()
     {
         if (CurrentSaveData != null)
@@ -136,6 +206,7 @@ public class GameSetting : MonoBehaviour
 
     private void OnApplicationQuit()// 강제종료시도 저장
     {
+        SaveGameData();
         SaveToInstance();
     }
     private void SaveToJson(string path, object obj)

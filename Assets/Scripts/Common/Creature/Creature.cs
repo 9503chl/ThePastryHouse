@@ -137,7 +137,7 @@ public class Creature : MonoBehaviour
     }
     public virtual void OnAwake()
     {
-
+        m_Animator = GetComponent<Animator>();
     }
 
     public virtual void OnStart()

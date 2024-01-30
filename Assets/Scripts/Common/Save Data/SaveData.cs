@@ -40,7 +40,7 @@ public class SaveData : ScriptableObject
         IsFirst = true;
 
         CurrentLevel = 0;
-        ARemainCount = 0;
+        ARemainCount = 20;
         RemainSnackCount = 0;
 
         RemainPlayerHP = 0;
@@ -121,9 +121,9 @@ public class SaveData : ScriptableObject
         SnackPositionsXs = gameData.SnackPositionsXs;
         SnackPositionsYs = gameData.SnackPositionsYs;
 
-        CylinderPositionXs = gameData.CylinderPositionXs;
-        CylinderPositionYs = gameData.CylinderPositionYs;
-        CylinderScales = gameData.CylinderScales;
+        CylinderPositionXs = gameData.CirclePositionXs;
+        CylinderPositionYs = gameData.CirclePositionYs;
+        CylinderScales = gameData.CircleScales;
 
         BoxPositionXs = gameData.BoxPositionXs;
         BoxPositionYs = gameData.BoxPositionYs;

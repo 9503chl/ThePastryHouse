@@ -11,7 +11,7 @@ public class EnemyManager : MonoBehaviour
 
     private Enemy enemyProp;
 
-    private List<GameObject> enemies = new List<GameObject>();
+    public List<GameObject> EnemyList = new List<GameObject>();
 
     private int enemyCount;
 
@@ -27,7 +27,7 @@ public class EnemyManager : MonoBehaviour
 
         enemyCount = PoolManager.Instance.EnemyPoolSize;
     }
-    public void EnemyCreate(Transform targetTF)
+    public void EnemyCreate(Transform targetTF)//아직 갯수 기억해서 소환하진 않음
     {
         for(int i = 0; i < enemyCount; i++)
         {
@@ -37,15 +37,19 @@ public class EnemyManager : MonoBehaviour
             prop.transform.localPosition = new Vector3(Random.Range(MinX, MaxX) * 10, Random.Range(MinY, MaxY) * 10, 0);
             prop.transform.localRotation = Quaternion.Euler(0, 0, 0);
 
-            enemies.Add(prop);
+            EnemyList.Add(prop);
         }
         EnemyComponentOff();
     }
+    public void EnemyReset()
+    {
+        EnemyList.RemoveRange(0, EnemyList.Count);
+    }
     public void EnemyComponentOff()
     {
-        for(int i= 0; i< enemies.Count; i++) 
+        for(int i= 0; i< EnemyList.Count; i++) 
         {
-            enemies[i].GetComponent<Enemy>().enabled = false;
+            EnemyList[i].GetComponent<Enemy>().enabled = false;
             colliderProps = prop.GetComponents<Collider2D>();
             if (colliderProps != null)
             {
@@ -58,9 +62,9 @@ public class EnemyManager : MonoBehaviour
     }
     public void EnemyComponentOn()
     {
-        for (int i = 0; i < enemies.Count; i++)
+        for (int i = 0; i < EnemyList.Count; i++)
         {
-            enemyProp = enemies[i].GetComponent<Enemy>();
+            enemyProp = EnemyList[i].GetComponent<Enemy>();
             enemyProp.enabled = true;
             colliderProps = prop.GetComponents<Collider2D>();
             if (colliderProps != null)
@@ -71,13 +75,5 @@ public class EnemyManager : MonoBehaviour
                 }
             }
         }
-    }
-
-    public void EnemyDie(Enemy enemy, Collider2D collider2D)
-    {
-        enemy.enabled = false;
-        collider2D.enabled = false;
-        enemy.transform.position = PoolManager.Instance.VectorAway;
-        PoolManager.Instance.EnemyPool.Release(enemy.gameObject);
     }
 }

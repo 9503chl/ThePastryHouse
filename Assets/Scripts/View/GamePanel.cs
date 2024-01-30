@@ -11,7 +11,11 @@ public class GamePanel : View
     void Awake()
     {
         OnBeforeShow += GamePanel_OnBeforeShow;
+        OnAfterShow += GamePanel_OnAfterShow;
+
+        FadeDuration = WaitingManager.Instance.FadeTime;
     }
+
 
     private void GamePanel_OnBeforeShow()
     {
@@ -24,7 +28,12 @@ public class GamePanel : View
             PlayerInput.PlayerInputInstance.PlayerColliderGetComponent();
             PlayerInput.PlayerInputInstance.CharRigidbody = PlayerInput.BaseInputInstance.Player.GetComponent<Rigidbody2D>();
         }
-        WaitingManager.Instance.NeedWaiting();
+    }
+
+    private void GamePanel_OnAfterShow()
+    {
+        WaitingManager.Instance.WaitngForStart();
+
         MapManager.Instance.CreateMap(ObjectTarget);
         EnemyManager.Instance.EnemyCreate(ObjectTarget);
     }

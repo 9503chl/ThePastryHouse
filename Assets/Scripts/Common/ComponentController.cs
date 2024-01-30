@@ -23,6 +23,7 @@ public class ComponentController : MonoBehaviour
                 case HPManager: CanDiableMonos.Add(monoBehaviours[i]); break;
             }
         }
+        DisableComponents();
     }
     public void DisableComponents()
     {

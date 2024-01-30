@@ -34,6 +34,8 @@ public class TitlePanel : View
         LevelSelectGroup.onClick.AddListener(delegate { LevelSelect(LevelSelectGroup); });
 
         saveData = GameSetting.Instance.CurrentSaveData;
+
+        FadeDuration = WaitingManager.Instance.FadeTime;
     }
 
     private void TitlePanel_OnBeforeShow()
