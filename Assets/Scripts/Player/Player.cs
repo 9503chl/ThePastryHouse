@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -85,11 +85,9 @@ public class Player : Creature
 
         ComponentOff(monoList);
 
-        ComponentController.Instance.DisableComponents();
-
         yield return new WaitForSeconds(m_Animator.GetCurrentAnimatorClipInfo(0).Length);
 
-        //팝업 띄우기.
+        PanelManager.Instance.ActiveView = PanelManager.ViewKind.Ending;
     }
     public override void CollisionStayOn(Collision2D collision)
     {

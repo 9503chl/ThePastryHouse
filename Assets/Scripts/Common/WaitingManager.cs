@@ -10,7 +10,6 @@ public class WaitingManager : MonoBehaviour
 
     public GameObject WaitingBG;
 
-    public Image FadeImage;
     public Image ProgressiveImage;
 
     public float FadeTime;
@@ -70,6 +69,11 @@ public class WaitingManager : MonoBehaviour
 
         ComponentController.Instance.EnableComponents();
 
+        if (GameSetting.Instance.CurrentGameData.IsFirst)
+        {
+            GameSetting.Instance.SaveGameData();
+            GameSetting.Instance.SaveToInstance();
+        }
         AstarPath.active.Scan();
     }
 }

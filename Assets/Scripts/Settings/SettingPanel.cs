@@ -49,7 +49,6 @@ public class SettingPanel : MonoBehaviour
 
         YesBackToWindowBtn.onClick.AddListener(delegate
         {
-            gameSetting.SaveToInstance();
             Application.Quit();
         });
         gameObject.SetActive(false);

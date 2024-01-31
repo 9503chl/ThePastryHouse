@@ -11,7 +11,8 @@ public class PanelManager : MonoBehaviour
     public enum ViewKind
     {
         Title,
-        Game
+        Game,
+        Ending
     }
     private static PanelManager instance;
     public static PanelManager Instance
@@ -35,6 +36,8 @@ public class PanelManager : MonoBehaviour
     [SerializeField] private TitlePanel titlePanel;
 
     [SerializeField] private GamePanel gamePanel;
+
+    [SerializeField] private EndingPanel endingPanel;
 
     [NonSerialized]
     private readonly Dictionary<ViewKind, View> views = new Dictionary<ViewKind, View>();
@@ -60,6 +63,7 @@ public class PanelManager : MonoBehaviour
 
         views.Add(ViewKind.Title, titlePanel);
         views.Add(ViewKind.Game, gamePanel);
+        views.Add(ViewKind.Ending, endingPanel);
 
         foreach (KeyValuePair<ViewKind, View> view in views)
         {

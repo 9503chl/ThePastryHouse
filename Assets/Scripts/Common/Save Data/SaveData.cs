@@ -9,7 +9,7 @@ public class SaveData : ScriptableObject
 {
     public bool IsFirst;
 
-    public int CurrentLevel;
+    public int CurrentLevel = 1;
     public int ARemainCount;//이름 미지정이라 일단 A
     public int RemainSnackCount;
 
@@ -39,7 +39,7 @@ public class SaveData : ScriptableObject
     {
         IsFirst = true;
 
-        CurrentLevel = 0;
+        CurrentLevel = 1;
         ARemainCount = 20;
         RemainSnackCount = 0;
 

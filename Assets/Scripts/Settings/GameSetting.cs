@@ -8,6 +8,8 @@ using LitJson;
 
 public struct GameData
 {
+    public bool IsFirst;
+
     public int CurrentLevel;
     public int ARemainCount;//이름 미지정이라 일단 A
     public int RemainSnackCount;
@@ -29,9 +31,13 @@ public struct GameData
     public List<float> BoxPositionYs;
     public List<float> BoxScales;
 
-    public void SetGameDate(SaveData saveData)
+    public DateTime LastPlayTime;
+
+    public void SetGameData(SaveData saveData)
     {
-        CurrentLevel= saveData.CurrentLevel;
+        IsFirst = saveData.IsFirst;
+
+        CurrentLevel = saveData.CurrentLevel;
         ARemainCount= saveData.ARemainCount;
         RemainSnackCount= saveData.RemainSnackCount;
 
@@ -112,6 +118,8 @@ public class GameSetting : MonoBehaviour
         jsonDataSaveData = LoadFromJson(Path.Combine(Application.persistentDataPath + SaveDataPath), CurrentSaveData);
         CurrentSaveData.LoadFromJson(jsonDataSaveData);
 
+        CurrentGameData.SetGameData(CurrentSaveData);
+
         foreach (AudioSource a in BGMAudios)
         {
             a.volume = options.BGMVolumn;
@@ -140,8 +148,7 @@ public class GameSetting : MonoBehaviour
     }
     public void GammaChange(float value)
     {
-        GammaPanel.color = new Color(GammaPanel.color.r, GammaPanel.color.g, GammaPanel.color.b,
-            0.5f - options.Gamma / 2);
+        GammaPanel.color = new Color(GammaPanel.color.r, GammaPanel.color.g, GammaPanel.color.b, 0.5f - options.Gamma / 2);
         options.Gamma = value;
     }
     public void SaveGameData()//여기다 다 적용하고 호출하기.
@@ -183,17 +190,18 @@ public class GameSetting : MonoBehaviour
             CurrentGameData.BoxScales.Add(listProp[i].transform.localScale.x);
         }
         #endregion
-
-        #region 초기화
+    }
+    public void ListResetEnemyNMap()
+    {
         EnemyManager.Instance.EnemyReset();
         MapManager.Instance.BoxNCubeReset();
-        #endregion
     }
 
     public void SaveToInstance()
     {
         if (CurrentSaveData != null)
         {
+            CurrentGameData.LastPlayTime = DateTime.Now;
             CurrentSaveData.SaveToJson(CurrentGameData);
             SaveToJson(Path.Combine(Application.persistentDataPath + GameOptionPath), options);
         }
@@ -206,7 +214,7 @@ public class GameSetting : MonoBehaviour
 
     private void OnApplicationQuit()// 강제종료시도 저장
     {
-        SaveGameData();
+        ListResetEnemyNMap();
         SaveToInstance();
     }
     private void SaveToJson(string path, object obj)
