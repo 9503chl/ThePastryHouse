@@ -53,7 +53,7 @@ public class Player : Creature
         Speed = missionData.PlayerSpeed;
         CurrentHP = HP;
         damageInterval = missionData.DamageInterval;
-        Damage = 75;
+        Damage = 1;
         lantern.Damage = Damage;
         DamageText.text = Damage.ToString();
     }
