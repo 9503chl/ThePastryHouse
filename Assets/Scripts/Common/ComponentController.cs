@@ -18,6 +18,7 @@ public class ComponentController : MonoBehaviour
         {
             switch(monoBehaviours[i])
             {
+                case SnackManager: CanDiableMonos.Add(monoBehaviours[i]); break;
                 case EnemyManager: CanDiableMonos.Add(monoBehaviours[i]); break;
                 case PlayerInput: CanDiableMonos.Add(monoBehaviours[i]); break;
                 case HPManager: CanDiableMonos.Add(monoBehaviours[i]); break;
@@ -31,8 +32,11 @@ public class ComponentController : MonoBehaviour
         {
             switch (CanDiableMonos[i])
             {
+                case SnackManager:
+                    SnackManager.Instance.ComponentOff();
+                    break;
                 case EnemyManager:
-                    EnemyManager.Instance.EnemyComponentOff();
+                    EnemyManager.Instance.ComponentOff();
                     break;
                 case PlayerInput:
                     PlayerInput.PlayerInputInstance.isEscapeOK = false;
@@ -51,9 +55,11 @@ public class ComponentController : MonoBehaviour
         {
             switch (CanDiableMonos[i])
             {
+                case SnackManager:
+                    SnackManager.Instance.ComponentOn();
+                    break;
                 case EnemyManager:
-                    EnemyManager.Instance.EnemyComponentOn();
-
+                    EnemyManager.Instance.ComponentOn();
                     break;
                 case PlayerInput:
                     PlayerInput.PlayerInputInstance.isEscapeOK = true;

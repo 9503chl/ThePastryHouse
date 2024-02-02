@@ -51,15 +51,15 @@ public class Player : Creature
         lantern = GetComponentInChildren<Lantern>();
         HP = missionData.PlayerMaxHP;
         Speed = missionData.PlayerSpeed;
-        CurrentHP = HP;
         damageInterval = missionData.DamageInterval;
-        Damage = 1;
+        Damage = 50;
         lantern.Damage = Damage;
         DamageText.text = Damage.ToString();
     }
     public override void EnableOn()
     {
         base.EnableOn();
+        CurrentHP = HP;
         transform.position = Vector3.zero;
         collider2DProp.enabled = true;
 

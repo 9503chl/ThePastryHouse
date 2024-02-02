@@ -6,60 +6,6 @@ using System;
 using System.IO;
 using LitJson;
 
-public struct GameData
-{
-    public bool IsFirst;
-
-    public int CurrentLevel;
-    public int ARemainCount;//이름 미지정이라 일단 A
-    public int RemainSnackCount;
-
-    public float RemainPlayerHP;//남은 체력 기억.
-    public List<float> ARemainHPs;
-
-    public float PlayerLastPositionX;
-    public float PlayerLastPositionY;
-
-    public List<float> SnackPositionsXs;
-    public List<float> SnackPositionsYs;
-
-    public List<float> CirclePositionXs;
-    public List<float> CirclePositionYs;
-    public List<float> CircleScales;
-
-    public List<float> BoxPositionXs;
-    public List<float> BoxPositionYs;
-    public List<float> BoxScales;
-
-    public DateTime LastPlayTime;
-
-    public void SetGameData(SaveData saveData)
-    {
-        IsFirst = saveData.IsFirst;
-
-        CurrentLevel = saveData.CurrentLevel;
-        ARemainCount= saveData.ARemainCount;
-        RemainSnackCount= saveData.RemainSnackCount;
-
-        RemainPlayerHP= saveData.RemainPlayerHP;
-        ARemainHPs = saveData.ARemainHPs;
-
-        PlayerLastPositionX = saveData.PlayerLastPositionX;
-        PlayerLastPositionY = saveData.PlayerLastPositionY;
-
-        SnackPositionsXs= saveData.SnackPositionsXs;
-        SnackPositionsYs= saveData.SnackPositionsYs;
-
-        CirclePositionXs= saveData.CylinderPositionXs;
-        CirclePositionYs= saveData.CylinderPositionYs;    
-        CircleScales= saveData.CylinderScales;
-
-        BoxPositionXs= saveData.BoxPositionXs;
-        BoxPositionYs= saveData.BoxPositionYs;
-        BoxScales= saveData.BoxScales;
-    }
-}
-
 
 public class GameSetting : MonoBehaviour
 {
@@ -83,8 +29,6 @@ public class GameSetting : MonoBehaviour
     }
 
     public SaveData CurrentSaveData;
-
-    public GameData CurrentGameData;//구조체로 현재 정보 갖고 있다가 저장시 옮기기.
 
     public MissionData CurrentMissionData;
     public MissionLevel CurrentMissionLevel;
@@ -117,8 +61,6 @@ public class GameSetting : MonoBehaviour
         CurrentSaveData = ScriptableObject.CreateInstance<SaveData>();
         jsonDataSaveData = LoadFromJson(Path.Combine(Application.persistentDataPath + SaveDataPath), CurrentSaveData);
         CurrentSaveData.LoadFromJson(jsonDataSaveData);
-
-        CurrentGameData.SetGameData(CurrentSaveData);
 
         foreach (AudioSource a in BGMAudios)
         {
@@ -155,13 +97,13 @@ public class GameSetting : MonoBehaviour
     {
         #region 적
         List<GameObject> listProp = EnemyManager.Instance.EnemyList;
-        CurrentGameData.ARemainCount = listProp.Count;
+        CurrentSaveData.ARemainCount = listProp.Count;
 
         Enemy enemyProp;
         for (int i = 0; i < listProp.Count; i++)
         {
             enemyProp = listProp[i].GetComponent<Enemy>();
-            CurrentGameData.ARemainHPs.Add(enemyProp.CurrentHP);
+            CurrentSaveData.ARemainHPs.Add(enemyProp.CurrentHP);
 
             listProp[i].transform.position = PoolManager.Instance.VectorAway;
             PoolManager.Instance.EnemyPool.Release(listProp[i].gameObject);
@@ -169,40 +111,53 @@ public class GameSetting : MonoBehaviour
         #endregion
 
         #region 플레이어
-        CurrentGameData.PlayerLastPositionX = PlayerInput.PlayerInputInstance.PlayerComponent.transform.position.x;
-        CurrentGameData.PlayerLastPositionY = PlayerInput.PlayerInputInstance.PlayerComponent.transform.position.y;
+        CurrentSaveData.PlayerLastPositionX = PlayerInput.PlayerInputInstance.PlayerComponent.transform.position.x;
+        CurrentSaveData.PlayerLastPositionY = PlayerInput.PlayerInputInstance.PlayerComponent.transform.position.y;
         #endregion
 
         #region 맵
         listProp = MapManager.Instance.CircleList;
         for(int i =0; i<listProp.Count; i++)
         {
-            CurrentGameData.CirclePositionXs.Add(listProp[i].transform.position.x);
-            CurrentGameData.CirclePositionYs.Add(listProp[i].transform.position.y);
-            CurrentGameData.CircleScales.Add(listProp[i].transform.localScale.x);
+            CurrentSaveData.CirclePositionXs.Add(listProp[i].transform.position.x);
+            CurrentSaveData.CirclePositionYs.Add(listProp[i].transform.position.y);
+            CurrentSaveData.CircleScales.Add(listProp[i].transform.localScale.x);
+
+            listProp[i].transform.position = PoolManager.Instance.VectorAway;
+            PoolManager.Instance.CirclePool.Release(listProp[i].gameObject);
         }
 
         listProp = MapManager.Instance.BoxList;
         for (int i = 0; i < listProp.Count; i++)
         {
-            CurrentGameData.BoxPositionXs.Add(listProp[i].transform.position.x);
-            CurrentGameData.BoxPositionYs.Add(listProp[i].transform.position.y);
-            CurrentGameData.BoxScales.Add(listProp[i].transform.localScale.x);
+            CurrentSaveData.BoxPositionXs.Add(listProp[i].transform.position.x);
+            CurrentSaveData.BoxPositionYs.Add(listProp[i].transform.position.y);
+            CurrentSaveData.BoxScales.Add(listProp[i].transform.localScale.x);
+
+            listProp[i].transform.position = PoolManager.Instance.VectorAway;
+            PoolManager.Instance.BoxPool.Release(listProp[i].gameObject);
+        }
+        #endregion
+
+        #region HP Bar
+        for(int i = 0; i < HPManager.Instance.HPPoolList.Count; i++)
+        {
+            HPManager.Instance.HPPool.Release(HPManager.Instance.HPPoolList[i]);
         }
         #endregion
     }
-    public void ListResetEnemyNMap()
+    public void ManagerListReset()
     {
-        EnemyManager.Instance.EnemyReset();
-        MapManager.Instance.BoxNCubeReset();
+        EnemyManager.Instance.ResetProp();
+        MapManager.Instance.ResetProp();
+        SnackManager.Instance.ResetProp();
     }
 
     public void SaveToInstance()
     {
         if (CurrentSaveData != null)
         {
-            CurrentGameData.LastPlayTime = DateTime.Now;
-            CurrentSaveData.SaveToJson(CurrentGameData);
+            CurrentSaveData.LastPlayTime = DateTime.Now;
             SaveToJson(Path.Combine(Application.persistentDataPath + GameOptionPath), options);
         }
         else
@@ -214,7 +169,7 @@ public class GameSetting : MonoBehaviour
 
     private void OnApplicationQuit()// 강제종료시도 저장
     {
-        ListResetEnemyNMap();
+        ManagerListReset();
         SaveToInstance();
     }
     private void SaveToJson(string path, object obj)

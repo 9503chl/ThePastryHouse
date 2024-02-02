@@ -28,13 +28,16 @@ public class GamePanel : View
             PlayerInput.PlayerInputInstance.PlayerColliderGetComponent();
             PlayerInput.PlayerInputInstance.CharRigidbody = PlayerInput.BaseInputInstance.Player.GetComponent<Rigidbody2D>();
         }
+
+        ObjectTarget.gameObject.SetActive(false);
     }
 
     private void GamePanel_OnAfterShow()
     {
+        ObjectTarget.gameObject.SetActive(true);
         WaitingManager.Instance.WaitngForStart();
 
-        MapManager.Instance.CreateMap(ObjectTarget);
-        EnemyManager.Instance.EnemyCreate(ObjectTarget);
+        MapManager.Instance.CreateProps(ObjectTarget);
+        EnemyManager.Instance.CreateProps(ObjectTarget);
     }
 }

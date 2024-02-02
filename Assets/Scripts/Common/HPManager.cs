@@ -12,7 +12,10 @@ public class HPManager : MonoBehaviour
     private List<string> nameList = new List<string>();
     private Image[] imageProps = new Image[2];
 
-    private IObjectPool<GameObject> HPBar;
+    public IObjectPool<GameObject> HPPool;
+
+    public List<GameObject> HPPoolList = new List<GameObject>();
+
     private GameObject objProp;
 
     public float Speed;
@@ -23,7 +26,7 @@ public class HPManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        HPBar = PoolManager.Instance.HPBarPool;
+        HPPool = PoolManager.Instance.HPBarPool;
     }
     private void OnEnable()
     {
@@ -60,7 +63,8 @@ public class HPManager : MonoBehaviour
     }
     private void SpawnHPBar(Transform tf)
     {
-        objProp = HPBar.Get();
+        objProp = HPPool.Get();
+        HPPoolList.Add(objProp);
         objProp.transform.SetParent(tf);
         objProp.transform.localPosition = Vector3.up * 1.5f;
     }

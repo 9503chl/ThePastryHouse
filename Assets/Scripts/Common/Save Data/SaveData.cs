@@ -10,7 +10,7 @@ public class SaveData : ScriptableObject
     public bool IsFirst;
 
     public int CurrentLevel = 1;
-    public int ARemainCount;//이름 미지정이라 일단 A
+    public int ARemainCount = 20;//이름 미지정이라 일단 A
     public int RemainSnackCount;
 
     public float RemainPlayerHP;//남은 체력 기억.
@@ -19,12 +19,9 @@ public class SaveData : ScriptableObject
     public float PlayerLastPositionX;
     public float PlayerLastPositionY;
 
-    public List<float> SnackPositionsXs = new List<float>();
-    public List<float> SnackPositionsYs = new List<float>();
-
-    public List<float> CylinderPositionXs = new List<float>();
-    public List<float> CylinderPositionYs = new List<float>();
-    public List<float> CylinderScales = new List<float>();
+    public List<float> CirclePositionXs = new List<float>();
+    public List<float> CirclePositionYs = new List<float>();
+    public List<float> CircleScales = new List<float>();
 
     public List<float> BoxPositionXs = new List<float>();
     public List<float> BoxPositionYs = new List<float>();
@@ -41,7 +38,7 @@ public class SaveData : ScriptableObject
 
         CurrentLevel = 1;
         ARemainCount = 20;
-        RemainSnackCount = 0;
+        RemainSnackCount = 5;
 
         RemainPlayerHP = 0;
 
@@ -66,26 +63,18 @@ public class SaveData : ScriptableObject
         PlayerLastPositionX = float.Parse(jsonData["PlayerLastPositionX"].ToString());
         PlayerLastPositionY = float.Parse(jsonData["PlayerLastPositionY"].ToString());
 
-        for (int i = 0; i < jsonData["SnackPositionsXs"].Count; i++)
-        {
-            SnackPositionsXs.Add(float.Parse(jsonData["SnackPositionsXs"][i].ToString()));
-        }
-        for (int i = 0; i < jsonData["SnackPositionsYs"].Count; i++)
-        {
-            SnackPositionsYs.Add(float.Parse(jsonData["SnackPositionsYs"][i].ToString()));
-        }
 
         for (int i = 0; i < jsonData["CylinderPositionXs"].Count; i++)
         {
-            CylinderPositionXs.Add(float.Parse(jsonData["CylinderPositionXs"][i].ToString()));
+            CirclePositionXs.Add(float.Parse(jsonData["CylinderPositionXs"][i].ToString()));
         }
         for (int i = 0; i < jsonData["CylinderPositionYs"].Count; i++)
         {
-            CylinderPositionYs.Add(float.Parse(jsonData["CylinderPositionYs"][i].ToString()));
+            CirclePositionYs.Add(float.Parse(jsonData["CylinderPositionYs"][i].ToString()));
         }
         for (int i = 0; i < jsonData["CylinderScales"].Count; i++)
         {
-            CylinderScales.Add(float.Parse(jsonData["CylinderScales"][i].ToString()));
+            CircleScales.Add(float.Parse(jsonData["CylinderScales"][i].ToString()));
         }
 
 
@@ -103,32 +92,5 @@ public class SaveData : ScriptableObject
         }
         LastPlayTime = DateTime.Parse(jsonData["LastPlayTime"].ToString());
         Difficulty = (MissionLevel)int.Parse(jsonData["Difficulty"].ToString());
-    }
-    public void SaveToJson(GameData gameData)
-    {
-       IsFirst = false;
-
-        CurrentLevel = gameData.CurrentLevel;
-        ARemainCount = gameData.ARemainCount;
-        RemainSnackCount = gameData.RemainSnackCount;
-
-        RemainPlayerHP = gameData.RemainPlayerHP;
-        ARemainHPs = gameData.ARemainHPs;
-
-        PlayerLastPositionX = gameData.PlayerLastPositionX;
-        PlayerLastPositionY = gameData.PlayerLastPositionY;
-
-        SnackPositionsXs = gameData.SnackPositionsXs;
-        SnackPositionsYs = gameData.SnackPositionsYs;
-
-        CylinderPositionXs = gameData.CirclePositionXs;
-        CylinderPositionYs = gameData.CirclePositionYs;
-        CylinderScales = gameData.CircleScales;
-
-        BoxPositionXs = gameData.BoxPositionXs;
-        BoxPositionYs = gameData.BoxPositionYs;
-        BoxScales = gameData.BoxScales;
-
-        LastPlayTime = DateTime.Now;
     }
 }

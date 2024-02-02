@@ -3,6 +3,8 @@ using UnityEngine.Experimental.Rendering.Universal;
 
 public class ScreenResolutionManager : MonoBehaviour
 {
+    public static ScreenResolutionManager Instance;
+
     public int Width = 1920;
     public int Height = 1080;
     public bool FullScreen = true;

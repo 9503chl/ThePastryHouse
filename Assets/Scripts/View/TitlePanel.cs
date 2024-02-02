@@ -40,6 +40,7 @@ public class TitlePanel : View
 
     private void TitlePanel_OnBeforeShow()
     {
+        HPManager.Instance.InfoGroup.SetActive(false);
         LevelSelectPanel.SetActive(false);
         if(saveData.IsFirst)
         {
@@ -49,7 +50,7 @@ public class TitlePanel : View
         else
         {
             ContinueBtn.interactable = true;
-            LastPlayTimeTxt.text = string.Format("({0})", saveData.LastPlayTime.ToString("yyyy:MM:dd"));
+            LastPlayTimeTxt.text = string.Format("({0})", saveData.LastPlayTime.ToString("yyyy:MM:dd:HH:mm:ss"));//타이밍 상 맞을텐데 잘 안된다.
         }
     }
 
@@ -71,7 +72,6 @@ public class TitlePanel : View
     }
     private void ContinueInvoke()
     {
-
         GameSetting.Instance.CurrentMissionData = MissionDatas[(int)saveData.Difficulty];
 
         switch (saveData.CurrentLevel)

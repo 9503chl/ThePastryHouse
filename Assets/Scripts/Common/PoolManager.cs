@@ -21,10 +21,14 @@ public class PoolManager : MonoBehaviour
     public int HPBarCapacity;
     public int HPBarPoolSize;
 
+    public int SnackCapacity;
+    public int SnackPoolSize;
+
     public GameObject BoxPrefab;
     public GameObject CirclePrefab;
     public GameObject EnemyPrefab;
     public GameObject HPBarPrefab;
+    public GameObject SnackPrefab;
 
     public Transform ObjectTf;
 
@@ -37,8 +41,8 @@ public class PoolManager : MonoBehaviour
     public IObjectPool<GameObject> BoxPool { get; private set; }
     public IObjectPool<GameObject> CirclePool { get; private set; }
     public IObjectPool<GameObject> EnemyPool { get; private set; }
-
     public IObjectPool<GameObject> HPBarPool { get; private set; }
+    public IObjectPool<GameObject> SnackPool { get; private set; }
 
 
     private void Awake()
@@ -63,6 +67,9 @@ public class PoolManager : MonoBehaviour
 
         HPBarPool = new UnityEngine.Pool.ObjectPool<GameObject>(CreateHPBox, OnTakeFromPool, OnReturnedToPool,
         OnDestroyPoolObject, true, EnemyCapacity, EnemyPoolSize);
+
+        SnackPool = new UnityEngine.Pool.ObjectPool<GameObject>(CreateSnack, OnTakeFromPool, OnReturnedToPool,
+       OnDestroyPoolObject, true, EnemyCapacity, EnemyPoolSize);
 
 
 
@@ -90,6 +97,12 @@ public class PoolManager : MonoBehaviour
             GameObject HPBar = CreateHPBox();
             HPBarPool.Release(HPBar);
         }
+        for (int i = 0; i < SnackCapacity; i++)
+        {
+            GameObject Snack = CreateSnack();
+            SnackPool.Release(Snack);
+        }
+
         PlayerInput.PlayerInputInstance.sight2Ds = FindObjectsOfType<Sight2D>();
     }
 
@@ -115,6 +128,11 @@ public class PoolManager : MonoBehaviour
         GameObject poolGo = Instantiate(HPBarPrefab, ObjectTf);
         return poolGo;
     }
+    private GameObject CreateSnack()
+    {
+        GameObject poolGo = Instantiate(SnackPrefab, ObjectTf);
+        return poolGo;
+    }
     private void OnTakeFromPool(GameObject poolGo)
     {
 
@@ -131,15 +149,10 @@ public class PoolManager : MonoBehaviour
             enemyProp.enabled = false;
             enemyProp.FullHP();
         }
-        //imageProp = poolGo.GetComponent<Image>();
-        //if (imageProp != null)
-        //{
-        //    imageProp.enabled = false;
-        //}
     }
     // ªË¡¶
     private void OnDestroyPoolObject(GameObject poolGo)
     {
-        //Destroy(poolGo);
+
     }
 }

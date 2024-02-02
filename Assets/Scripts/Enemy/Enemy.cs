@@ -30,7 +30,7 @@ public class Enemy : Creature
         followTime = missionData.EnemyFollowTime;
         FullHP();
 
-        Damage = 75;//나중에 바꿔야함.
+        Damage = 1;//나중에 바꿔야함.
     }
     public override void OnAwake()
     {

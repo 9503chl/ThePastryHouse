@@ -69,10 +69,11 @@ public class WaitingManager : MonoBehaviour
 
         ComponentController.Instance.EnableComponents();
 
-        if (GameSetting.Instance.CurrentGameData.IsFirst)
+        if (GameSetting.Instance.CurrentSaveData.IsFirst)
         {
             GameSetting.Instance.SaveGameData();
             GameSetting.Instance.SaveToInstance();
+            GameSetting.Instance.CurrentSaveData.IsFirst = false;
         }
         AstarPath.active.Scan();
     }

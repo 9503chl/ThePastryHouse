@@ -2,94 +2,111 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MapManager : MonoBehaviour
+public class MapManager : Manager
 {
     public static MapManager Instance;
-
-    private GameObject prop;
-
-    public List<Rigidbody2D> Rigidbody2DList = new List<Rigidbody2D>();
 
     public List<GameObject> CircleList= new List<GameObject>();
     public List<GameObject> BoxList = new List<GameObject>();
 
-    private Rigidbody2D tempRigid2D;
+    private SaveData saveData;
 
-    private int circleCount;
-    private int cubeCount;
 
-    public float MaxX;//960
-    public float MaxY;//540
-
-    public float MinX;
-    public float MinY;
-
-    private void Awake()
+    public override void OnAwake()
     {
+        base.OnAwake();
         Instance = this;
 
-        circleCount = PoolManager.Instance.CirclePoolSize;
-        cubeCount = PoolManager.Instance.BoxPoolSize;
+        m_PoolA = PoolManager.Instance.CirclePool;
+        m_PoolB = PoolManager.Instance.BoxPool;
     }
 
-    public void CreateMap(Transform targetTransform)
+    public override void CreateProps(Transform targetTransform)
     {
-        for (int i = 0; i < circleCount; i++)
+        if (GameSetting.Instance.CurrentSaveData.IsFirst)
         {
-            prop = PoolManager.Instance.CirclePool.Get();
-            prop.transform.SetParent(targetTransform);
-
-            int scaleFactor = Random.Range(1, 3);
-            prop.transform.localScale = Vector3.one * scaleFactor * 10;
-
-            CircleList.Add(prop);
-
-            tempRigid2D = prop.GetComponent<Rigidbody2D>();
-            if(tempRigid2D != null)
+            for (int i = 0; i < PoolManager.Instance.CirclePoolSize; i++)
             {
-                prop.transform.localPosition = new Vector3(Random.Range(MinX, MaxX) * 10, Random.Range(MinY, MaxY) * 10, 0);//Z 값은 피봇 대신 쓰는거.
-                tempRigid2D.bodyType = RigidbodyType2D.Dynamic;
-                Rigidbody2DList.Add(tempRigid2D);
+                ObjProp = m_PoolA.Get();
+                ObjProp.transform.SetParent(targetTransform);
+
+                int scaleFactor = Random.Range(1, 3);
+                ObjProp.transform.localScale = Vector3.one * scaleFactor * 10;
+
+                CircleList.Add(ObjProp);
+
+                RigidBodyProp = ObjProp.GetComponent<Rigidbody2D>();
+                if (RigidBodyProp != null)
+                {
+                    ObjProp.transform.localPosition = new Vector2(Random.Range(XValue.x, XValue.y) * 10, Random.Range(YValue.x, YValue.y) * 10);
+                    RigidBodyProp.bodyType = RigidbodyType2D.Dynamic;
+                    m_Rigidbody2DList.Add(RigidBodyProp);
+                }
+            }
+
+            for (int i = 0; i < PoolManager.Instance.BoxPoolSize; i++)
+            {
+                ObjProp = m_PoolB.Get();
+                ObjProp.transform.SetParent(targetTransform);
+
+                int scaleFactor = Random.Range(1, 3);
+                ObjProp.transform.localScale = Vector3.one * scaleFactor * 10;
+
+                BoxList.Add(ObjProp);
+
+                RigidBodyProp = ObjProp.GetComponent<Rigidbody2D>();
+                if (RigidBodyProp != null)
+                {
+                    ObjProp.transform.localPosition = new Vector2(Random.Range(XValue.x, XValue.y) * 10, Random.Range(YValue.x, YValue.y) * 10);
+                    m_Rigidbody2DList.Add(RigidBodyProp);
+                }
             }
         }
-
-        for (int i = 0; i < cubeCount; i++)
+        else
         {
-            prop = PoolManager.Instance.BoxPool.Get();
-            prop.transform.SetParent(targetTransform);
+            saveData = GameSetting.Instance.CurrentSaveData;
 
-            int scaleFactor = Random.Range(1, 3);
-            prop.transform.localScale = Vector3.one * scaleFactor * 10;
-
-            BoxList.Add(prop);
-
-            tempRigid2D = prop.GetComponent<Rigidbody2D>();
-            if (tempRigid2D != null)
+            for (int i = 0; i < saveData.CirclePositionXs.Count; i++)
             {
-                prop.transform.localPosition = new Vector3(Random.Range(MinX, MaxX) * 10, Random.Range(MinY, MaxY) * 10, 0);//Z 값은 피봇 대신 쓰는거.
-                Rigidbody2DList.Add(tempRigid2D);
+                ObjProp = m_PoolA.Get();
+                ObjProp.transform.SetParent(targetTransform);
+
+                ObjProp.transform.localScale = Vector3.one * saveData.CircleScales[i];
+
+                CircleList.Add(ObjProp);
+
+                RigidBodyProp = ObjProp.GetComponent<Rigidbody2D>();
+                if (RigidBodyProp != null)
+                {
+                    ObjProp.transform.localPosition = new Vector3(saveData.CirclePositionXs[i], saveData.CirclePositionYs[i], 0);
+                    RigidBodyProp.bodyType = RigidbodyType2D.Dynamic;
+                    m_Rigidbody2DList.Add(RigidBodyProp);
+                }
+            }
+            for (int i = 0; i < saveData.BoxPositionXs.Count; i++)
+            {
+                ObjProp = m_PoolB.Get();
+                ObjProp.transform.SetParent(targetTransform);
+
+                ObjProp.transform.localScale = Vector3.one * saveData.BoxScales[i];
+
+                CircleList.Add(ObjProp);
+
+                RigidBodyProp = ObjProp.GetComponent<Rigidbody2D>();
+                if (RigidBodyProp != null)
+                {
+                    ObjProp.transform.localPosition = new Vector3(saveData.BoxPositionXs[i], saveData.BoxPositionYs[i], 0);
+                    RigidBodyProp.bodyType = RigidbodyType2D.Dynamic;
+                    m_Rigidbody2DList.Add(RigidBodyProp);
+                }
             }
         }
         StartCoroutine(DelayReset());
     }
-    public void BoxNCubeReset()
+
+    public override void ResetProp()
     {
         CircleList.RemoveRange(0, CircleList.Count);
         BoxList.RemoveRange(0, CircleList.Count);
-    }
-    IEnumerator DelayReset()//맵이 세팅되고 겹치는걸 방지해서 5초간 시간을 줌.
-    {
-        Time.timeScale = 5.0f;
-        float time = 0.8f;
-        while (time > 0)
-        {
-            time -= Time.fixedDeltaTime;
-            yield return new WaitForSeconds(Time.fixedDeltaTime);
-        }
-        for (int i = 0; i < Rigidbody2DList.Count; i++)
-        {
-            Rigidbody2DList[i].bodyType = RigidbodyType2D.Kinematic;
-        }
-        Time.timeScale = 1.0f;
     }
 }
