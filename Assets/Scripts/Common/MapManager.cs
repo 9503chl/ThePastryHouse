@@ -90,7 +90,7 @@ public class MapManager : Manager
 
                 ObjProp.transform.localScale = Vector3.one * saveData.BoxScales[i];
 
-                CircleList.Add(ObjProp);
+                BoxList.Add(ObjProp);
 
                 RigidBodyProp = ObjProp.GetComponent<Rigidbody2D>();
                 if (RigidBodyProp != null)
@@ -104,9 +104,18 @@ public class MapManager : Manager
         StartCoroutine(DelayReset());
     }
 
-    public override void ResetProp()
+    public override void ResetProps()
     {
+        for(int i = 0; i <CircleList.Count; i++)
+        {
+            m_PoolA.Release(CircleList[i]);
+        }
         CircleList.RemoveRange(0, CircleList.Count);
-        BoxList.RemoveRange(0, CircleList.Count);
+
+        for (int i = 0; i < BoxList.Count; i++)
+        {
+            m_PoolB.Release(BoxList[i]);
+        }
+        BoxList.RemoveRange(0, BoxList.Count);
     }
 }

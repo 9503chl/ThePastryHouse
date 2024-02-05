@@ -64,17 +64,17 @@ public class SaveData : ScriptableObject
         PlayerLastPositionY = float.Parse(jsonData["PlayerLastPositionY"].ToString());
 
 
-        for (int i = 0; i < jsonData["CylinderPositionXs"].Count; i++)
+        for (int i = 0; i < jsonData["CirclePositionXs"].Count; i++)
         {
-            CirclePositionXs.Add(float.Parse(jsonData["CylinderPositionXs"][i].ToString()));
+            CirclePositionXs.Add(float.Parse(jsonData["CirclePositionXs"][i].ToString()));
         }
-        for (int i = 0; i < jsonData["CylinderPositionYs"].Count; i++)
+        for (int i = 0; i < jsonData["CirclePositionYs"].Count; i++)
         {
-            CirclePositionYs.Add(float.Parse(jsonData["CylinderPositionYs"][i].ToString()));
+            CirclePositionYs.Add(float.Parse(jsonData["CirclePositionYs"][i].ToString()));
         }
-        for (int i = 0; i < jsonData["CylinderScales"].Count; i++)
+        for (int i = 0; i < jsonData["CircleScales"].Count; i++)
         {
-            CircleScales.Add(float.Parse(jsonData["CylinderScales"][i].ToString()));
+            CircleScales.Add(float.Parse(jsonData["CircleScales"][i].ToString()));
         }
 
 

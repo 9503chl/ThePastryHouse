@@ -50,12 +50,14 @@ public class TitlePanel : View
         else
         {
             ContinueBtn.interactable = true;
-            LastPlayTimeTxt.text = string.Format("({0})", saveData.LastPlayTime.ToString("yyyy:MM:dd:HH:mm:ss"));//타이밍 상 맞을텐데 잘 안된다.
+            LastPlayTimeTxt.text = string.Format("({0})", saveData.LastPlayTime.ToString("yyyy:MM:dd:HH:mm:ss"));
         }
     }
 
     private void LevelSelect(ButtonGroup buttonGroup)
     {
+        GameSetting.Instance.ListNPoolReset();
+
         GameSetting.Instance.CurrentMissionData = MissionDatas[buttonGroup.SelectedIndex];
 
         saveData.DataReset();
@@ -73,6 +75,7 @@ public class TitlePanel : View
     private void ContinueInvoke()
     {
         GameSetting.Instance.CurrentMissionData = MissionDatas[(int)saveData.Difficulty];
+        GameSetting.Instance.ListNPoolReset();
 
         switch (saveData.CurrentLevel)
         {

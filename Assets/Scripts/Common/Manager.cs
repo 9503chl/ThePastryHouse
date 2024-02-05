@@ -83,13 +83,13 @@ public class Manager : MonoBehaviour
     }
     public virtual void OnAwake()
     {
-        XValue = new Vector2(-ScreenResolutionManager.Instance.Width, ScreenResolutionManager.Instance.Width) / 2;
-        YValue = new Vector2(-ScreenResolutionManager.Instance.Height, ScreenResolutionManager.Instance.Height) / 2;
+        
     }
 
     public virtual void OnStart()
     {
-
+        XValue = new Vector2(-19.2f, 19.2f);
+        YValue = new Vector2(-10.8f, 10.8f);
     }
     public virtual void OnUpdate()
     {
@@ -132,7 +132,7 @@ public class Manager : MonoBehaviour
     {
 
     }
-    public virtual void ResetProp()
+    public virtual void ResetProps()
     {
 
     }

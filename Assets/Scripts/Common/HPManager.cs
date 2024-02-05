@@ -4,16 +4,13 @@ using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.UI;
 
-public class HPManager : MonoBehaviour
+public class HPManager : Manager
 {
     public static HPManager Instance;
 
     private Dictionary<string, Image[]> imageDictionary = new Dictionary<string, Image[]>();
     private List<string> nameList = new List<string>();
     private Image[] imageProps = new Image[2];
-
-    public IObjectPool<GameObject> HPPool;
-
     public List<GameObject> HPPoolList = new List<GameObject>();
 
     private GameObject objProp;
@@ -26,7 +23,7 @@ public class HPManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        HPPool = PoolManager.Instance.HPBarPool;
+        m_PoolA = PoolManager.Instance.HPBarPool;
     }
     private void OnEnable()
     {
@@ -63,7 +60,7 @@ public class HPManager : MonoBehaviour
     }
     private void SpawnHPBar(Transform tf)
     {
-        objProp = HPPool.Get();
+        objProp = m_PoolA.Get();
         HPPoolList.Add(objProp);
         objProp.transform.SetParent(tf);
         objProp.transform.localPosition = Vector3.up * 1.5f;
@@ -88,5 +85,13 @@ public class HPManager : MonoBehaviour
             }
             yield return new WaitUntil(() => nameList.Count > 0);
         }
+    }
+    public override void ResetProps()
+    {
+        for(int i=0; i< HPPoolList.Count; i++)
+        {
+            m_PoolA.Release(HPPoolList[i]);
+        }
+        HPPoolList.RemoveRange(0,HPPoolList.Count);
     }
 }

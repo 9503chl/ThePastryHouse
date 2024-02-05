@@ -112,6 +112,7 @@ public class Enemy : Creature
         yield return new WaitForSeconds(m_Animator.GetCurrentAnimatorClipInfo(0).Length);
 
         gameObject.transform.position = PoolManager.Instance.VectorAway;
+        EnemyManager.Instance.EnemyList.Remove(gameObject);
         PoolManager.Instance.EnemyPool.Release(gameObject);
     }
     private IEnumerator DelayTracking(GameObject playerObj)

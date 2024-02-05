@@ -7,7 +7,7 @@ public class SnackManager : Manager
 {
     public static SnackManager Instance;
 
-    private List<Snack> snackList = new List<Snack>();
+    public List<GameObject> SnackList = new List<GameObject>();
 
     public override void OnAwake()
     {
@@ -35,9 +35,9 @@ public class SnackManager : Manager
     }
     public void SnackComponentOff()
     {
-        for (int i = 0; i < snackList.Count; i++)
+        for (int i = 0; i < SnackList.Count; i++)
         {
-            snackList[i].GetComponent<Enemy>().enabled = false;
+            SnackList[i].GetComponent<Snack>().enabled = false;
             ColliderProp = ObjProp.GetComponent<Collider2D>();
             if (ColliderProp != null)
             {
@@ -47,9 +47,9 @@ public class SnackManager : Manager
     }
     public void SnackComponentOn()
     {
-        for (int i = 0; i < snackList.Count; i++)
+        for (int i = 0; i < SnackList.Count; i++)
         {
-            snackList[i].GetComponent<Enemy>().enabled = true; ;
+            SnackList[i].GetComponent<Snack>().enabled = true; ;
             ColliderProp = ObjProp.GetComponent<Collider2D>();
             if (ColliderProp != null)
             {
@@ -58,8 +58,12 @@ public class SnackManager : Manager
         }
     }
 
-    public override void ResetProp()
+    public override void ResetProps()
     {
-        snackList.RemoveRange(0, snackList.Count);
+        for (int i = 0; i < SnackList.Count; i++)
+        {
+            m_PoolA.Release(SnackList[i].gameObject);
+        }
+        SnackList.RemoveRange(0, SnackList.Count);
     }
 }

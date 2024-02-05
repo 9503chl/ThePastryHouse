@@ -59,7 +59,7 @@ public class Player : Creature
     public override void EnableOn()
     {
         base.EnableOn();
-        CurrentHP = HP;
+        CurrentHP = HP;//이것도 저장 데이터에서 불러오기 해야됨.
         transform.position = Vector3.zero;
         collider2DProp.enabled = true;
 

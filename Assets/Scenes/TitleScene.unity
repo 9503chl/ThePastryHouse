@@ -258,7 +258,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: b86c7e09ccc66ad4297db5d4abe307b3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2727,7 +2727,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: b86c7e09ccc66ad4297db5d4abe307b3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3076,7 +3076,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: b86c7e09ccc66ad4297db5d4abe307b3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3161,7 +3161,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: b86c7e09ccc66ad4297db5d4abe307b3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4919,6 +4919,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1fb05653459c1641970cea02d87fe02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RigidBodyProp: {fileID: 0}
+  m_Rigidbody2DList: []
+  ColliderProp: {fileID: 0}
+  XValue: {x: 0, y: 0}
+  YValue: {x: 0, y: 0}
+  ObjProp: {fileID: 0}
   HPPoolList: []
   Speed: 0.005
   InfoGroup: {fileID: 1933016300}
@@ -5053,6 +5059,7 @@ MonoBehaviour:
   XValue: {x: 0, y: 0}
   YValue: {x: 0, y: 0}
   ObjProp: {fileID: 0}
+  SnackList: []
 --- !u!1 &1933016300
 GameObject:
   m_ObjectHideFlags: 0
@@ -8460,8 +8467,8 @@ MonoBehaviour:
   EnemyPoolSize: 20
   HPBarCapacity: 20
   HPBarPoolSize: 20
-  SnackCapacity: 0
-  SnackPoolSize: 0
+  SnackCapacity: 5
+  SnackPoolSize: 5
   BoxPrefab: {fileID: 1344773018415267087, guid: 83f5be45b1660f0479d2ce9a5314af95,
     type: 3}
   CirclePrefab: {fileID: 7308959960245386989, guid: 6276b181e4ee75a4da5467f2f59848aa,
@@ -8470,7 +8477,8 @@ MonoBehaviour:
     type: 3}
   HPBarPrefab: {fileID: 2778437910151399012, guid: efa2092b79b74fa4c87eb593fc9d7e07,
     type: 3}
-  SnackPrefab: {fileID: 0}
+  SnackPrefab: {fileID: 8891755539737486345, guid: 02c22c302b41a484b877fdb35bd93e3c,
+    type: 3}
   ObjectTf: {fileID: 413926125}
   VectorAway: {x: -5000, y: -5000, z: 0}
 --- !u!1 &4983708987084848099

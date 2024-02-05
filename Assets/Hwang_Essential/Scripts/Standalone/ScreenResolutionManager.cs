@@ -3,7 +3,23 @@ using UnityEngine.Experimental.Rendering.Universal;
 
 public class ScreenResolutionManager : MonoBehaviour
 {
-    public static ScreenResolutionManager Instance;
+    public static ScreenResolutionManager Instance
+    {
+        get
+        {
+            ScreenResolutionManager[] templates = FindObjectsOfType<ScreenResolutionManager>();
+            if (templates.Length > 0)
+            {
+                instance = templates[0];
+                instance.enabled = true;
+                instance.gameObject.SetActive(true);
+            }
+            return instance;
+        }
+
+    }
+
+    private static ScreenResolutionManager instance;
 
     public int Width = 1920;
     public int Height = 1080;

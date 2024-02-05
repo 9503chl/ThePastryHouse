@@ -43,6 +43,7 @@ public class Snack : Object
         yield return new WaitForSeconds(animator.GetCurrentAnimatorClipInfo(0).Length);
 
         gameObject.transform.position = PoolManager.Instance.VectorAway;
+        SnackManager.Instance.SnackList.Remove(gameObject);
         PoolManager.Instance.SnackPool.Release(gameObject);
         coroutine = null;
     }

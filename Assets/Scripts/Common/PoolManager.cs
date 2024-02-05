@@ -1,4 +1,4 @@
-using System.Collections;
+ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -7,7 +7,23 @@ using UnityEngine.UI;
 
 public class PoolManager : MonoBehaviour
 {
-    public static PoolManager Instance;
+    public static PoolManager Instance 
+    {
+        get 
+        {
+            PoolManager[] templates = FindObjectsOfType<PoolManager>();
+            if (templates.Length > 0)
+            {
+                instance = templates[0];
+                instance.enabled = true;
+                instance.gameObject.SetActive(true);
+            }
+            return instance;
+        }
+
+    }
+
+    private static PoolManager instance;
 
     public int BoxCapacity;
     public int BoxPoolSize;
@@ -35,7 +51,6 @@ public class PoolManager : MonoBehaviour
     public Vector3 VectorAway;
 
     private Enemy enemyProp;
-    private Image imageProp;
 
 
     public IObjectPool<GameObject> BoxPool { get; private set; }
@@ -47,10 +62,6 @@ public class PoolManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null)
-            Instance = this;
-        else
-            Destroy(this.gameObject);
         Init();
     }
 
@@ -79,7 +90,6 @@ public class PoolManager : MonoBehaviour
             GameObject Box = CreateBox();
             BoxPool.Release(Box);
         }
-
 
         for (int i = 0; i < CircleCapacity; i++)
         {
@@ -142,7 +152,6 @@ public class PoolManager : MonoBehaviour
     private void OnReturnedToPool(GameObject poolGo)
     {
         poolGo.transform.position = VectorAway;
-
         enemyProp = poolGo.GetComponent<Enemy>();
         if(enemyProp != null )
         {

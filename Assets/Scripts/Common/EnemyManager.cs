@@ -33,8 +33,12 @@ public class EnemyManager : Manager
         ComponentOff();
     }
 
-    public override void ResetProp()
+    public override void ResetProps()
     {
+        for(int i= 0; i<EnemyList.Count; i++)
+        {
+            m_PoolA.Release(EnemyList[i]);
+        }
         EnemyList.RemoveRange(0, EnemyList.Count);
     }
     public override void ComponentOff()
