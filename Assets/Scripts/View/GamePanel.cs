@@ -39,5 +39,6 @@ public class GamePanel : View
 
         MapManager.Instance.CreateProps(ObjectTarget);
         EnemyManager.Instance.CreateProps(ObjectTarget);
+        SnackManager.Instance.CreateProps(ObjectTarget);
     }
 }

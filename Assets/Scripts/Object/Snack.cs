@@ -17,11 +17,14 @@ public class Snack : Object
     public override void OnAwake()
     {
         base.OnAwake();
-        Damage = GameSetting.Instance.CurrentMissionData.SnackValue;
         animator = GetComponent<Animator>();
     }
 
-
+    public override void OnStart()
+    {
+        base.OnStart();
+        Damage = GameSetting.Instance.CurrentMissionData.SnackValue;
+    }
     public override void CollisionEnterOn(Collision2D collision)
     {
         if (coroutine == null) {

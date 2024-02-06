@@ -47,50 +47,57 @@ public class SaveData : ScriptableObject
     }
     public void LoadFromJson(JsonData jsonData)//Vector가 안되서 따로 나눠야함.
     {
-        IsFirst = bool.Parse(jsonData["IsFirst"].ToString());
-
-        CurrentLevel = int.Parse(jsonData["CurrentLevel"].ToString());
-        ARemainCount = int.Parse(jsonData["ARemainCount"].ToString());
-        RemainSnackCount = int.Parse(jsonData["RemainSnackCount"].ToString());
-
-        RemainPlayerHP = float.Parse(jsonData["RemainPlayerHP"].ToString());
-
-        for (int i = 0; i < jsonData["ARemainHPs"].Count; i++)
+        try
         {
-            ARemainHPs.Add(float.Parse(jsonData["ARemainHPs"][i].ToString()));
-        }
+            IsFirst = bool.Parse(jsonData["IsFirst"].ToString());
 
-        PlayerLastPositionX = float.Parse(jsonData["PlayerLastPositionX"].ToString());
-        PlayerLastPositionY = float.Parse(jsonData["PlayerLastPositionY"].ToString());
+            CurrentLevel = int.Parse(jsonData["CurrentLevel"].ToString());
+            ARemainCount = int.Parse(jsonData["ARemainCount"].ToString());
+            RemainSnackCount = int.Parse(jsonData["RemainSnackCount"].ToString());
 
+            RemainPlayerHP = float.Parse(jsonData["RemainPlayerHP"].ToString());
 
-        for (int i = 0; i < jsonData["CirclePositionXs"].Count; i++)
-        {
-            CirclePositionXs.Add(float.Parse(jsonData["CirclePositionXs"][i].ToString()));
-        }
-        for (int i = 0; i < jsonData["CirclePositionYs"].Count; i++)
-        {
-            CirclePositionYs.Add(float.Parse(jsonData["CirclePositionYs"][i].ToString()));
-        }
-        for (int i = 0; i < jsonData["CircleScales"].Count; i++)
-        {
-            CircleScales.Add(float.Parse(jsonData["CircleScales"][i].ToString()));
-        }
+            for (int i = 0; i < jsonData["ARemainHPs"].Count; i++)
+            {
+                ARemainHPs.Add(float.Parse(jsonData["ARemainHPs"][i].ToString()));
+            }
+
+            PlayerLastPositionX = float.Parse(jsonData["PlayerLastPositionX"].ToString());
+            PlayerLastPositionY = float.Parse(jsonData["PlayerLastPositionY"].ToString());
 
 
-        for (int i = 0; i < jsonData["BoxPositionXs"].Count; i++)
-        {
-            BoxPositionXs.Add(float.Parse(jsonData["BoxPositionXs"][i].ToString()));
+            for (int i = 0; i < jsonData["CirclePositionXs"].Count; i++)
+            {
+                CirclePositionXs.Add(float.Parse(jsonData["CirclePositionXs"][i].ToString()));
+            }
+            for (int i = 0; i < jsonData["CirclePositionYs"].Count; i++)
+            {
+                CirclePositionYs.Add(float.Parse(jsonData["CirclePositionYs"][i].ToString()));
+            }
+            for (int i = 0; i < jsonData["CircleScales"].Count; i++)
+            {
+                CircleScales.Add(float.Parse(jsonData["CircleScales"][i].ToString()));
+            }
+
+
+            for (int i = 0; i < jsonData["BoxPositionXs"].Count; i++)
+            {
+                BoxPositionXs.Add(float.Parse(jsonData["BoxPositionXs"][i].ToString()));
+            }
+            for (int i = 0; i < jsonData["BoxPositionYs"].Count; i++)
+            {
+                BoxPositionYs.Add(float.Parse(jsonData["BoxPositionYs"][i].ToString()));
+            }
+            for (int i = 0; i < jsonData["BoxScales"].Count; i++)
+            {
+                BoxScales.Add(float.Parse(jsonData["BoxScales"][i].ToString()));
+            }
+            LastPlayTime = DateTime.Parse(jsonData["LastPlayTime"].ToString());
+            Difficulty = (MissionLevel)int.Parse(jsonData["Difficulty"].ToString());
         }
-        for (int i = 0; i < jsonData["BoxPositionYs"].Count; i++)
+        catch
         {
-            BoxPositionYs.Add(float.Parse(jsonData["BoxPositionYs"][i].ToString()));
+            Debug.Log("Save Data is Empty");
         }
-        for (int i = 0; i < jsonData["BoxScales"].Count; i++)
-        {
-            BoxScales.Add(float.Parse(jsonData["BoxScales"][i].ToString()));
-        }
-        LastPlayTime = DateTime.Parse(jsonData["LastPlayTime"].ToString());
-        Difficulty = (MissionLevel)int.Parse(jsonData["Difficulty"].ToString());
     }
 }

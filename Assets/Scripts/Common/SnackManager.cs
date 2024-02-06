@@ -23,6 +23,8 @@ public class SnackManager : Manager
             ObjProp = m_PoolA.Get();
             ObjProp.transform.SetParent(targetTransform);
 
+            SnackList.Add(ObjProp);
+
             RigidBodyProp = ObjProp.GetComponent<Rigidbody2D>();
             if (RigidBodyProp != null)
             {
@@ -33,7 +35,19 @@ public class SnackManager : Manager
         }
         StartCoroutine(DelayReset());
     }
-    public void SnackComponentOff()
+    public override void ComponentOn()
+    {
+        for (int i = 0; i < SnackList.Count; i++)
+        {
+            SnackList[i].GetComponent<Snack>().enabled = true;
+            ColliderProp = ObjProp.GetComponent<Collider2D>();
+            if (ColliderProp != null)
+            {
+                ColliderProp.enabled = true;
+            }
+        }
+    }
+    public override void ComponentOff()
     {
         for (int i = 0; i < SnackList.Count; i++)
         {
@@ -42,18 +56,6 @@ public class SnackManager : Manager
             if (ColliderProp != null)
             {
                 ColliderProp.enabled = false;
-            }
-        }
-    }
-    public void SnackComponentOn()
-    {
-        for (int i = 0; i < SnackList.Count; i++)
-        {
-            SnackList[i].GetComponent<Snack>().enabled = true; ;
-            ColliderProp = ObjProp.GetComponent<Collider2D>();
-            if (ColliderProp != null)
-            {
-                ColliderProp.enabled = true;
             }
         }
     }

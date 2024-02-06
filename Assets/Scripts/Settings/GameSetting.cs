@@ -119,6 +119,7 @@ public class GameSetting : MonoBehaviour
         #endregion
 
         #region 플레이어
+        CurrentSaveData.RemainPlayerHP = PlayerInput.PlayerInputInstance.PlayerComponent.CurrentHP;
         CurrentSaveData.PlayerLastPositionX = PlayerInput.PlayerInputInstance.PlayerComponent.transform.position.x;
         CurrentSaveData.PlayerLastPositionY = PlayerInput.PlayerInputInstance.PlayerComponent.transform.position.y;
         #endregion
@@ -171,14 +172,9 @@ public class GameSetting : MonoBehaviour
             SaveToJson(Path.Combine(Application.persistentDataPath + GameOptionPath), options);
             SaveToJson(Path.Combine(Application.persistentDataPath + SaveDataPath), CurrentSaveData);
         }
-        else
-        {
-            Debug.Log("SaveData is empty");
-        }
     }
 
-
-    private void OnApplicationQuit()// 강제종료시도 저장
+    private void OnApplicationQuit()
     {
         SaveGameData();
         ListNPoolReset();
