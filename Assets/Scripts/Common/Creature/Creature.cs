@@ -45,12 +45,12 @@ public class Creature : MonoBehaviour
         isDamaged = false;
         CurrentHP -= damage;
         m_Sprite.color = new Color(m_Sprite.color.r, m_Sprite.color.g, m_Sprite.color.b, 0.5f);
-        DamageImage.DOColor(new Color(DamageImage.color.r, DamageImage.color.g, DamageImage.color.b, 0.4f), 0.125f);
+        DamageImage.DOColor(new Color(DamageImage.color.r, DamageImage.color.g, DamageImage.color.b, 0.4f), 0.25f);
 
-        yield return new WaitForSeconds(0.125f);
-        DamageImage.DOColor(new Color(DamageImage.color.r, DamageImage.color.g, DamageImage.color.b, 0), 0.125f);
+        yield return new WaitForSeconds(0.25f);
+        DamageImage.DOColor(new Color(DamageImage.color.r, DamageImage.color.g, DamageImage.color.b, 0), 0.25f);
 
-        yield return new WaitForSeconds(damageInterval - 0.125f);
+        yield return new WaitForSeconds(damageInterval - 0.25f);
         m_Sprite.color = new Color(m_Sprite.color.r, m_Sprite.color.g, m_Sprite.color.b, 1);
         isDamaged = true;
     }

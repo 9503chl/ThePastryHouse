@@ -7,6 +7,7 @@ using UnityEditor;
 public class Player : Creature
 {
     public Image DamageImage;
+    public Color DamageColor;
 
     public Text DamageText;
 
@@ -50,6 +51,7 @@ public class Player : Creature
         missionData = GameSetting.Instance.CurrentMissionData;
         lantern = GetComponentInChildren<Lantern>();
         HP = missionData.PlayerMaxHP;
+        CurrentHP = GameSetting.Instance.CurrentSaveData.RemainPlayerHP;
         Speed = missionData.PlayerSpeed;
         damageInterval = missionData.DamageInterval;
         Damage = 50;
@@ -59,19 +61,21 @@ public class Player : Creature
     public override void EnableOn()
     {
         base.EnableOn();
-        CurrentHP = HP;//이것도 저장 데이터에서 불러오기 해야됨.
         transform.position = Vector3.zero;
         collider2DProp.enabled = true;
 
-        ComponentOn(monoList);
+        DamageImage.color = new Color(DamageColor.r, DamageColor.g, DamageColor.b, 0);
 
-        DamageImage.color = new Color(DamageImage.color.r, DamageImage.color.g, DamageImage.color.b, 0);
+        ComponentOn(monoList);
     }
     public override void DamageCount(float damage, float damageInterval, Image damageImage)
     {
         if(CurrentHP > 0)
         {
+            if(damage > 0) 
+                DamageImage.color = new Color(DamageColor.r, DamageColor.g, DamageColor.b, 0);
             base.DamageCount(damage, damageInterval, damageImage);
+            CurrentHP = Mathf.Clamp(CurrentHP, 0, HP);
             HPManager.Instance.HpText.text = CurrentHP.ToString();
         }
         else

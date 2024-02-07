@@ -169,6 +169,7 @@ public class GameSetting : MonoBehaviour
         if (CurrentSaveData != null)
         {
             CurrentSaveData.LastPlayTime = DateTime.Now;
+            CurrentSaveData.RemainPlayerHP = CurrentMissionData.PlayerMaxHP;
             SaveToJson(Path.Combine(Application.persistentDataPath + GameOptionPath), options);
             SaveToJson(Path.Combine(Application.persistentDataPath + SaveDataPath), CurrentSaveData);
         }

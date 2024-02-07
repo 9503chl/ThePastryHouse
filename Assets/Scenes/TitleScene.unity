@@ -8253,6 +8253,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 413926125}
     m_Modifications:
+    - target: {fileID: 3448114078260018632, guid: a6f42e83bdc041544b1a1322a71a2a51,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3448114078260018632, guid: a6f42e83bdc041544b1a1322a71a2a51,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3448114078260018632, guid: a6f42e83bdc041544b1a1322a71a2a51,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3448114078260018634, guid: a6f42e83bdc041544b1a1322a71a2a51,
         type: 3}
       propertyPath: DamageText
@@ -8263,6 +8278,26 @@ PrefabInstance:
       propertyPath: DamageImage
       value: 
       objectReference: {fileID: 1794301140}
+    - target: {fileID: 3448114078260018634, guid: a6f42e83bdc041544b1a1322a71a2a51,
+        type: 3}
+      propertyPath: DamageColor.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3448114078260018634, guid: a6f42e83bdc041544b1a1322a71a2a51,
+        type: 3}
+      propertyPath: DamageColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3448114078260018634, guid: a6f42e83bdc041544b1a1322a71a2a51,
+        type: 3}
+      propertyPath: DamageColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3448114078260018634, guid: a6f42e83bdc041544b1a1322a71a2a51,
+        type: 3}
+      propertyPath: DamageColor.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3448114078260018635, guid: a6f42e83bdc041544b1a1322a71a2a51,
         type: 3}
       propertyPath: m_RootOrder

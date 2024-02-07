@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.LowLevel;
 
 public class Snack : Object
 {
@@ -11,6 +12,8 @@ public class Snack : Object
     private Animator animator;
 
     public string AnimatorTrigger;
+
+    public Color HealColor;
 
     private Coroutine coroutine;
 
@@ -33,6 +36,7 @@ public class Snack : Object
                 playerProp = collision.gameObject.GetComponent<Player>();
                 if (playerProp != null)
                 {
+                    playerProp.DamageImage.color = new Color(HealColor.r, HealColor.g, HealColor.b, 0);
                     playerProp.DamageCount(-Damage, playerProp.damageInterval, playerProp.DamageImage);
                     HPManager.Instance.HpText.text = playerProp.CurrentHP.ToString();
                     coroutine = StartCoroutine(HealNRelease());
